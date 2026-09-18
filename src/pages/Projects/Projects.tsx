@@ -1,17 +1,16 @@
-/* eslint-disable react/no-array-index-key */
-import { styles } from '../../assets/constants';
-import Project from '../../components/Project';
-import AnimationScale3d from '../../components/Animations/AnimationScale3d';
-import { projectsList, testTasksList } from '../../shared/constants';
-import { IProjectsSection } from './Projects.types';
+import { AnimationScale3d } from '../../components';
+import { projectsList, styles, testTasksList } from '../../shared/constants';
+import { getLetters } from './model/lib';
+import { ProjectsSection } from './Projects.types';
+import Project from './UI/Project';
 
 import './Projects.styles.scss';
 
-const Projects = () => {
-  const projectsString = 'Projects'.split('');
-  const testTasksString = 'Test Tasks'.split('');
+export default function Projects() {
+  const projectsString = getLetters('Projects');
+  const testTasksString = getLetters('Test Tasks');
 
-  const projectsSections: IProjectsSection[] = [
+  const projectsSections: ProjectsSection[] = [
     {
       title: projectsString,
       projects: projectsList,
@@ -52,6 +51,4 @@ const Projects = () => {
       </div>
     </main>
   );
-};
-
-export default Projects;
+}

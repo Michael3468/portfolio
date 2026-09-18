@@ -19,8 +19,8 @@ const getStorageValue = <T>(key: string, defaultValue: T): T => {
  *
  * example: (for define toggle variable darkMode on site)
  *
- * type TDarkMode = 'light' | 'dark';
- * const [darkMode, setDarkMode] = useLocalStorage<TDarkMode>('darkMode', 'light');
+ * type DarkMode = 'light' | 'dark';
+ * const [darkMode, setDarkMode] = useLocalStorage<DarkMode>('darkMode', 'light');
  */
 export const useLocalStorage = <T>(
   key: string,

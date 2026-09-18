@@ -1,13 +1,12 @@
-type TProjects = {
-  id: number;
-  title: string;
-  skills: string;
-  img: string;
-  bigImg: string;
-  background: string;
-  gitHubLink: string;
-  liveDemo: string;
-};
+export type DarkMode = 'light' | 'dark';
 
-// eslint-disable-next-line import/prefer-default-export
-export type { TProjects };
+export interface ProjectItem {
+  readonly id: number;
+  readonly title: string;
+  readonly skills: string;
+  readonly img: string;
+  readonly bigImg: string;
+  readonly background: string;
+  readonly gitHubLink: string;
+  readonly liveDemo: string;
+}

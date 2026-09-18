@@ -42,7 +42,9 @@ body {
   background-color: var(--page-bg);
   color: var(--text-color);
 
-  transition: background-color 1s, color 1s;
+  transition:
+    background-color 1s,
+    color 1s;
 }
 
 /* General */
@@ -82,7 +84,6 @@ body {
 .text-shadow {
   text-shadow: 2px 2px 2px var(--text-shadow);
 }
-
 
 /* Content list */
 

@@ -11,10 +11,13 @@
 
   width: 51px;
   height: 26px;
+  padding: 0;
   border: 1px solid black;
 
   border-radius: 50px;
   background-color: #272727;
+  font: inherit;
+  color: inherit;
 }
 
 .dark-mode-btn::before {

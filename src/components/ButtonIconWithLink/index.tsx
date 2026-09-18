@@ -1,14 +1,13 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import { CSSProperties } from 'react';
 import './styles.css';
 
-type Props = {
-  buttonText: string;
-  link?: string | null;
-  img?: string | null;
-  altText?: string;
-  border?: number;
-  borderType?:
+export interface ButtonIconWithLinkProps {
+  readonly buttonText: string;
+  readonly link?: string | null;
+  readonly img?: string | null;
+  readonly altText?: string;
+  readonly border?: number;
+  readonly borderType?:
     | 'none'
     | 'hidden'
     | 'dotted'
@@ -19,25 +18,25 @@ type Props = {
     | 'ridge'
     | 'inset'
     | 'outset';
-  borderColor?: string;
-  borderRadius?: number;
-  buttonWidth?: number;
-  buttonHeight?: number;
-  imgWidth?: number;
-  imgHeight?: number;
-  fontWeight?: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
-  fontSize?: number;
-  fontColor?: string;
-  backgroundColor?: string;
-  boxShadowColor?: string;
-  boxShadowBlurRadius?: number;
-  boxShadowSpreadRadius?: number;
-  boxShadowX?: number;
-  boxShadowY?: number;
-  style?: CSSProperties;
-  imgStyle?: CSSProperties;
-  buttonTextStyle?: CSSProperties;
-};
+  readonly borderColor?: string;
+  readonly borderRadius?: number;
+  readonly buttonWidth?: number;
+  readonly buttonHeight?: number;
+  readonly imgWidth?: number;
+  readonly imgHeight?: number;
+  readonly fontWeight?: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
+  readonly fontSize?: number;
+  readonly fontColor?: string;
+  readonly backgroundColor?: string;
+  readonly boxShadowColor?: string;
+  readonly boxShadowBlurRadius?: number;
+  readonly boxShadowSpreadRadius?: number;
+  readonly boxShadowX?: number;
+  readonly boxShadowY?: number;
+  readonly style?: CSSProperties;
+  readonly imgStyle?: CSSProperties;
+  readonly buttonTextStyle?: CSSProperties;
+}
 
 export default function ButtonIconWithLink({
   buttonText,
@@ -64,12 +63,15 @@ export default function ButtonIconWithLink({
   style = {},
   imgStyle = {},
   buttonTextStyle = {},
-}: Props) {
+}: ButtonIconWithLinkProps) {
+  const borderStyle =
+    border != null && border > 0 ? `${border}px ${borderType} ${borderColor}` : 'none';
+
   return (
     <a
       className="btn-outline"
       style={{
-        border: `${border && `${border}px ${borderType} ${borderColor}`}`,
+        border: borderStyle,
         borderRadius: `${borderRadius}px`,
         width: `${buttonWidth}px`,
         height: `${buttonHeight}px`,

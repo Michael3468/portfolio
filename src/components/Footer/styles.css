@@ -4,14 +4,14 @@
   background-color: var(--footer-bg);
   color: var(--footer-text);
 
-  position:relative;
-  left:0;
-  bottom:0;
-  right:0;
+  position: relative;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }
 
 .footer__fixed {
-  position:fixed;
+  position: fixed;
 }
 
 .footer__wrapper {

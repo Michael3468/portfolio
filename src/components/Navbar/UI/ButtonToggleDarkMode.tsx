@@ -1,17 +1,16 @@
 import { useEffect } from 'react';
 
-import { useDarkModeStore } from '../../atoms/darkModeState';
-import detectDarkMode from '../../hooks/detectDarkMode';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { useDarkModeStore } from '../../../atoms/darkModeState';
+import detectDarkMode from '../../../hooks/detectDarkMode';
+import { useLocalStorage } from '../../../hooks/useLocalStorage';
+import { DarkMode } from '../../../shared/types';
 import moon from './moon.svg';
 import sun from './sun.svg';
 
-import './styles.css';
+import './ButtonToggleDarkMode.css';
 
-export type TDarkMode = 'light' | 'dark';
-
-const BtnDarkMode = () => {
-  const [darkMode, setDarkMode] = useLocalStorage<TDarkMode>('darkMode', detectDarkMode());
+export default function ButtonToggleDarkMode() {
+  const [darkMode, setDarkMode] = useLocalStorage<DarkMode>('darkMode', detectDarkMode());
   const setDarkModeStore = useDarkModeStore((state) => state.setDarkMode);
 
   const toggleDarkMode = () => {
@@ -44,11 +43,15 @@ const BtnDarkMode = () => {
   const btnActive = 'dark-mode-btn dark-mode-btn--active';
 
   return (
-    <div className={darkMode === 'dark' ? btnActive : btnNormal} onClick={toggleDarkMode}>
-      <img src={sun} alt="Light mode" className="dark-mode-btn__icon" />
-      <img src={moon} alt="Dark mode" className="dark-mode-btn__icon" />
-    </div>
+    <button
+      type="button"
+      className={darkMode === 'dark' ? btnActive : btnNormal}
+      onClick={toggleDarkMode}
+      aria-label="Переключить тему"
+      aria-pressed={darkMode === 'dark'}
+    >
+      <img src={sun} alt="" aria-hidden="true" className="dark-mode-btn__icon" />
+      <img src={moon} alt="" aria-hidden="true" className="dark-mode-btn__icon" />
+    </button>
   );
-};
-
-export default BtnDarkMode;
+}

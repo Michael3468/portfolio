@@ -10,9 +10,9 @@ import project14Big from '../assets/img/projects/14-big.jpg';
 import project14 from '../assets/img/projects/14.jpg';
 import project15Big from '../assets/img/projects/15-big.jpg';
 import project15 from '../assets/img/projects/15.jpg';
-import { TProjects } from '../types';
+import { ProjectItem } from '../types';
 
-const projectsList: TProjects[] = [
+const projectsList: ProjectItem[] = [
   {
     id: 15,
     title: 'React Landing',

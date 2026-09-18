@@ -1,21 +1,19 @@
-/* eslint-disable no-nested-ternary */
-/* eslint-disable react/no-array-index-key */
 import { motion } from 'framer-motion';
 import { CSSProperties } from 'react';
 
-type Props = {
-  text: string;
-  animationType: 'words' | 'letters';
-  staggerChildren?: number;
-  delayChildren?: number;
-  hiddenX?: number;
-  hiddenY?: number;
-  visibleX?: number;
-  visibleY?: number;
-  dumping?: number;
-  stiffness?: number;
-  style?: CSSProperties;
-};
+export interface AnimationTextProps {
+  readonly text: string;
+  readonly animationType: 'words' | 'letters';
+  readonly staggerChildren?: number;
+  readonly delayChildren?: number;
+  readonly hiddenX?: number;
+  readonly hiddenY?: number;
+  readonly visibleX?: number;
+  readonly visibleY?: number;
+  readonly dumping?: number;
+  readonly stiffness?: number;
+  readonly style?: CSSProperties;
+}
 
 export default function AnimationText({
   text,
@@ -29,7 +27,7 @@ export default function AnimationText({
   dumping = 12,
   stiffness = 100,
   style = {},
-}: Props) {
+}: AnimationTextProps) {
   const items = animationType === 'words' ? text.split(' ') : text.split('');
 
   const container = {

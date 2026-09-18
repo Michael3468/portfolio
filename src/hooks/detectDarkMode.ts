@@ -1,8 +1,19 @@
-import { TDarkMode } from '../types';
+import { DarkMode } from '../shared/types';
 
+/**
+ * Проверяет, включена ли системная тёмная тема.
+ *
+ * @returns `true`, если в операционной системе включена тёмная тема,
+ * иначе — `false`.
+ */
 const isDarkModeEnabled = (): boolean =>
-  window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  window?.matchMedia('(prefers-color-scheme: dark)')?.matches;
 
-const detectDarkMode = (): TDarkMode => (isDarkModeEnabled() === true ? 'dark' : 'light');
+/**
+ * Определяет текущую тему оформления на основе системных настроек.
+ *
+ * @returns Значение `DarkMode`: `'dark'`, если включена тёмная тема, иначе — `'light'`.
+ */
+const detectDarkMode = (): DarkMode => (isDarkModeEnabled() === true ? 'dark' : 'light');
 
 export default detectDarkMode;

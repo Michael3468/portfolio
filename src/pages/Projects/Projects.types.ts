@@ -1,9 +1,6 @@
-import { TProjects } from '../../shared/types';
+import { ProjectItem } from '../../shared/types';
 
-interface IProjectsSection {
-  title: string[];
-  projects: TProjects[];
+export interface ProjectsSection {
+  readonly title: string[];
+  readonly projects: ProjectItem[];
 }
-
-// eslint-disable-next-line import/prefer-default-export
-export type { IProjectsSection };

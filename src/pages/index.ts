@@ -1,6 +1,4 @@
-import Contacts from './Contacts';
-import Home from './Home';
-import Project from './Project';
-import Projects from './Projects';
-
-export { Contacts, Home, Project, Projects };
+export { default as Contacts } from './Contacts';
+export { default as Home } from './Home';
+export { default as Project } from './Project';
+export { Projects } from './Projects';

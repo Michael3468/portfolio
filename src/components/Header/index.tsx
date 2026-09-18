@@ -1,11 +1,13 @@
-/* eslint-disable react/no-array-index-key */
-import { styles } from '../../assets/constants';
+import { styles } from '../../shared/constants';
+// Прямые импорты вместо '../index.ts' — чтобы избежать циклической зависимости:
+// src/components/index.ts реэкспортирует Header.
 import AnimationScale3d from '../Animations/AnimationScale3d';
 import AnimationText from '../Animations/AnimationText';
+import { getLetters } from './model/lib';
 import './styles.css';
 
-const Header = () => {
-  const name = "Hi, I'm Mikhail,".split('');
+export default function Header() {
+  const name = getLetters("Hi, I'm Mikhail,");
 
   return (
     <header className="header">
@@ -43,6 +45,4 @@ const Header = () => {
       </div>
     </header>
   );
-};
-
-export default Header;
+}

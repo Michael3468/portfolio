@@ -1,23 +1,36 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { styles } from '../../assets/constants';
-import ButtonIconWithLink from '../../components/ButtonIconWithLink';
-import { projectsList, testTasksList } from '../../shared/constants';
 import gitHubIcon from '../../assets/icons/gitHub-black.svg';
 import liveDemo from '../../assets/icons/live-demo-icon.svg';
+import { ButtonIconWithLink } from '../../components';
+import { styles } from '../../shared/constants';
+import { BUTTON_GRADIENT } from './model/constants';
+import { findProjectById } from './model/lib';
 
 import './styles.css';
 
-const Project = () => {
+/**
+ * Компонент страницы отдельного проекта.
+ *
+ * Извлекает идентификатор проекта из параметров маршрута (`id`),
+ * находит проект по идентификатору и отображает его детали:
+ * название, навыки, обложку и ссылки на GitHub и Live Demo.
+ *
+ * @returns {JSX.Element} Разметка страницы с деталями проекта.
+ */
+export default function Project() {
   const { id } = useParams();
   const [imgLoaded, setImgLoaded] = useState(false);
 
-  const getProject = projectsList.filter((p) => p.id === Number(id))[0];
-  const getTestTaskProject = testTasksList.filter((p) => p.id === Number(id))[0];
-  const project = getProject || getTestTaskProject;
-  const buttonGradient = 'linear-gradient(to bottom, rgb(255, 255, 255), rgba(0, 0, 0, 0.5))';
+  const project = findProjectById(id);
 
+  /**
+   * Обработчик события загрузки изображения проекта.
+   *
+   * Устанавливает флаг `imgLoaded` в значение `true`,
+   * что запускает анимацию появления обложки проекта.
+   */
   const handleImgLoaded = () => {
     setImgLoaded(true);
   };
@@ -58,7 +71,7 @@ const Project = () => {
               buttonText="GitHub"
               img={gitHubIcon}
               altText="github repo"
-              backgroundColor={buttonGradient}
+              backgroundColor={BUTTON_GRADIENT}
               style={{ marginBottom: 10 }}
             />
 
@@ -67,13 +80,11 @@ const Project = () => {
               buttonText="Live Demo"
               img={liveDemo}
               altText="live demo"
-              backgroundColor={buttonGradient}
+              backgroundColor={BUTTON_GRADIENT}
             />
           </div>
         </div>
       </div>
     </main>
   );
-};
-
-export default Project;
+}

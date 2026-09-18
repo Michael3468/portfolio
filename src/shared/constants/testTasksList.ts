@@ -6,9 +6,9 @@ import project23Big from '../assets/img/testProjects/23-big.jpg';
 import project23 from '../assets/img/testProjects/23.jpg';
 import project29Big from '../assets/img/testProjects/29-big.jpg';
 import project29 from '../assets/img/testProjects/29.jpg';
-import { TProjects } from '../types';
+import { ProjectItem } from '../types';
 
-const testTasksList: TProjects[] = [
+const testTasksList: ProjectItem[] = [
   {
     id: 29,
     title: 'React Landing',

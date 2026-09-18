@@ -2,12 +2,12 @@
 import { motion, useAnimationControls } from 'framer-motion';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 
-type Props = {
-  children: ReactNode;
-  transitionTimes?: number[];
-  duration?: number;
-  startOnInit?: boolean;
-};
+export interface AnimationScale3dProps {
+  readonly children: ReactNode;
+  readonly transitionTimes?: number[];
+  readonly duration?: number;
+  readonly startOnInit?: boolean;
+}
 
 /**
  * @param transitionTimes {number[]} array of number between 0 and 1.
@@ -19,7 +19,7 @@ export default function AnimationScale3d({
   transitionTimes = [0, 0.4, 0.6, 0.7, 0.8, 0.9],
   duration = 1,
   startOnInit = false,
-}: Props) {
+}: AnimationScale3dProps) {
   const controls = useAnimationControls();
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
 

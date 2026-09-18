@@ -1,9 +1,9 @@
-/* eslint-disable react/no-array-index-key */
-import { styles } from '../assets/constants';
-import AnimationScale3d from '../components/Animations/AnimationScale3d';
+import { AnimationScale3d } from '../components';
+import { styles } from '../shared/constants';
+import { getLetters } from './Contacts/model/lib';
 
-const Contacts = () => {
-  const contactsString = 'Contacts'.split('');
+export default function Contacts() {
+  const contactsString = getLetters('Contacts');
 
   return (
     <main className="section">
@@ -15,16 +15,18 @@ const Contacts = () => {
         </h1>
 
         <ul className="content-list">
-          {/* <li className="content-list__item">
-          <h2 className="title-2">Location</h2>
-          <p>Moscow, Russia</p>
-        </li> */}
+          <li className="content-list__item">
+            <h2 className="title-2">Location</h2>
+            <p>St. Petersburg, Russia</p>
+          </li>
+
           <li className="content-list__item">
             <h2 className="title-2 text-shadow">Telegram</h2>
             <a href="https://t.me/mikhail3468" className="text-shadow">
               Click to send message
             </a>
           </li>
+
           <li className="content-list__item">
             <h2 className="title-2 text-shadow">Email</h2>
             <p>
@@ -37,6 +39,4 @@ const Contacts = () => {
       </div>
     </main>
   );
-};
-
-export default Contacts;
+}

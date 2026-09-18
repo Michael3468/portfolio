@@ -8,16 +8,16 @@
 
 ## 1. Обзор и цели
 
-| Параметр | Исходный проект | Целевой проект |
-|---|---|---|
-| Сборщик | Create React App (`react-scripts` 5.0.1, Webpack) | Vite (последняя стабильная версия) |
-| React | 18.2.0 | 19.x |
-| TypeScript | 4.9.5 | последняя стабильная (5.8+) |
-| Роутинг | react-router-dom 6.10.0 | react-router-dom 7.x (API v6 сохранён) |
-| Storybook | 7.0 (webpack5) + git submodule `src/stories` | ❌ полностью удаляется |
-| Тесты | Jest (через react-scripts) + Testing Library 13 | Vitest + Testing Library 16 |
-| Стили | CSS + SCSS (dart-sass 1.69) | CSS + SCSS (актуальный dart-sass) |
-| Состояние | Recoil 0.7.7, framer-motion 10.12 | Recoil (см. риски), framer-motion 11/12+ |
+| Параметр   | Исходный проект                                   | Целевой проект                           |
+| ---------- | ------------------------------------------------- | ---------------------------------------- |
+| Сборщик    | Create React App (`react-scripts` 5.0.1, Webpack) | Vite (последняя стабильная версия)       |
+| React      | 18.2.0                                            | 19.x                                     |
+| TypeScript | 4.9.5                                             | последняя стабильная (5.8+)              |
+| Роутинг    | react-router-dom 6.10.0                           | react-router-dom 7.x (API v6 сохранён)   |
+| Storybook  | 7.0 (webpack5) + git submodule `src/stories`      | ❌ полностью удаляется                   |
+| Тесты      | Jest (через react-scripts) + Testing Library 13   | Vitest + Testing Library 16              |
+| Стили      | CSS + SCSS (dart-sass 1.69)                       | CSS + SCSS (актуальный dart-sass)        |
+| Состояние  | Recoil 0.7.7, framer-motion 10.12                 | Recoil (см. риски), framer-motion 11/12+ |
 
 **Функциональность и внешний вид сайта должны сохраниться без изменений.**
 Список страниц и маршрутов:
@@ -36,15 +36,15 @@
 `.gitmodules` подключает репозиторий `https://github.com/Michael3468/storybook.git` в `src/stories`.
 НЕЛЬЗЯ просто удалить весь `src/stories` — приложение импортирует из него **рабочие** файлы:
 
-| Файл-импортёр | Что импортируется из `src/stories` |
-|---|---|
-| `src/App.tsx` | `./stories/utils/ScrollToTop` |
-| `src/pages/Contacts.tsx` | `../../stories/components/Animations/AnimationScale3d` |
-| `src/pages/Projects/Projects.tsx` | `../../stories/components/Animations/AnimationScale3d` |
-| `src/pages/Project/Project.tsx` | `../../stories/assets/images/icons/gitHub-black.svg`, `../../stories/assets/images/icons/live-demo-icon.svg`, `../../stories/components/Buttons/ButtonIconWithLink` |
-| `src/components/Header/index.tsx` | `AnimationScale3d`, `AnimationText` (из stories/components/Animations) |
-| `src/components/Project/Project.tsx` | `../../stories/assets/css/animations/pulse-animation.css` |
-| `src/components/ButtonToggleDarkMode/index.tsx` | `../../stories/utils/customHooks` (useLocalStorage), `../../stories/utils/detectDarkMode` |
+| Файл-импортёр                                   | Что импортируется из `src/stories`                                                                                                                                  |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/App.tsx`                                   | `./stories/utils/ScrollToTop`                                                                                                                                       |
+| `src/pages/Contacts.tsx`                        | `../../stories/components/Animations/AnimationScale3d`                                                                                                              |
+| `src/pages/Projects/Projects.tsx`               | `../../stories/components/Animations/AnimationScale3d`                                                                                                              |
+| `src/pages/Project/Project.tsx`                 | `../../stories/assets/images/icons/gitHub-black.svg`, `../../stories/assets/images/icons/live-demo-icon.svg`, `../../stories/components/Buttons/ButtonIconWithLink` |
+| `src/components/Header/index.tsx`               | `AnimationScale3d`, `AnimationText` (из stories/components/Animations)                                                                                              |
+| `src/components/Project/Project.tsx`            | `../../stories/assets/css/animations/pulse-animation.css`                                                                                                           |
+| `src/components/ButtonToggleDarkMode/index.tsx` | `../../stories/utils/customHooks` (useLocalStorage), `../../stories/utils/detectDarkMode`                                                                           |
 
 **Стратегия:** перенести только используемые файлы из `src/stories` в структуру `src/` целевого
 проекта (см. раздел 5), после чего удалить `src/stories` целиком вместе с `.gitmodules`.
@@ -132,6 +132,7 @@ npm install -D stylelint@latest stylelint-config-standard@latest stylelint-confi
 
 > Примечание: вместо фиксации точных версий на момент написания плана используется `@latest` /
 > мажорные диапазоны. На момент реализации необходимо убедиться, что:
+>
 > - `react` / `react-dom` — ветка 19.x;
 > - `react-router-dom` — ветка 7.x;
 > - `vitest` — ветка 3.x+ (совместима с Vite 7);
@@ -141,33 +142,33 @@ npm install -D stylelint@latest stylelint-config-standard@latest stylelint-confi
 
 ### 3.2. Какие зависимости остаются
 
-| Пакет | Версия в исходнике | Целевая версия | Зачем |
-|---|---|---|---|
-| `react` | ^18.2.0 | ^19 | ядро |
-| `react-dom` | ^18.2.0 | ^19 | ядро |
-| `react-router-dom` | ^6.10.0 | ^7 | роутинг; API BrowserRouter/Routes/NavLink/useParams обратно совместимы |
-| `framer-motion` | ^10.12.4 | 11+/latest | анимации (AnimationScale3d, AnimationText) — используются приложением |
-| `recoil` | ^0.7.7 | ^0.7.7 (см. риски) | тёмная тема (darkModeState) |
-| `typescript` | ^4.9.5 | latest (5.8+) | типизация |
-| `@types/react`, `@types/react-dom` | ^18 | latest (19.x) | типы React |
-| `sass` | ^1.69.4 | latest | компиляция `Projects.styles.scss` |
-| `@testing-library/react`, `jest-dom`, `user-event` | 13/5/13 | 16/6/14 | тесты |
-| `prettier` | ^2.8.7 | latest | форматирование (конфиг `.prettierrc` переносится) |
-| `stylelint` + плагины | 15.x | latest | линтинг SCSS (конфиг `.stylelintrc.json` переносится) — опционально |
+| Пакет                                              | Версия в исходнике | Целевая версия     | Зачем                                                                  |
+| -------------------------------------------------- | ------------------ | ------------------ | ---------------------------------------------------------------------- |
+| `react`                                            | ^18.2.0            | ^19                | ядро                                                                   |
+| `react-dom`                                        | ^18.2.0            | ^19                | ядро                                                                   |
+| `react-router-dom`                                 | ^6.10.0            | ^7                 | роутинг; API BrowserRouter/Routes/NavLink/useParams обратно совместимы |
+| `framer-motion`                                    | ^10.12.4           | 11+/latest         | анимации (AnimationScale3d, AnimationText) — используются приложением  |
+| `recoil`                                           | ^0.7.7             | ^0.7.7 (см. риски) | тёмная тема (darkModeState)                                            |
+| `typescript`                                       | ^4.9.5             | latest (5.8+)      | типизация                                                              |
+| `@types/react`, `@types/react-dom`                 | ^18                | latest (19.x)      | типы React                                                             |
+| `sass`                                             | ^1.69.4            | latest             | компиляция `Projects.styles.scss`                                      |
+| `@testing-library/react`, `jest-dom`, `user-event` | 13/5/13            | 16/6/14            | тесты                                                                  |
+| `prettier`                                         | ^2.8.7             | latest             | форматирование (конфиг `.prettierrc` переносится)                      |
+| `stylelint` + плагины                              | 15.x               | latest             | линтинг SCSS (конфиг `.stylelintrc.json` переносится) — опционально    |
 
 ### 3.3. Какие зависимости УДАЛИТЬ (не переносятся)
 
-| Пакет | Причина |
-|---|---|
-| `react-scripts` | CRA-обёртка, заменяется Vite |
-| `web-vitals` | используется только в `reportWebVitals.ts`, который удаляется |
-| `@types/jest` | Jest заменяется Vitest (матрёры приходят из `@testing-library/jest-dom/vitest`) |
-| `@storybook/*` (addon-essentials, addon-interactions, addon-links, blocks, preset-create-react-app, react, react-webpack5, testing-library), `storybook`, `storybook-source-code-addon` | Storybook удаляется полностью |
-| `eslint-plugin-storybook` | правило `plugin:storybook/recommended` больше не нужно |
-| `@babel/preset-env`, `@babel/preset-react`, `@babel/preset-typescript` | Vite транслирует через esbuild; jest больше нет |
-| `eslint-config-airbnb`, `eslint-config-airbnb-base` | в flat-конфиге заменяются на `@eslint/js` + `typescript-eslint` (см. раздел 6.4) |
-| `prop-types` | код на TypeScript, PropTypes не используются |
-| `commitizen`, `cz-conventional-changelog`, `git-flow` | скрипты `release-*`, `cm`, `cml` — вне рамок миграции (можно вернуть отдельно, если нужен git-flow workflow) |
+| Пакет                                                                                                                                                                                   | Причина                                                                                                      |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `react-scripts`                                                                                                                                                                         | CRA-обёртка, заменяется Vite                                                                                 |
+| `web-vitals`                                                                                                                                                                            | используется только в `reportWebVitals.ts`, который удаляется                                                |
+| `@types/jest`                                                                                                                                                                           | Jest заменяется Vitest (матрёры приходят из `@testing-library/jest-dom/vitest`)                              |
+| `@storybook/*` (addon-essentials, addon-interactions, addon-links, blocks, preset-create-react-app, react, react-webpack5, testing-library), `storybook`, `storybook-source-code-addon` | Storybook удаляется полностью                                                                                |
+| `eslint-plugin-storybook`                                                                                                                                                               | правило `plugin:storybook/recommended` больше не нужно                                                       |
+| `@babel/preset-env`, `@babel/preset-react`, `@babel/preset-typescript`                                                                                                                  | Vite транслирует через esbuild; jest больше нет                                                              |
+| `eslint-config-airbnb`, `eslint-config-airbnb-base`                                                                                                                                     | в flat-конфиге заменяются на `@eslint/js` + `typescript-eslint` (см. раздел 6.4)                             |
+| `prop-types`                                                                                                                                                                            | код на TypeScript, PropTypes не используются                                                                 |
+| `commitizen`, `cz-conventional-changelog`, `git-flow`                                                                                                                                   | скрипты `release-*`, `cm`, `cml` — вне рамок миграции (можно вернуть отдельно, если нужен git-flow workflow) |
 
 > `@types/node` оставить/установить: нужен для типизации `vite.config.ts` (node:path, process.env).
 
@@ -226,30 +227,30 @@ src/components/ButtonToggleDarkMode/sun.svg
 
 ### 4.2. Переносятся из `src/stories` в `src` (с адаптацией путей и React 19)
 
-| Источник (исходный проект) | Назначение (новый проект) | Адаптация |
-|---|---|---|
-| `src/stories/utils/ScrollToTop.tsx` | `src/components/ScrollToTop/index.tsx` | без изменений логики |
-| `src/stories/components/Animations/AnimationScale3d/index.tsx` | `src/components/Animations/AnimationScale3d/index.tsx` | убрать `defaultProps` → дефолты в аргументах; `import React` не нужен |
-| `src/stories/components/Animations/AnimationText/index.tsx` | `src/components/Animations/AnimationText/index.tsx` | убрать `defaultProps`; `React.CSSProperties` заменить на импорт типа из 'react' |
-| `src/stories/components/Buttons/ButtonIconWithLink/index.tsx` | `src/components/ButtonIconWithLink/index.tsx` | убрать `defaultProps`; заменить `React.ReactNode`/`React.CSSProperties` на импорт типов |
-| `src/stories/components/Buttons/ButtonIconWithLink/styles.css` | `src/components/ButtonIconWithLink/styles.css` | как есть |
-| `src/stories/utils/customHooks/useLocalStorage.ts` | `src/hooks/useLocalStorage.ts` | без изменений |
-| `src/stories/utils/detectDarkMode.ts` | `src/hooks/detectDarkMode.ts` | без изменений (импорт `TDarkMode` из `../types` сохраняется) |
-| `src/stories/assets/css/animations/pulse-animation.css` | `src/assets/styles/pulse-animation.css` | как есть |
-| `src/stories/assets/images/icons/gitHub-black.svg` | `src/assets/icons/gitHub-black.svg` | как есть |
-| `src/stories/assets/images/icons/live-demo-icon.svg` | `src/assets/icons/live-demo-icon.svg` | как есть |
+| Источник (исходный проект)                                     | Назначение (новый проект)                              | Адаптация                                                                               |
+| -------------------------------------------------------------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------- |
+| `src/stories/utils/ScrollToTop.tsx`                            | `src/components/ScrollToTop/index.tsx`                 | без изменений логики                                                                    |
+| `src/stories/components/Animations/AnimationScale3d/index.tsx` | `src/components/Animations/AnimationScale3d/index.tsx` | убрать `defaultProps` → дефолты в аргументах; `import React` не нужен                   |
+| `src/stories/components/Animations/AnimationText/index.tsx`    | `src/components/Animations/AnimationText/index.tsx`    | убрать `defaultProps`; `React.CSSProperties` заменить на импорт типа из 'react'         |
+| `src/stories/components/Buttons/ButtonIconWithLink/index.tsx`  | `src/components/ButtonIconWithLink/index.tsx`          | убрать `defaultProps`; заменить `React.ReactNode`/`React.CSSProperties` на импорт типов |
+| `src/stories/components/Buttons/ButtonIconWithLink/styles.css` | `src/components/ButtonIconWithLink/styles.css`         | как есть                                                                                |
+| `src/stories/utils/customHooks/useLocalStorage.ts`             | `src/hooks/useLocalStorage.ts`                         | без изменений                                                                           |
+| `src/stories/utils/detectDarkMode.ts`                          | `src/hooks/detectDarkMode.ts`                          | без изменений (импорт `TDarkMode` из `../types` сохраняется)                            |
+| `src/stories/assets/css/animations/pulse-animation.css`        | `src/assets/styles/pulse-animation.css`                | как есть                                                                                |
+| `src/stories/assets/images/icons/gitHub-black.svg`             | `src/assets/icons/gitHub-black.svg`                    | как есть                                                                                |
+| `src/stories/assets/images/icons/live-demo-icon.svg`           | `src/assets/icons/live-demo-icon.svg`                  | как есть                                                                                |
 
 ### 4.3. Переименовываются / переписываются
 
-| Источник | Назначение | Изменения |
-|---|---|---|
-| `src/index.tsx` | `src/main.tsx` | убрать `reportWebVitals`; добавить импорт `main.css` перенесён из `App.tsx` (или оставить в `App.tsx` — на выбор) |
-| `src/react-app-env.d.ts` | `src/vite-env.d.ts` | содержимое: `/// <reference types="vite/client" />` |
-| `src/setupTests.ts` | `src/setupTests.ts` | `import '@testing-library/jest-dom';` → `import '@testing-library/jest-dom/vitest';` |
-| `src/App.test.tsx` | `src/App.test.tsx` | полная перезапись под Vitest (см. 6.5) |
-| `public/index.html` | `/index.html` (корень проекта) | переписать под Vite (см. 6.7) |
-| `public/manifest.json` | `public/manifest.json` | обновить name/short_name на «Portfolio» |
-| `README.md` | `README.md` | написать заново: команды Vite (`npm run dev/build/preview/test/lint`), описание стека |
+| Источник                 | Назначение                     | Изменения                                                                                                         |
+| ------------------------ | ------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| `src/index.tsx`          | `src/main.tsx`                 | убрать `reportWebVitals`; добавить импорт `main.css` перенесён из `App.tsx` (или оставить в `App.tsx` — на выбор) |
+| `src/react-app-env.d.ts` | `src/vite-env.d.ts`            | содержимое: `/// <reference types="vite/client" />`                                                               |
+| `src/setupTests.ts`      | `src/setupTests.ts`            | `import '@testing-library/jest-dom';` → `import '@testing-library/jest-dom/vitest';`                              |
+| `src/App.test.tsx`       | `src/App.test.tsx`             | полная перезапись под Vitest (см. 6.5)                                                                            |
+| `public/index.html`      | `/index.html` (корень проекта) | переписать под Vite (см. 6.7)                                                                                     |
+| `public/manifest.json`   | `public/manifest.json`         | обновить name/short_name на «Portfolio»                                                                           |
+| `README.md`              | `README.md`                    | написать заново: команды Vite (`npm run dev/build/preview/test/lint`), описание стека                             |
 
 ### 4.4. Удаляются полностью (не переносятся)
 
@@ -370,6 +371,7 @@ root.render(
 ```
 
 Изменения относительно исходника:
+
 - имя файла `index.tsx` → `main.tsx`;
 - удалён вызов `reportWebVitals()` и сам импорт;
 - импорт `./assets/styles/main.css` перенесён сюда из `App.tsx` (рекомендуется — глобальные стили
@@ -380,18 +382,18 @@ root.render(
 
 ### 6.2. Правки импортов, связанные с переносом файлов из `src/stories`
 
-| Файл | Было | Стало |
-|---|---|---|
-| `src/App.tsx` | `import ScrollToTop from './stories/utils/ScrollToTop';` | `import ScrollToTop from './components/ScrollToTop';` |
-| `src/pages/Contacts.tsx` | `import AnimationScale3d from '../stories/components/Animations/AnimationScale3d';` | `import AnimationScale3d from '../components/Animations/AnimationScale3d';` |
-| `src/pages/Projects/Projects.tsx` | `import AnimationScale3d from '../../stories/components/Animations/AnimationScale3d';` | `import AnimationScale3d from '../../components/Animations/AnimationScale3d';` |
-| `src/pages/Project/Project.tsx` | `import gitHubIcon from '../../stories/assets/images/icons/gitHub-black.svg';` | `import gitHubIcon from '../../assets/icons/gitHub-black.svg';` |
-| `src/pages/Project/Project.tsx` | `import liveDemo from '../../stories/assets/images/icons/live-demo-icon.svg';` | `import liveDemo from '../../assets/icons/live-demo-icon.svg';` |
-| `src/pages/Project/Project.tsx` | `import ButtonIconWithLink from '../../stories/components/Buttons/ButtonIconWithLink';` | `import ButtonIconWithLink from '../../components/ButtonIconWithLink';` |
-| `src/components/Header/index.tsx` | `from '../../stories/components/Animations/AnimationScale3d'` и `.../AnimationText'` | `from '../../components/Animations/AnimationScale3d'` и `'../../components/Animations/AnimationText'` |
-| `src/components/Project/Project.tsx` | `import '../../stories/assets/css/animations/pulse-animation.css';` | `import '../../assets/styles/pulse-animation.css';` |
-| `src/components/ButtonToggleDarkMode/index.tsx` | `import { useLocalStorage } from '../../stories/utils/customHooks';` | `import { useLocalStorage } from '../../hooks/useLocalStorage';` |
-| `src/components/ButtonToggleDarkMode/index.tsx` | `import detectDarkMode from '../../stories/utils/detectDarkMode';` | `import detectDarkMode from '../../hooks/detectDarkMode';` |
+| Файл                                            | Было                                                                                    | Стало                                                                                                 |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `src/App.tsx`                                   | `import ScrollToTop from './stories/utils/ScrollToTop';`                                | `import ScrollToTop from './components/ScrollToTop';`                                                 |
+| `src/pages/Contacts.tsx`                        | `import AnimationScale3d from '../stories/components/Animations/AnimationScale3d';`     | `import AnimationScale3d from '../components/Animations/AnimationScale3d';`                           |
+| `src/pages/Projects/Projects.tsx`               | `import AnimationScale3d from '../../stories/components/Animations/AnimationScale3d';`  | `import AnimationScale3d from '../../components/Animations/AnimationScale3d';`                        |
+| `src/pages/Project/Project.tsx`                 | `import gitHubIcon from '../../stories/assets/images/icons/gitHub-black.svg';`          | `import gitHubIcon from '../../assets/icons/gitHub-black.svg';`                                       |
+| `src/pages/Project/Project.tsx`                 | `import liveDemo from '../../stories/assets/images/icons/live-demo-icon.svg';`          | `import liveDemo from '../../assets/icons/live-demo-icon.svg';`                                       |
+| `src/pages/Project/Project.tsx`                 | `import ButtonIconWithLink from '../../stories/components/Buttons/ButtonIconWithLink';` | `import ButtonIconWithLink from '../../components/ButtonIconWithLink';`                               |
+| `src/components/Header/index.tsx`               | `from '../../stories/components/Animations/AnimationScale3d'` и `.../AnimationText'`    | `from '../../components/Animations/AnimationScale3d'` и `'../../components/Animations/AnimationText'` |
+| `src/components/Project/Project.tsx`            | `import '../../stories/assets/css/animations/pulse-animation.css';`                     | `import '../../assets/styles/pulse-animation.css';`                                                   |
+| `src/components/ButtonToggleDarkMode/index.tsx` | `import { useLocalStorage } from '../../stories/utils/customHooks';`                    | `import { useLocalStorage } from '../../hooks/useLocalStorage';`                                      |
+| `src/components/ButtonToggleDarkMode/index.tsx` | `import detectDarkMode from '../../stories/utils/detectDarkMode';`                      | `import detectDarkMode from '../../hooks/detectDarkMode';`                                            |
 
 Также в `src/hooks/detectDarkMode.ts` сохранить импорт `import { TDarkMode } from '../types';` —
 в целевом проекте файл лежит в `src/hooks/`, поэтому путь становится `../types`.
@@ -464,6 +466,7 @@ export default defineConfig({
 ```
 
 Пояснения:
+
 - `import.meta.dirname` доступен на Node 20.11+/21.2+ (Vite 7 требует Node ≥20.19). Если окружение
   старше — использовать `fileURLToPath(new URL('.', import.meta.url))`;
 - `test`-блок описывает Vitest: jsdom-окружение, глобальные `describe/it/expect`, подгрузка
@@ -502,6 +505,7 @@ export default defineConfig({
 ```
 
 Примечание:
+
 - `moduleResolution: "bundler"` и `module: "ESNext"` — рекомендованный набор для Vite;
 - `types: ["vitest/globals", ...]` даёт типы для `describe/it/expect` и jest-dom-матрёров в тестах;
 - если `noUnusedLocals` начнёт ругаться на переменные с префиксом `_` в деструктуризации —
@@ -548,6 +552,7 @@ export default defineConfig({
 **Решение: используем новый формат `eslint.config.js` (flat config).**
 
 Обоснование:
+
 1. ESLint 9.x (текущая major-версия) использует flat config **по умолчанию**; `.eslintrc.json`
    объявлен deprecated и в ESLint 10 будет удалён;
 2. исходный `.eslintrc.json` завязан на `eslint-config-airbnb` (старый способ, несовместимый с
@@ -642,6 +647,7 @@ export default tseslint.config(
 ```
 
 Изменения против исходника:
+
 - `%PUBLIC_URL%` заменяется на корневые пути `/favicon.ico`, `/logo192.png`, `/manifest.json`
   (Vite обслуживает `public/` из корня);
 - добавлен `<script type="module" src="/src/main.tsx">` — так Vite подключает бандл;
@@ -694,6 +700,7 @@ describe('App', () => {
 ```
 
 Замечания:
+
 - `App` сам содержит `BrowserRouter` и `RecoilRoot`, поэтому дополнительный враппер не нужен;
 - `ScrollToTop` использует `useLocation` — работает внутри `BrowserRouter`;
 - `jsdom` имитирует `window.matchMedia`? — нет! `detectDarkMode` (используется в
@@ -742,20 +749,20 @@ Object.defineProperty(window, 'matchMedia', {
    - [ ] скопировать `public/*` (favicon, логотипы, robots.txt, manifest.json с правкой);
    - [ ] скопировать `src/shared/**` (типы, константы, изображения проектов);
    - [ ] скопировать `src/assets/**` (styles, constants.ts) + иконки и pulse-animation из stories
-     по карте 4.2;
+         по карте 4.2;
    - [ ] скопировать `src/hooks/` (useLocalStorage, detectDarkMode) из stories.
 
 4. **Перенос компонентов**
    - [ ] скопировать `src/components/**` (Footer, Header, Navbar, Project, ButtonToggleDarkMode);
    - [ ] перенести из stories: ScrollToTop, AnimationScale3d, AnimationText, ButtonIconWithLink
-     с адаптацией под React 19 (раздел 6.3);
+         с адаптацией под React 19 (раздел 6.3);
    - [ ] скопировать `src/pages/**` (все страницы, включая SCSS);
    - [ ] скопировать `src/atoms/`, `src/types.ts`, `src/components/index.ts`, `src/pages/index.ts`.
 
 5. **Правка импортов**
    - [ ] применить все замены импортов из таблицы раздела 6.2;
    - [ ] удалить `import React from 'react'` там, где он больше не нужен (react-jsx transform):
-     `main.tsx`, компоненты анимаций и кнопок (при их переписывании);
+         `main.tsx`, компоненты анимаций и кнопок (при их переписывании);
    - [ ] убедиться, что в `src/` не осталось ни одного упоминания `stories`.
 
 6. **Конфигурация линтеров и тестов**
@@ -769,7 +776,7 @@ Object.defineProperty(window, 'matchMedia', {
    - [ ] `npm run test:run` — тесты зелёные;
    - [ ] `npm run build` — прод-сборка успешна (dist/);
    - [ ] `npm run preview` — сайт открывается, все 4 маршрута работают, тёмная тема
-     переключается, анимации воспроизводятся, картинки проектов загружаются.
+         переключается, анимации воспроизводятся, картинки проектов загружаются.
 
 8. **Финализация**
    - [ ] удалить из исходного каталога (или просто не переносить) всё Storybook-содержимое;
@@ -788,7 +795,7 @@ Object.defineProperty(window, 'matchMedia', {
 - [ ] переход на `/project/:id` — детальная страница, кнопки GitHub и Live Demo открываются в новой вкладке;
 - [ ] страница `/contacts` — заголовок с анимацией, ссылки Telegram и Email;
 - [ ] тёмная/светлая тема: кнопка в Navbar переключает тему, состояние сохраняется в localStorage,
-    отслеживается системная схема;
+      отслеживается системная схема;
 - [ ] favicon, manifest, robots.txt доступны по `/favicon.ico`, `/manifest.json`, `/robots.txt`;
 - [ ] в `node_modules` отсутствуют пакеты `storybook*`, `react-scripts`, `web-vitals`;
 - [ ] в проекте нет файлов `*.stories.*`, `.storybook/`, `src/stories/`, `.gitmodules`;
