@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 
@@ -48,6 +48,31 @@ describe('Project page', () => {
     expect(screen.getByRole('link', { name: /Live Demo/i })).toHaveAttribute(
       'href',
       'https://bank-modern-rhccoder.vercel.app/',
+    );
+  });
+
+  /**
+   * Проверяет, что после успешной загрузки обложки проекта к изображению
+   * и его контейнеру добавляются классы анимации появления
+   * (`project-details__cover_loaded` и `project-details__container__loaded`).
+   */
+  it('adds the loaded classes to the cover after the image load event', () => {
+    const { container } = render(
+      <MemoryRouter initialEntries={['/project/15']}>
+        <Routes>
+          <Route path="/project/:id" element={<ProjectPage />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    const cover = container.querySelector('.project-details__cover');
+    expect(cover).not.toBeNull();
+
+    fireEvent.load(cover as HTMLImageElement);
+
+    expect(cover).toHaveClass('project-details__cover_loaded');
+    expect(container.querySelector('.project-details__container')).toHaveClass(
+      'project-details__container__loaded',
     );
   });
 });

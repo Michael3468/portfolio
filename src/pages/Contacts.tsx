@@ -1,7 +1,19 @@
 import { AnimationScale3d } from '../components';
 import { styles } from '../shared/constants';
-import { getLetters } from './Contacts/model/lib';
+import { getLetters, replaceSpaceWithNbsp } from './Contacts/model/lib';
 
+/**
+ * Страница «Контакты».
+ *
+ * Рендерит заголовок первого уровня с анимированными буквами слова
+ * «Contacts» (буквы разбиваются через `getLetters` и оборачиваются
+ * в компонент `AnimationScale3d`; пробелы заменяются на неразрывные).
+ *
+ * Ниже заголовка выводится список контактов: местоположение
+ * (Санкт-Петербург), ссылка на Telegram и ссылка на Email.
+ *
+ * @returns {JSX.Element} Разметка страницы «Контакты».
+ */
 export default function Contacts() {
   const contactsString = getLetters('Contacts');
 
@@ -10,7 +22,7 @@ export default function Contacts() {
       <div className="container">
         <h1 className="title-1" style={{ textShadow: `${styles.mainTheme.textShadow}` }}>
           {contactsString.map((letter, index) => (
-            <AnimationScale3d key={index}>{letter === ' ' ? '\u00A0' : letter}</AnimationScale3d>
+            <AnimationScale3d key={`${index}-${letter}`}>{replaceSpaceWithNbsp(letter)}</AnimationScale3d>
           ))}
         </h1>
 

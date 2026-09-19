@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { getLetters } from './lib';
+import { getLetters, replaceSpaceWithNbsp } from './lib';
 
 /**
  * Набор тестов для функции `getLetters` страницы «Контакты».
@@ -26,5 +26,21 @@ describe('getLetters (Contacts)', () => {
    */
   it('returns an empty array for an empty string', () => {
     expect(getLetters('')).toEqual([]);
+  });
+});
+
+describe('replaceSpaceWithNbsp (Contacts)', () => {
+  /**
+   * Проверяет, что обычный пробел заменяется неразрывным (nbsp).
+   */
+  it('replaces a regular space with a non-breaking space', () => {
+    expect(replaceSpaceWithNbsp(' ')).toBe('\u00A0');
+  });
+
+  /**
+   * Проверяет, что обычные символы остаются без изменений.
+   */
+  it('leaves non-space characters unchanged', () => {
+    expect(replaceSpaceWithNbsp('C')).toBe('C');
   });
 });

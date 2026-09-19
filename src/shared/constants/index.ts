@@ -1,6 +1,3 @@
-import projectsList from './projectsList';
-import testTasksList from './testTasksList';
-import { styles } from './theme';
-
-export { projectsList, styles, testTasksList };
-
+export { default as projectsList } from './projectsList';
+export { default as testTasksList } from './testTasksList';
+export { styles } from './theme';

@@ -1,24 +1,30 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
+/**
+ * Читает значение из localStorage и возвращает его либо значение по умолчанию.
+ *
+ * @template T - тип хранимого значения.
+ * @param key - ключ в localStorage.
+ * @param defaultValue - значение, возвращаемое при отсутствии данных по ключу.
+ * @returns сохранённое значение либо defaultValue.
+ */
 const getStorageValue = <T>(key: string, defaultValue: T): T => {
   const savedData = localStorage.getItem(key);
-
-  let storageValue: T | null = null;
-  if (savedData) {
-    if (typeof savedData === 'string') {
-      storageValue = savedData as T;
-    } else {
-      storageValue = JSON.parse(savedData);
-    }
-  }
-  return storageValue || defaultValue;
+  return savedData ? (savedData as T) : defaultValue;
 };
 
 /**
- * Add generic type after useLocalStorage
+ * Хук синхронизирует состояние компонента с localStorage:
+ * при изменении значения оно автоматически сохраняется в localStorage по указанному ключу.
+ * Строки сохраняются как есть, остальные типы — через JSON.stringify.
  *
- * example: (for define toggle variable darkMode on site)
+ * @template T - тип сохраняемого значения.
+ * @param key - ключ, по которому значение хранится в localStorage.
+ * @param defaultValue - начальное значение, используемое при отсутствии данных по ключу.
+ * @returns кортеж из текущего значения и функции его обновления (аналог useState).
  *
+ * @example
+ * // определение переключаемой переменной darkMode на сайте:
  * type DarkMode = 'light' | 'dark';
  * const [darkMode, setDarkMode] = useLocalStorage<DarkMode>('darkMode', 'light');
  */

@@ -25,6 +25,10 @@ export default function Project() {
 
   const project = findProjectById(id);
 
+  if (!project) {
+    return null;
+  }
+
   /**
    * Обработчик события загрузки изображения проекта.
    *

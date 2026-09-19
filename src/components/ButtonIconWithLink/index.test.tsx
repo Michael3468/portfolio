@@ -37,4 +37,20 @@ describe('ButtonIconWithLink', () => {
     expect(anchor?.getAttribute('href')).toBeNull();
     expect(anchor?.getAttribute('target')).toBeNull();
   });
+
+  it('renders without a border when border is set to 0', () => {
+    render(<ButtonIconWithLink {...baseProps} border={0} />);
+
+    const link = screen.getByRole('link', { name: /GitHub/i });
+    // jsdom не раскладывает shorthand border в computed style,
+    // поэтому проверяем longhand-свойство borderStyle
+    expect(link).toHaveStyle({ borderStyle: 'none' });
+  });
+
+  it('renders the image without an alt attribute when altText is null', () => {
+    render(<ButtonIconWithLink {...baseProps} altText={null as unknown as string} />);
+
+    const img = screen.getByRole('img');
+    expect(img).not.toHaveAttribute('alt');
+  });
 });

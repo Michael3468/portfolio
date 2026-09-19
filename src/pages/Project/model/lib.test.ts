@@ -15,6 +15,12 @@ describe('findProjectById', () => {
   it('returns a project from projectsList by id', () => {
     const project = findProjectById('15');
 
+    expect(project).toBeDefined();
+
+    if (!project) {
+      throw new Error('Project with id "15" was not found in projectsList');
+    }
+
     expect(project.id).toBe(15);
     expect(project.title).toBe('React Landing');
   });
@@ -25,6 +31,12 @@ describe('findProjectById', () => {
    */
   it('returns a project from testTasksList when id is not in projectsList', () => {
     const project = findProjectById('29');
+
+    expect(project).toBeDefined();
+
+    if (!project) {
+      throw new Error('Project with id "29" was not found in testTasksList');
+    }
 
     expect(project.id).toBe(29);
     expect(project.title).toBe('React Landing');
