@@ -81,7 +81,16 @@ portfolio/
     ├── pages/
     │   ├── index.ts               # реэкспорт страниц
     │   ├── Home.tsx               # главная (Header + навыки)
-    │   ├── Contacts.tsx           # контакты (+ model/lib.ts)
+    │   ├── Contacts/              # контакты
+    │   │   ├── index.ts           # реэкспорт страницы
+    │   │   ├── Contacts.tsx       # страница контактов
+    │   │   ├── Contacts.types.ts  # типы ContactItem, ContactLink
+    │   │   ├── model/
+    │   │   │   ├── constants.ts   # локальные константы (CONTACTS_LIST)
+    │   │   │   └── lib.ts         # getLetters, replaceSpaceWithNbsp
+    │   │   └── UI/
+    │   │       ├── AnimatedTitle.tsx  # анимированный заголовок
+    │   │       └── ContactItem.tsx    # элемент списка контактов
     │   ├── Project/               # детальная страница проекта
     │   │   ├── index.ts           # реэкспорт страницы
     │   │   ├── Project.tsx        # страница проекта
