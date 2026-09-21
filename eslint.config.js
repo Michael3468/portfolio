@@ -6,6 +6,7 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import importHelpers from 'eslint-plugin-import-helpers';
 import importPlugin from 'eslint-plugin-import';
+import sonarjs from 'eslint-plugin-sonarjs';
 
 export default tseslint.config(
   { ignores: ['dist', 'node_modules'] },
@@ -49,6 +50,19 @@ export default tseslint.config(
           alphabetize: { order: 'asc', ignoreCase: true },
         },
       ],
+    },
+  },
+  // Официальный recommended-набор SonarSource (eslint-plugin-sonarjs v4):
+  // 1:1 правила SonarQube для JavaScript/TypeScript (sonar-*).
+  {
+    ...sonarjs.configs.recommended,
+    name: 'sonarjs/recommended',
+    files: ['src/**/*.{ts,tsx}'],
+    rules: {
+      // Сохраняем все recommended-правила sonarjs и уточняем порог
+      // когнитивной сложности = 15 (дефолт SonarQube Quality Gate)
+      ...sonarjs.configs.recommended.rules,
+      'sonarjs/cognitive-complexity': ['error', 15],
     },
   },
 );

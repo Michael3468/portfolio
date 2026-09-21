@@ -23,7 +23,9 @@ export default function Projects() {
 
   return (
     <main className="section">
-      {/* TODO: move 'container' class to mixin */}
+      {/* Класс 'container' задаёт общую ширину и центрирование контента
+          (определён в src/assets/styles/main.css); вынос в SCSS-mixin —
+          возможное улучшение для переиспользования в других страницах */}
       <div className="projects-list container">
         {projectsSections.map((item) => (
           <div className="projects-list__block" key={item.title.join('')}>

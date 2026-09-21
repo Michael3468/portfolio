@@ -23,6 +23,7 @@ export default function Home() {
                 Redux Thunk, MobX, NPM, BootStrap, TailwindCSS, Webpack, Vite
               </p>
             </li>
+
             <li className="content-list__item">
               <h2 className="title-2 text-shadow">Backend</h2>
               <p className="text-shadow">

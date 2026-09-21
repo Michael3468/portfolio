@@ -62,6 +62,19 @@ export default function AnimationText({
     },
   };
 
+  /**
+   * Возвращает отображаемый текст отдельного элемента анимации:
+   * в режиме `letters` обычные пробелы заменяются на неразрывные (\u00A0),
+   * чтобы сохранить визуальные отступы между буквами; в режиме `words`
+   * текст возвращается без изменений.
+   */
+  const getDisplayText = (item: string): string => {
+    if (animationType === 'letters' && item === ' ') {
+      return '\u00A0';
+    }
+    return item;
+  };
+
   return (
     <motion.div
       variants={container}
@@ -73,7 +86,7 @@ export default function AnimationText({
         // this motion uses parent 'initial' and 'animate' props and values
         // causes they have same names 'hidden' and 'visible'
         <motion.span key={index} variants={child} style={{ ...style }}>
-          {animationType === 'words' ? item : item === ' ' ? '\u00A0' : item}
+          {getDisplayText(item)}
         </motion.span>
       ))}
     </motion.div>
