@@ -14,7 +14,7 @@
 - Компоненты декларативные, без побочных эффектов вне `useEffect`.
 - Всё новое пишется на русском языке в комментариях и UI-текстах, код и имена — на английском.
 - Форматирование — Prettier, линтинг — ESLint 9 (flat config). Перед PR обязателен прогон
-  `npm run lint` и `npm run format`.
+  `npm run lint`, `npm run format` , `npx eslint .` и `npx tsc --noEmit -p tsconfig.app.json`.
 
 ## 2. Компоненты
 
