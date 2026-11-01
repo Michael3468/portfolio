@@ -82,9 +82,15 @@ export default function Project({ title, img, id, background }: ProjectProps) {
               background,
             }}
           >
+            {/* width/height задают соотношение сторон 4:3 (все превью такие) и резервируют место,
+                чтобы карточки не прыгали при загрузке; фактический размер задаёт CSS */}
             <img
               src={img}
               alt={title}
+              width={600}
+              height={450}
+              loading="lazy"
+              decoding="async"
               className={`project__img ${imgLoaded ? 'project__img_loaded' : ''}`}
               onLoad={handleImgLoaded}
             />

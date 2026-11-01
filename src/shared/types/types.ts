@@ -6,6 +6,7 @@ export interface ProjectItem {
   readonly skills: string;
   readonly img: string;
   readonly bigImg: string;
+  readonly bigImgSmall: string;
   readonly background: string;
   readonly gitHubLink: string;
   readonly liveDemo: string;

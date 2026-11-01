@@ -35,6 +35,7 @@ describe('projectsList', () => {
       expect(typeof project.skills).toBe('string');
       expect(typeof project.img).toBe('string');
       expect(typeof project.bigImg).toBe('string');
+      expect(typeof project.bigImgSmall).toBe('string');
       expect(typeof project.background).toBe('string');
       expect(typeof project.gitHubLink).toBe('string');
       expect(typeof project.liveDemo).toBe('string');

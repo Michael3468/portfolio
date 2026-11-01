@@ -34,6 +34,7 @@ describe('testTasksList', () => {
       expect(typeof task.skills).toBe('string');
       expect(typeof task.img).toBe('string');
       expect(typeof task.bigImg).toBe('string');
+      expect(typeof task.bigImgSmall).toBe('string');
       expect(typeof task.background).toBe('string');
       expect(typeof task.gitHubLink).toBe('string');
       expect(typeof task.liveDemo).toBe('string');
