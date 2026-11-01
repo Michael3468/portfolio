@@ -5,7 +5,7 @@
 
 Мигрирован с **Create React App (React 18) + Storybook** на **Vite + React 19** без Storybook.
 План миграции — [`MIGRATION_PLAN.md`](./MIGRATION_PLAN.md).
-Правила стиля и архитектуры кода — [`docs/style-guide.md`](./docs/style-guide.md).
+Правила стиля и архитектуры кода — [`agents/style-guide.md`](./agents/style-guide.md).
 
 ## Стек
 
@@ -21,17 +21,18 @@
 
 ## Команды
 
-| Команда            | Описание                                                |
-| ------------------ | ------------------------------------------------------- |
-| `npm install`      | Установка зависимостей                                  |
-| `npm run dev`      | Dev-сервер Vite (HMR), http://localhost:5173            |
-| `npm run build`    | Проверка типов (`tsc -b`) + production-сборка в `dist/` |
-| `npm run preview`  | Локальный просмотр production-сборки                    |
-| `npm test`         | Запуск тестов (Vitest, watch-режим)                     |
-| `npm run test:run` | Однократный запуск тестов                               |
-| `npm run lint`     | Проверка ESLint (flat config)                           |
-| `npm run lint:fix` | Автоисправление ESLint                                  |
-| `npm run format`   | Форматирование Prettier                                 |
+| Команда                 | Описание                                                |
+| ----------------------- | ------------------------------------------------------- |
+| `npm install`           | Установка зависимостей                                  |
+| `npm run dev`           | Dev-сервер Vite (HMR), http://localhost:5173            |
+| `npm run build`         | Проверка типов (`tsc -b`) + production-сборка в `dist/` |
+| `npm run preview`       | Локальный просмотр production-сборки                    |
+| `npm test`              | Запуск тестов (Vitest, watch-режим)                     |
+| `npm run test:run`      | Однократный запуск тестов                               |
+| `npm run test:coverage` | Coverage report (Vitest + provider v8)                  |
+| `npm run lint`          | Проверка ESLint (flat config)                           |
+| `npm run lint:fix`      | Автоисправление ESLint                                  |
+| `npm run format`        | Форматирование Prettier                                 |
 
 > Требуется Node.js **≥ 20.19** (проверено на Node 24). Версия зафиксирована в `.nvmrc`.
 
@@ -57,65 +58,110 @@ portfolio/
     ├── vite-env.d.ts              # типы Vite (бывший react-app-env.d.ts)
     ├── types.ts                   # реэкспорт общих типов из shared/types (DarkMode, ProjectItem)
     ├── atoms/
-    │   └── darkModeState.ts       # zustand-стор тёмной темы
+    │   ├── darkModeState.ts       # zustand-стор тёмной темы
+    │   └── darkModeState.test.ts  # тест zustand-стора
     ├── assets/
-    │   ├── icons/                 # иконки GitHub / Live Demo (из stories)
+    │   ├── icons/                 # иконки GitHub / Live Demo
     │   └── styles/                # main.css, reset.css, pulse-animation.css
     ├── hooks/
-    │   ├── useLocalStorage.ts     # хук localStorage (из stories)
-    │   └── detectDarkMode.ts      # определение системной темы (из stories)
+    │   ├── useLocalStorage.ts     # хук localStorage
+    │   ├── useLocalStorage.test.tsx  # тест хука
+    │   ├── detectDarkMode.ts      # определение системной темы
+    │   └── detectDarkMode.test.ts  # тест хука
     ├── components/
     │   ├── index.ts               # реэкспорт компонентов (баррель)
-    │   ├── ScrollToTop/           # скролл к началу при смене маршрута
+    │   ├── ScrollToTop/
+    │   │   ├── index.tsx          # скролл к началу при смене маршрута
+    │   │   └── index.test.tsx
     │   ├── Animations/
-    │   │   ├── AnimationScale3d/  # анимация букв
-    │   │   └── AnimationText/     # анимация слов/букв
-    │   ├── ButtonIconWithLink/    # кнопка с иконкой
-    │   ├── Footer/                # подвал с соцсетями
-    │   ├── Header/                # шапка с анимациями (+ model/lib.ts)
+    │   │   ├── AnimationScale3d/
+    │   │   │   ├── index.tsx     # анимация «rubber band» букв
+    │   │   │   └── index.test.tsx
+    │   │   └── AnimationText/
+    │   │       ├── index.tsx     # анимация слов/букв
+    │   │       └── index.test.tsx
+    │   ├── ButtonIconWithLink/
+    │   │   ├── index.tsx          # кнопка с иконкой
+    │   │   ├── index.test.tsx
+    │   │   └── styles.css
+    │   ├── Footer/
+    │   │   ├── index.tsx          # подвал с соцсетями
+    │   │   ├── index.test.tsx
+    │   │   ├── styles.css
+    │   │   └── icons/             # иконки соцсетей
+    │   ├── Header/
+    │   │   ├── index.tsx          # шапка с анимациями
+    │   │   ├── index.test.tsx
+    │   │   ├── model/
+    │   │   │   ├── lib.ts         # getLetters(text)
+    │   │   │   └── lib.test.ts
+    │   │   └── styles.css
     │   └── Navbar/
     │       ├── index.ts           # реэкспорт Navbar и UI/ButtonToggleDarkMode
     │       ├── Navbar.tsx         # навигация (логотип, ссылки, переключатель темы)
+    │       ├── Navbar.test.tsx
+    │       ├── styles.css
     │       └── UI/
-    │           └── ButtonToggleDarkMode.tsx  # переключатель тёмной темы
+    │           ├── ButtonToggleDarkMode.tsx  # переключатель тёмной темы
+    │           ├── ButtonToggleDarkMode.css
+    │           ├── ButtonToggleDarkMode.test.tsx
+    │           ├── colorMode.css  # CSS-переменные светлой/тёмной темы
+    │           ├── moon.svg
+    │           └── sun.svg
     ├── pages/
     │   ├── index.ts               # реэкспорт страниц
     │   ├── Home.tsx               # главная (Header + навыки)
-    │   ├── Contacts/              # контакты
+    │   ├── Home.test.tsx
+    │   ├── Contacts/
     │   │   ├── index.ts           # реэкспорт страницы
     │   │   ├── Contacts.tsx       # страница контактов
     │   │   ├── Contacts.types.ts  # типы ContactItem, ContactLink
+    │   │   ├── Contacts.test.tsx
     │   │   ├── model/
     │   │   │   ├── constants.ts   # локальные константы (CONTACTS_LIST)
-    │   │   │   └── lib.ts         # getLetters, replaceSpaceWithNbsp
+    │   │   │   ├── lib.ts         # getLetters, replaceSpaceWithNbsp
+    │   │   │   └── lib.test.ts
     │   │   └── UI/
     │   │       ├── AnimatedTitle.tsx  # анимированный заголовок
-    │   │       └── ContactItem.tsx    # элемент списка контактов
-    │   ├── Project/               # детальная страница проекта
+    │   │       ├── ContactItem.tsx    # элемент списка контактов
+    │   │       └── index.ts
+    │   ├── Project/
     │   │   ├── index.ts           # реэкспорт страницы
     │   │   ├── Project.tsx        # страница проекта
+    │   │   ├── Project.test.tsx
+    │   │   ├── styles.css
     │   │   └── model/
     │   │       ├── constants.ts   # локальные константы (BUTTON_GRADIENT)
-    │   │       └── lib.ts         # findProjectById(id)
-    │   └── Projects/              # список проектов
+    │   │       ├── lib.ts         # findProjectById(id)
+    │   │       └── lib.test.ts
+    │   └── Projects/
     │       ├── index.ts           # реэкспорт Projects и UI/Project
     │       ├── Projects.tsx       # страница списка проектов
+    │       ├── Projects.styles.scss
     │       ├── Projects.types.ts  # тип ProjectsSection
-    │       ├── model/lib.ts       # getLetters(text)
+    │       ├── Projects.test.tsx
+    │       ├── model/
+    │       │   ├── lib.ts         # getLetters(text)
+    │       │   └── lib.test.ts
     │       └── UI/
     │           ├── Project.tsx    # карточка проекта
+    │           ├── Project.css
+    │           ├── Project.test.tsx
     │           └── model/
-    │               └── constants.ts  # DEFAULT_SHADOW_COLOR, INNER_SHADOW_COLOR_DARK
+    │               ├── constants.ts  # DEFAULT_SHADOW_COLOR, INNER_SHADOW_COLOR_DARK
+    │               └── constants.test.ts
     └── shared/
         ├── assets/img/            # изображения проектов
         ├── constants/
         │   ├── index.ts           # реэкспорт констант
         │   ├── projectsList.ts    # список проектов
+        │   ├── projectsList.test.ts
         │   ├── testTasksList.ts   # список тестовых заданий
+        │   ├── testTasksList.test.ts
         │   └── theme.ts           # стили темы (styles.mainTheme)
-        └── types/
-            ├── index.ts           # реэкспорт типов
-            └── types.ts           # DarkMode, ProjectItem
+        ├── types/
+        │   ├── index.ts           # реэкспорт типов
+        │   └── types.ts           # DarkMode, ProjectItem
 ```
 
 ## Как перенесён проект (CRA → Vite)
@@ -173,26 +219,37 @@ portfolio/
 `src/setupTests.ts` подключает матчеры `@testing-library/jest-dom/vitest` и мок
 `window.matchMedia`, необходимый для компонентов тёмной темы в jsdom.
 
-Покрытые модули (~39 тестов в 16 файлах):
+Покрытие тестов — **99.29%** statements / **99.09%** branches / **100%** functions / **99.23%** lines.
+Все тесты проходят: **76 тестов в 26 файлах**.
 
-| Модуль                         | Файл теста                                               |
-| ------------------------------ | -------------------------------------------------------- |
-| `App` (маршрутизация)          | `src/App.test.tsx`                                       |
-| `Navbar`                       | `src/components/Navbar/Navbar.test.tsx`                  |
-| `ButtonToggleDarkMode`         | `src/components/Navbar/UI/ButtonToggleDarkMode.test.tsx` |
-| `Footer`                       | `src/components/Footer/index.test.tsx`                   |
-| `Header`                       | `src/components/Header/index.test.tsx`                   |
-| `ScrollToTop`                  | `src/components/ScrollToTop/index.test.tsx`              |
-| `ButtonIconWithLink`           | `src/components/ButtonIconWithLink/index.test.tsx`       |
-| `Home`                         | `src/pages/Home.test.tsx`                                |
-| `Contacts`                     | `src/pages/Contacts.test.tsx`                            |
-| `Projects`                     | `src/pages/Projects/Projects.test.tsx`                   |
-| `Project` (карточка)           | `src/pages/Projects/UI/Project.test.tsx`                 |
-| `Project` (страница)           | `src/pages/Project/Project.test.tsx`                     |
-| `findProjectById`              | `src/pages/Project/model/lib.test.ts`                    |
-| `useLocalStorage`              | `src/hooks/useLocalStorage.test.tsx`                     |
-| `detectDarkMode`               | `src/hooks/detectDarkMode.test.ts`                       |
-| `darkModeState` (zustand-стор) | `src/atoms/darkModeState.test.ts`                        |
+| Модуль                                             | Файл теста                                                  |
+| -------------------------------------------------- | ----------------------------------------------------------- |
+| `App` (маршрутизация)                              | `src/App.test.tsx`                                          |
+| `Navbar`                                           | `src/components/Navbar/Navbar.test.tsx`                     |
+| `ButtonToggleDarkMode`                             | `src/components/Navbar/UI/ButtonToggleDarkMode.test.tsx`    |
+| `Footer`                                           | `src/components/Footer/index.test.tsx`                      |
+| `Header`                                           | `src/components/Header/index.test.tsx`                      |
+| `ScrollToTop`                                      | `src/components/ScrollToTop/index.test.tsx`                 |
+| `ButtonIconWithLink`                               | `src/components/ButtonIconWithLink/index.test.tsx`          |
+| `Home`                                             | `src/pages/Home.test.tsx`                                   |
+| `Contacts`                                         | `src/pages/Contacts.test.tsx`                               |
+| `Projects`                                         | `src/pages/Projects/Projects.test.tsx`                      |
+| `Project` (карточка)                               | `src/pages/Projects/UI/Project.test.tsx`                    |
+| `Project` (страница)                               | `src/pages/Project/Project.test.tsx`                        |
+| `findProjectById`                                  | `src/pages/Project/model/lib.test.ts`                       |
+| `useLocalStorage`                                  | `src/hooks/useLocalStorage.test.tsx`                        |
+| `detectDarkMode`                                   | `src/hooks/detectDarkMode.test.ts`                          |
+| `theme` (`styles.mainTheme`)                       | `src/shared/constants/theme.test.ts`                        |
+| `projectsList`                                     | `src/shared/constants/projectsList.test.ts`                 |
+| `testTasksList`                                    | `src/shared/constants/testTasksList.test.ts`                |
+| `AnimationScale3d`                                 | `src/components/Animations/AnimationScale3d/index.test.tsx` |
+| `AnimationText`                                    | `src/components/Animations/AnimationText/index.test.tsx`    |
+| `getLetters` (`Header`)                            | `src/components/Header/model/lib.test.ts`                   |
+| `getLetters` / `replaceSpaceWithNbsp` (`Contacts`) | `src/pages/Contacts/model/lib.test.ts`                      |
+| `BUTTON_GRADIENT`                                  | `src/pages/Project/model/constants.test.ts`                 |
+| `getLetters` (`Projects`)                          | `src/pages/Projects/model/lib.test.ts`                      |
+| `DEFAULT_SHADOW_COLOR` / `INNER_SHADOW_COLOR_DARK` | `src/pages/Projects/UI/model/constants.test.ts`             |
+| `darkModeState` (zustand-стор)                     | `src/atoms/darkModeState.test.ts`                           |
 
 Команда запуска (однократно):
 
