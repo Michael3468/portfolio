@@ -17,11 +17,11 @@ describe('App', () => {
     expect(screen.getByRole('link', { name: /Contacts/i })).toBeInTheDocument();
   });
 
-  it('renders the 404 page for an unknown route', () => {
+  it('renders the 404 page for an unknown route', async () => {
     window.history.pushState({}, '', '/this-page-does-not-exist');
     render(<App />);
 
-    expect(screen.getByRole('heading', { level: 1, name: '404' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { level: 1, name: '404' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'На главную' })).toBeInTheDocument();
   });
 });

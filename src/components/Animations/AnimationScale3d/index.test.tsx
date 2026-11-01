@@ -6,7 +6,7 @@ import AnimationScale3d from './index';
 
 /**
  * Хранилище мок-объектов framer-motion: мок-метод `start` контролов
- * и колбэки, которые компонент передаёт в `motion.span`.
+ * и колбэки, которые компонент передаёт в `m.span`.
  */
 const mocks = vi.hoisted(() => {
   const start = vi.fn();
@@ -23,13 +23,13 @@ const mocks = vi.hoisted(() => {
   };
 });
 
-// Мок framer-motion: заменяем motion.span обычным span, сохраняя обработчики
+// Мок framer-motion: заменяем m.span обычным span, сохраняя обработчики
 // событий, а useAnimationControls — объектом с мок-методом start.
 vi.mock('framer-motion', async () => {
   const ReactModule = await import('react');
 
   return {
-    motion: {
+    m: {
       span: (props: Record<string, unknown>) => {
         const { children, onAnimationComplete, ...rest } = props;
         delete rest.animate;

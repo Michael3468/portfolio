@@ -1,4 +1,4 @@
-import { motion, useAnimationControls } from 'framer-motion';
+import { m, useAnimationControls } from 'framer-motion';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 
 export interface AnimationScale3dProps {
@@ -47,7 +47,7 @@ export default function AnimationScale3d({
   }, [rubberBand, startOnInit]);
 
   return (
-    <motion.span
+    <m.span
       style={{ display: 'inline-block', cursor: 'pointer' }}
       animate={controls}
       onMouseOver={() => {
@@ -56,6 +56,6 @@ export default function AnimationScale3d({
       onAnimationComplete={() => setIsPlaying(false)}
     >
       {children}
-    </motion.span>
+    </m.span>
   );
 }

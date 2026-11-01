@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { CSSProperties } from 'react';
 
 export interface AnimationTextProps {
@@ -76,7 +76,7 @@ export default function AnimationText({
   };
 
   return (
-    <motion.div
+    <m.div
       variants={container}
       initial="hidden"
       animate="visible"
@@ -85,10 +85,10 @@ export default function AnimationText({
       {items.map((item, index) => (
         // this motion uses parent 'initial' and 'animate' props and values
         // causes they have same names 'hidden' and 'visible'
-        <motion.span key={index} variants={child} style={{ ...style }}>
+        <m.span key={index} variants={child} style={{ ...style }}>
           {getDisplayText(item)}
-        </motion.span>
+        </m.span>
       ))}
-    </motion.div>
+    </m.div>
   );
 }
