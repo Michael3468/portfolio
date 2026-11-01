@@ -57,9 +57,9 @@ portfolio/
     ├── setupTests.ts              # jest-dom + мок window.matchMedia
     ├── vite-env.d.ts              # типы Vite (бывший react-app-env.d.ts)
     ├── types.ts                   # реэкспорт общих типов из shared/types (DarkMode, ProjectItem)
-    ├── atoms/
-    │   ├── darkModeState.ts       # zustand-стор тёмной темы
-    │   └── darkModeState.test.ts  # тест zustand-стора
+    ├── store/
+    │   ├── darkModeStore.ts       # zustand-стор тёмной темы
+    │   └── darkModeStore.test.ts  # тест zustand-стора
     ├── assets/
     │   ├── icons/                 # иконки GitHub / Live Demo
     │   └── styles/                # main.css, reset.css, pulse-animation.css
@@ -208,7 +208,7 @@ portfolio/
 `recoil@0.7.7` (последняя версия) несовместим с React 19: он обращается к удалённому
 `react.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED`, из-за чего падают и браузер,
 и тесты. По запасному плану из MIGRATION_PLAN.md состояние тёмной темы переведено на
-**zustand**. Затронутые файлы: `src/atoms/darkModeState.ts`,
+**zustand**. Затронутые файлы: `src/store/darkModeStore.ts`,
 `src/components/Navbar/UI/ButtonToggleDarkMode.tsx`, `src/pages/Projects/UI/Project.tsx`,
 `src/App.tsx` (убран `RecoilRoot`). Функциональность тёмной темы сохранена:
 переключение кнопкой, сохранение в `localStorage`, отслеживание системной схемы.
@@ -249,7 +249,7 @@ portfolio/
 | `BUTTON_GRADIENT`                                  | `src/pages/Project/model/constants.test.ts`                 |
 | `getLetters` (`Projects`)                          | `src/pages/Projects/model/lib.test.ts`                      |
 | `DEFAULT_SHADOW_COLOR` / `INNER_SHADOW_COLOR_DARK` | `src/pages/Projects/UI/model/constants.test.ts`             |
-| `darkModeState` (zustand-стор)                     | `src/atoms/darkModeState.test.ts`                           |
+| `darkModeStore` (zustand-стор)                 | `src/store/darkModeStore.test.ts`                           |
 
 Команда запуска (однократно):
 

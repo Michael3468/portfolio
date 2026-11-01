@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { useDarkModeStore } from './darkModeState';
+import { useDarkModeStore } from './darkModeStore';
 
-describe('darkModeState store', () => {
+describe('darkModeStore store', () => {
   beforeEach(() => {
     useDarkModeStore.setState({ darkMode: 'dark' });
   });

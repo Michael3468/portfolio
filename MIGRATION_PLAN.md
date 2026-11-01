@@ -55,7 +55,7 @@
 - `src/components/` кроме правок импортов;
 - `src/shared/` (константы, типы, картинки проектов);
 - `src/assets/` (styles, constants.ts);
-- `src/atoms/darkModeState.ts`;
+- `src/store/darkModeStore.ts`;
 - `src/types.ts`;
 - CSS-файлы компонентов, `colorMode.css`, `Projects.styles.scss`.
 
@@ -148,7 +148,7 @@ npm install -D stylelint@latest stylelint-config-standard@latest stylelint-confi
 | `react-dom`                                        | ^18.2.0            | ^19                | ядро                                                                   |
 | `react-router-dom`                                 | ^6.10.0            | ^7                 | роутинг; API BrowserRouter/Routes/NavLink/useParams обратно совместимы |
 | `framer-motion`                                    | ^10.12.4           | 11+/latest         | анимации (AnimationScale3d, AnimationText) — используются приложением  |
-| `recoil`                                           | ^0.7.7             | ^0.7.7 (см. риски) | тёмная тема (darkModeState)                                            |
+| `recoil`                                           | ^0.7.7             | ^0.7.7 (см. риски) | тёмная тема (darkModeStore)                                            |
 | `typescript`                                       | ^4.9.5             | latest (5.8+)      | типизация                                                              |
 | `@types/react`, `@types/react-dom`                 | ^18                | latest (19.x)      | типы React                                                             |
 | `sass`                                             | ^1.69.4            | latest             | компиляция `Projects.styles.scss`                                      |
@@ -186,7 +186,7 @@ public/robots.txt
 src/assets/styles/reset.css
 src/assets/styles/main.css            # содержит @import './reset.css' и Google Fonts — Vite это поддерживает
 src/assets/constants.ts
-src/atoms/darkModeState.ts
+src/store/darkModeStore.ts
 src/types.ts
 src/shared/constants/index.ts
 src/shared/constants/projectsList.ts  # относительные импорты ../assets/img/... работают
@@ -295,8 +295,8 @@ portflolio/
     ├── setupTests.ts                # jest-dom/vitest
     ├── vite-env.d.ts                # бывший react-app-env.d.ts
     ├── types.ts
-    ├── atoms/
-    │   └── darkModeState.ts
+    ├── store/
+    │   └── darkModeStore.ts
     ├── assets/
     │   ├── constants.ts
     │   ├── icons/
@@ -757,7 +757,7 @@ Object.defineProperty(window, 'matchMedia', {
    - [ ] перенести из stories: ScrollToTop, AnimationScale3d, AnimationText, ButtonIconWithLink
          с адаптацией под React 19 (раздел 6.3);
    - [ ] скопировать `src/pages/**` (все страницы, включая SCSS);
-   - [ ] скопировать `src/atoms/`, `src/types.ts`, `src/components/index.ts`, `src/pages/index.ts`.
+   - [ ] скопировать `src/store/`, `src/types.ts`, `src/components/index.ts`, `src/pages/index.ts`.
 
 5. **Правка импортов**
    - [ ] применить все замены импортов из таблицы раздела 6.2;
@@ -809,7 +809,7 @@ Object.defineProperty(window, 'matchMedia', {
    предупреждения в консоли или проблемы с типизацией. Порядок действий:
    - сначала проверить работу с `recoil@^0.7.7` (сайт работает, тема переключается);
    - при проблемах — **запасной план**: заменить Recoil на лёгкую альтернативу (zustand или
-     контекст + useState). Объём изменений ограничен: `src/atoms/darkModeState.ts`,
+     контекст + useState). Объём изменений ограничен: `src/store/darkModeStore.ts`,
      `src/components/ButtonToggleDarkMode/index.tsx`, `src/components/Project/Project.tsx`,
      `src/App.tsx` (убрать `RecoilRoot`). Это решение принимает исполнитель на этапе реализации
      после запуска dev-сервера.
