@@ -2,7 +2,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import type { Plugin } from 'vite';
 
-import { buildUrl, PageMeta, SITE_NAME, SITE_URL, STATIC_PAGES } from '../src/shared/constants/seo';
+import {
+  buildUrl,
+  PageMeta,
+  SITE_NAME,
+  SITE_URL,
+  STATIC_PAGES,
+} from '../src/shared/constants/seo.js';
 
 /** Теги, которые плагин заменяет в `<head>` готового index.html. */
 const MANAGED_HEAD_TAGS =

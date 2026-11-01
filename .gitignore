@@ -25,3 +25,10 @@ node_modules/.tmp
 
 .continue
 .vscode
+# Скриншоты для отладки (локальные)
+/browser-screenshots/
+
+# Отчёты и артефакты Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/

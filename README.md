@@ -4,7 +4,7 @@
 и тестовых заданий, детальные страницы проектов и контакты.
 
 Мигрирован с **Create React App (React 18) + Storybook** на **Vite + React 19** без Storybook.
-План миграции — [`MIGRATION_PLAN.md`](./MIGRATION_PLAN.md).
+План миграции — [`docs/archive/MIGRATION_PLAN.md`](./docs/archive/MIGRATION_PLAN.md) (архив).
 Правила стиля и архитектуры кода — [`agents/style-guide.md`](./agents/style-guide.md).
 
 ## Стек
@@ -206,7 +206,7 @@ portfolio/
 
 `recoil@0.7.7` (последняя версия) несовместим с React 19: он обращается к удалённому
 `react.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED`, из-за чего падают и браузер,
-и тесты. По запасному плану из MIGRATION_PLAN.md состояние тёмной темы переведено на
+и тесты. По запасному плану из docs/archive/MIGRATION_PLAN.md состояние тёмной темы переведено на
 **zustand**. Затронутые файлы: `src/store/darkModeStore.ts`,
 `src/components/Navbar/UI/ButtonToggleDarkMode.tsx`, `src/pages/Projects/UI/Project.tsx`,
 `src/App.tsx` (убран `RecoilRoot`). Функциональность тёмной темы сохранена:
