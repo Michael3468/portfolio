@@ -1,5 +1,5 @@
-import { projectsList, testTasksList } from '../../../shared/constants';
-import { ProjectItem } from '../../../shared/types';
+import { projectsList, testTasksList } from '@/shared/constants';
+import { ProjectItem } from '@/shared/types';
 
 /**
  * Находит проект по id сначала в списке проектов, затем в списке тестовых заданий.

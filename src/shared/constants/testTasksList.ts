@@ -1,12 +1,12 @@
-import project21Big from '../assets/img/testProjects/21-big.jpg';
-import project21 from '../assets/img/testProjects/21.jpg';
-import project22Big from '../assets/img/testProjects/22-big.jpg';
-import project22 from '../assets/img/testProjects/22.jpg';
-import project23Big from '../assets/img/testProjects/23-big.jpg';
-import project23 from '../assets/img/testProjects/23.jpg';
-import project29Big from '../assets/img/testProjects/29-big.jpg';
-import project29 from '../assets/img/testProjects/29.jpg';
-import { ProjectItem } from '../types';
+import project21Big from '@/shared/assets/img/testProjects/21-big.jpg';
+import project21 from '@/shared/assets/img/testProjects/21.jpg';
+import project22Big from '@/shared/assets/img/testProjects/22-big.jpg';
+import project22 from '@/shared/assets/img/testProjects/22.jpg';
+import project23Big from '@/shared/assets/img/testProjects/23-big.jpg';
+import project23 from '@/shared/assets/img/testProjects/23.jpg';
+import project29Big from '@/shared/assets/img/testProjects/29-big.jpg';
+import project29 from '@/shared/assets/img/testProjects/29.jpg';
+import { ProjectItem } from '@/shared/types';
 
 const testTasksList: ProjectItem[] = [
   {

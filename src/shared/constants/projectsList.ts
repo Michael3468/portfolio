@@ -1,16 +1,16 @@
-import project10Big from '../assets/img/projects/10-big.jpg';
-import project10 from '../assets/img/projects/10.jpg';
-import project11Big from '../assets/img/projects/11-big.jpg';
-import project11 from '../assets/img/projects/11.jpg';
-import project12Big from '../assets/img/projects/12-big.jpg';
-import project12 from '../assets/img/projects/12.jpg';
-import project13Big from '../assets/img/projects/13-big.jpg';
-import project13 from '../assets/img/projects/13.jpg';
-import project14Big from '../assets/img/projects/14-big.jpg';
-import project14 from '../assets/img/projects/14.jpg';
-import project15Big from '../assets/img/projects/15-big.jpg';
-import project15 from '../assets/img/projects/15.jpg';
-import { ProjectItem } from '../types';
+import project10Big from '@/shared/assets/img/projects/10-big.jpg';
+import project10 from '@/shared/assets/img/projects/10.jpg';
+import project11Big from '@/shared/assets/img/projects/11-big.jpg';
+import project11 from '@/shared/assets/img/projects/11.jpg';
+import project12Big from '@/shared/assets/img/projects/12-big.jpg';
+import project12 from '@/shared/assets/img/projects/12.jpg';
+import project13Big from '@/shared/assets/img/projects/13-big.jpg';
+import project13 from '@/shared/assets/img/projects/13.jpg';
+import project14Big from '@/shared/assets/img/projects/14-big.jpg';
+import project14 from '@/shared/assets/img/projects/14.jpg';
+import project15Big from '@/shared/assets/img/projects/15-big.jpg';
+import project15 from '@/shared/assets/img/projects/15.jpg';
+import { ProjectItem } from '@/shared/types';
 
 const projectsList: ProjectItem[] = [
   {

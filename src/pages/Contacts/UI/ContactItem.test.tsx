@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import type { ContactItem as ContactItemData } from '../Contacts.types';
+import type { ContactItem as ContactItemData } from '@/pages/Contacts/Contacts.types';
+
 import ContactItem from './ContactItem';
 
 /**

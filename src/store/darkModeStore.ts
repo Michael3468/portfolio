@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { DarkMode } from '../shared/types';
+import { DarkMode } from '@/shared/types';
 
 type DarkModeStore = {
   darkMode: DarkMode;

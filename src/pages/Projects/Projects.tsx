@@ -1,6 +1,7 @@
-import { AnimationScale3d } from '../../components';
-import { projectsList, styles, testTasksList } from '../../shared/constants';
-import { getLetters } from './model/lib';
+import { AnimationScale3d } from '@/components';
+import { projectsList, styles, testTasksList } from '@/shared/constants';
+import { getLetters, replaceSpaceWithNbsp } from '@/shared/lib';
+
 import { ProjectsSection } from './Projects.types';
 import Project from './UI/Project';
 
@@ -31,9 +32,7 @@ export default function Projects() {
           <div className="projects-list__block" key={item.title.join('')}>
             <h2 className="title-1" style={{ textShadow: `${styles.mainTheme.textShadow}` }}>
               {item.title.map((letter, index) => (
-                <AnimationScale3d key={index}>
-                  {letter === ' ' ? '\u00A0' : letter}
-                </AnimationScale3d>
+                <AnimationScale3d key={index}>{replaceSpaceWithNbsp(letter)}</AnimationScale3d>
               ))}
             </h2>
 

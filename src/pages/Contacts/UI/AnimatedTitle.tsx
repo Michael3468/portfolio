@@ -1,6 +1,6 @@
-import { AnimationScale3d } from '../../../components';
-import { styles } from '../../../shared/constants';
-import { getLetters, replaceSpaceWithNbsp } from '../model/lib';
+import { AnimationScale3d } from '@/components';
+import { styles } from '@/shared/constants';
+import { getLetters, replaceSpaceWithNbsp } from '@/shared/lib';
 
 export interface AnimatedTitleProps {
   readonly title: string;

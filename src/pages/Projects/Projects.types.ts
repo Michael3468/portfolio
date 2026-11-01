@@ -1,4 +1,4 @@
-import { ProjectItem } from '../../shared/types';
+import { ProjectItem } from '@/shared/types';
 
 export interface ProjectsSection {
   readonly title: string[];

@@ -8,7 +8,7 @@ import AnimatedTitle from './AnimatedTitle';
  * Мок компонента анимации: заменяем `AnimationScale3d` на простой `span`,
  * чтобы проверять развёртывание заголовка без запуска реальной анимации.
  */
-vi.mock('../../../components', () => ({
+vi.mock('@/components', () => ({
   AnimationScale3d: ({ children }: { children?: ReactNode }) => <span>{children}</span>,
 }));
 

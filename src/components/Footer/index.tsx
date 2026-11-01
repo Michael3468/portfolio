@@ -1,4 +1,5 @@
-import { styles } from '../../shared/constants';
+import { styles } from '@/shared/constants';
+
 import gitHub from './icons/gitHub.svg';
 import instagram from './icons/instagram.svg';
 import linkedIn from './icons/linkedIn.svg';

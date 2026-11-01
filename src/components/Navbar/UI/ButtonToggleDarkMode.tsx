@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 
-import detectDarkMode from '../../../hooks/detectDarkMode';
-import { useLocalStorage } from '../../../hooks/useLocalStorage';
-import { DarkMode } from '../../../shared/types';
-import { useDarkModeStore } from '../../../store/darkModeStore';
+import detectDarkMode from '@/hooks/detectDarkMode';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { DarkMode } from '@/shared/types';
+import { useDarkModeStore } from '@/store/darkModeStore';
+
 import moon from './moon.svg';
 import sun from './sun.svg';
 

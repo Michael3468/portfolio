@@ -1,4 +1,4 @@
-import type { ContactItem } from '../Contacts.types';
+import type { ContactItem } from '@/pages/Contacts/Contacts.types';
 
 /**
  * Заголовок страницы «Контакты».

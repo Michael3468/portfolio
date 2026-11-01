@@ -1,4 +1,4 @@
-import type { ContactItem, ContactLink } from '../Contacts.types';
+import type { ContactItem, ContactLink } from '@/pages/Contacts/Contacts.types';
 
 export interface ContactItemProps {
   readonly item: ContactItem;

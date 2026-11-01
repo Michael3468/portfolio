@@ -1,0 +1,24 @@
+# Сборки и зависимости
+node_modules/
+dist/
+build/
+.next/
+out/
+venv/
+.venv/
+env/
+
+# Логи и базы данных
+*.log
+*.sqlite
+.env
+.env.*
+
+# Медиа и тяжелые документы
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.pdf
+*.mp4

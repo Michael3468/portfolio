@@ -1,9 +1,9 @@
-import { styles } from '../../shared/constants';
 // Прямые импорты вместо '../index.ts' — чтобы избежать циклической зависимости:
 // src/components/index.ts реэкспортирует Header.
-import AnimationScale3d from '../Animations/AnimationScale3d';
-import AnimationText from '../Animations/AnimationText';
-import { getLetters } from './model/lib';
+import AnimationScale3d from '@/components/Animations/AnimationScale3d';
+import AnimationText from '@/components/Animations/AnimationText';
+import { styles } from '@/shared/constants';
+import { getLetters, replaceSpaceWithNbsp } from '@/shared/lib';
 import './styles.css';
 
 export default function Header() {
@@ -15,7 +15,7 @@ export default function Header() {
         <h1 className="header__title" style={{ textShadow: `${styles.mainTheme.textShadow}` }}>
           {name.map((letter, index) => (
             <AnimationScale3d key={index} startOnInit>
-              {letter === ' ' ? '\u00A0' : letter}
+              {replaceSpaceWithNbsp(letter)}
             </AnimationScale3d>
           ))}
         </h1>

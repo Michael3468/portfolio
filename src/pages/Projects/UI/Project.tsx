@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { useDarkModeStore } from '../../../store/darkModeStore';
+import { useDarkModeStore } from '@/store/darkModeStore';
+
 import { DEFAULT_SHADOW_COLOR, INNER_SHADOW_COLOR_DARK } from './model/constants';
 
 import './Project.css';
-import '../../../assets/styles/pulse-animation.css';
+import '@/assets/styles/pulse-animation.css';
 
 /**
  * Пропсы компонента карточки проекта.

@@ -1,7 +1,8 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useDarkModeStore } from '../../../store/darkModeStore';
+import { useDarkModeStore } from '@/store/darkModeStore';
+
 import ButtonToggleDarkMode from './ButtonToggleDarkMode';
 
 /**

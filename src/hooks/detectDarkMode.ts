@@ -1,4 +1,4 @@
-import { DarkMode } from '../shared/types';
+import { DarkMode } from '@/shared/types';
 
 /**
  * Проверяет, включена ли системная тёмная тема.

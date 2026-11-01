@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import gitHubIcon from '../../assets/icons/gitHub-black.svg';
-import liveDemo from '../../assets/icons/live-demo-icon.svg';
-import { ButtonIconWithLink } from '../../components';
-import { styles } from '../../shared/constants';
+import gitHubIcon from '@/assets/icons/gitHub-black.svg';
+import liveDemo from '@/assets/icons/live-demo-icon.svg';
+import { ButtonIconWithLink } from '@/components';
+import { styles } from '@/shared/constants';
+
 import { BUTTON_GRADIENT } from './model/constants';
 import { findProjectById } from './model/lib';
 

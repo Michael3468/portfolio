@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 
-import { styles } from '../../shared/constants';
+import { styles } from '@/shared/constants';
+
 // Прямой импорт подкомпонента вместо '../index.ts' — чтобы избежать циклической
 // зависимости: src/components/Navbar/index.ts реэкспортирует Navbar.
 import ButtonToggleDarkMode from './UI/ButtonToggleDarkMode';

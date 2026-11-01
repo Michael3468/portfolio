@@ -36,6 +36,9 @@
 
 > Требуется Node.js **≥ 20.19** (проверено на Node 24). Версия зафиксирована в `.nvmrc`.
 
+> Импорты вне текущего каталога пишутся через алиас `@` (= `src/`), например
+> `import { styles } from '@/shared/constants'`; относительные `./` — только внутри каталога.
+
 ## Структура проекта
 
 ```
@@ -56,7 +59,6 @@ portfolio/
     ├── App.test.tsx               # тест приложения (Vitest + Testing Library)
     ├── setupTests.ts              # jest-dom + мок window.matchMedia
     ├── vite-env.d.ts              # типы Vite (бывший react-app-env.d.ts)
-    ├── types.ts                   # реэкспорт общих типов из shared/types (DarkMode, ProjectItem)
     ├── store/
     │   ├── darkModeStore.ts       # zustand-стор тёмной темы
     │   └── darkModeStore.test.ts  # тест zustand-стора
@@ -92,9 +94,6 @@ portfolio/
     │   ├── Header/
     │   │   ├── index.tsx          # шапка с анимациями
     │   │   ├── index.test.tsx
-    │   │   ├── model/
-    │   │   │   ├── lib.ts         # getLetters(text)
-    │   │   │   └── lib.test.ts
     │   │   └── styles.css
     │   └── Navbar/
     │       ├── index.ts           # реэкспорт Navbar и UI/ButtonToggleDarkMode
@@ -119,8 +118,7 @@ portfolio/
     │   │   ├── Contacts.test.tsx
     │   │   ├── model/
     │   │   │   ├── constants.ts   # локальные константы (CONTACTS_LIST)
-    │   │   │   ├── lib.ts         # getLetters, replaceSpaceWithNbsp
-    │   │   │   └── lib.test.ts
+    │   │   │   └── constants.test.ts
     │   │   └── UI/
     │   │       ├── AnimatedTitle.tsx  # анимированный заголовок
     │   │       ├── ContactItem.tsx    # элемент списка контактов
@@ -140,9 +138,6 @@ portfolio/
     │       ├── Projects.styles.scss
     │       ├── Projects.types.ts  # тип ProjectsSection
     │       ├── Projects.test.tsx
-    │       ├── model/
-    │       │   ├── lib.ts         # getLetters(text)
-    │       │   └── lib.test.ts
     │       └── UI/
     │           ├── Project.tsx    # карточка проекта
     │           ├── Project.css
@@ -159,6 +154,10 @@ portfolio/
         │   ├── testTasksList.ts   # список тестовых заданий
         │   ├── testTasksList.test.ts
         │   └── theme.ts           # стили темы (styles.mainTheme)
+        ├── lib/
+        │   ├── index.ts           # реэкспорт утилит
+        │   ├── text.ts            # getLetters, replaceSpaceWithNbsp
+        │   └── text.test.ts
         ├── types/
         │   ├── index.ts           # реэкспорт типов
         │   └── types.ts           # DarkMode, ProjectItem
@@ -219,8 +218,8 @@ portfolio/
 `src/setupTests.ts` подключает матчеры `@testing-library/jest-dom/vitest` и мок
 `window.matchMedia`, необходимый для компонентов тёмной темы в jsdom.
 
-Покрытие тестов — **99.29%** statements / **99.09%** branches / **100%** functions / **99.23%** lines.
-Все тесты проходят: **76 тестов в 26 файлах**.
+Покрытие тестов — **100%** statements / branches / functions / lines.
+Все тесты проходят: **86 тестов в 27 файлах**.
 
 | Модуль                                             | Файл теста                                                  |
 | -------------------------------------------------- | ----------------------------------------------------------- |
@@ -231,25 +230,26 @@ portfolio/
 | `Header`                                           | `src/components/Header/index.test.tsx`                      |
 | `ScrollToTop`                                      | `src/components/ScrollToTop/index.test.tsx`                 |
 | `ButtonIconWithLink`                               | `src/components/ButtonIconWithLink/index.test.tsx`          |
+| `AnimationScale3d`                                 | `src/components/Animations/AnimationScale3d/index.test.tsx` |
+| `AnimationText`                                    | `src/components/Animations/AnimationText/index.test.tsx`    |
 | `Home`                                             | `src/pages/Home.test.tsx`                                   |
-| `Contacts`                                         | `src/pages/Contacts.test.tsx`                               |
+| `Contacts`                                         | `src/pages/Contacts/Contacts.test.tsx`                      |
+| `AnimatedTitle` (`Contacts`)                       | `src/pages/Contacts/UI/AnimatedTitle.test.tsx`              |
+| `ContactItem` (`Contacts`)                         | `src/pages/Contacts/UI/ContactItem.test.tsx`                |
+| константы `Contacts`                               | `src/pages/Contacts/model/constants.test.ts`                |
 | `Projects`                                         | `src/pages/Projects/Projects.test.tsx`                      |
 | `Project` (карточка)                               | `src/pages/Projects/UI/Project.test.tsx`                    |
+| `DEFAULT_SHADOW_COLOR` / `INNER_SHADOW_COLOR_DARK` | `src/pages/Projects/UI/model/constants.test.ts`             |
 | `Project` (страница)                               | `src/pages/Project/Project.test.tsx`                        |
 | `findProjectById`                                  | `src/pages/Project/model/lib.test.ts`                       |
+| `BUTTON_GRADIENT`                                  | `src/pages/Project/model/constants.test.ts`                 |
 | `useLocalStorage`                                  | `src/hooks/useLocalStorage.test.tsx`                        |
 | `detectDarkMode`                                   | `src/hooks/detectDarkMode.test.ts`                          |
+| `darkModeStore` (zustand-стор)                     | `src/store/darkModeStore.test.ts`                           |
 | `theme` (`styles.mainTheme`)                       | `src/shared/constants/theme.test.ts`                        |
 | `projectsList`                                     | `src/shared/constants/projectsList.test.ts`                 |
 | `testTasksList`                                    | `src/shared/constants/testTasksList.test.ts`                |
-| `AnimationScale3d`                                 | `src/components/Animations/AnimationScale3d/index.test.tsx` |
-| `AnimationText`                                    | `src/components/Animations/AnimationText/index.test.tsx`    |
-| `getLetters` (`Header`)                            | `src/components/Header/model/lib.test.ts`                   |
-| `getLetters` / `replaceSpaceWithNbsp` (`Contacts`) | `src/pages/Contacts/model/lib.test.ts`                      |
-| `BUTTON_GRADIENT`                                  | `src/pages/Project/model/constants.test.ts`                 |
-| `getLetters` (`Projects`)                          | `src/pages/Projects/model/lib.test.ts`                      |
-| `DEFAULT_SHADOW_COLOR` / `INNER_SHADOW_COLOR_DARK` | `src/pages/Projects/UI/model/constants.test.ts`             |
-| `darkModeStore` (zustand-стор)                 | `src/store/darkModeStore.test.ts`                           |
+| `getLetters` / `replaceSpaceWithNbsp`              | `src/shared/lib/text.test.ts`                               |
 
 Команда запуска (однократно):
 
