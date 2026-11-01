@@ -15,12 +15,12 @@ import ButtonToggleDarkMode from './ButtonToggleDarkMode';
 describe('ButtonToggleDarkMode', () => {
   /**
    * Сбрасывает окружение перед каждым тестом:
-   * очищает localStorage, удаляет класс `dark` с body
+   * очищает localStorage, удаляет класс `dark` с <html>
    * и возвращает хранилище темы (darkMode store) в состояние `dark`.
    */
   beforeEach(() => {
     localStorage.clear();
-    document.body.classList.remove('dark');
+    document.documentElement.classList.remove('dark');
     useDarkModeStore.setState({ darkMode: 'dark' });
   });
 
@@ -50,7 +50,7 @@ describe('ButtonToggleDarkMode', () => {
     fireEvent.click(toggle);
 
     expect(toggle).toHaveAttribute('aria-pressed', 'true');
-    expect(document.body.classList.contains('dark')).toBe(true);
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
     expect(localStorage.getItem('darkMode')).toBe('dark');
   });
 
@@ -67,7 +67,7 @@ describe('ButtonToggleDarkMode', () => {
     fireEvent.click(toggle);
 
     expect(toggle).toHaveAttribute('aria-pressed', 'false');
-    expect(document.body.classList.contains('dark')).toBe(false);
+    expect(document.documentElement.classList.contains('dark')).toBe(false);
     expect(localStorage.getItem('darkMode')).toBe('light');
   });
 
@@ -109,14 +109,14 @@ describe('ButtonToggleDarkMode', () => {
         changeListener?.({ matches: true });
       });
 
-      expect(document.body.classList.contains('dark')).toBe(true);
+      expect(document.documentElement.classList.contains('dark')).toBe(true);
       expect(localStorage.getItem('darkMode')).toBe('dark');
 
       act(() => {
         changeListener?.({ matches: false });
       });
 
-      expect(document.body.classList.contains('dark')).toBe(false);
+      expect(document.documentElement.classList.contains('dark')).toBe(false);
       expect(localStorage.getItem('darkMode')).toBe('light');
     } finally {
       vi.unstubAllGlobals();

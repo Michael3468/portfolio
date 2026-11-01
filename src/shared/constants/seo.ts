@@ -1,6 +1,6 @@
 /**
  * Базовый адрес сайта. Нужен для canonical, og:url, sitemap.xml и robots.txt.
- * TODO: Перед деплоем заменить на реальный домен.
+ * Перед деплоем заменить на реальный домен.
  */
 export const SITE_URL = 'https://example.com';
 

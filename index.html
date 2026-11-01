@@ -9,6 +9,30 @@
     <link rel="apple-touch-icon" href="/logo192.png" />
     <link rel="manifest" href="/manifest.json" />
     <title>Portfolio</title>
+    <script>
+      // Выставляет тему до первой отрисовки, чтобы не было вспышки неверной темы (FOUC).
+      // Логика совпадает с getInitialDarkMode() в src/store/darkModeStore.ts.
+      (function () {
+        var theme = 'light';
+        try {
+          var saved = localStorage.getItem('darkMode');
+          if (saved === 'light' || saved === 'dark') {
+            theme = saved;
+          } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            theme = 'dark';
+          }
+        } catch (e) {
+          // localStorage недоступен — остаётся системная тема или светлая
+        }
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        }
+        var themeColor = document.querySelector('meta[name="theme-color"]');
+        if (themeColor) {
+          themeColor.setAttribute('content', theme === 'dark' ? '#252526' : '#c1c1c1');
+        }
+      })();
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

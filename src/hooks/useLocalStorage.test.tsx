@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useLocalStorage } from './useLocalStorage';
 
@@ -104,15 +104,36 @@ describe('useLocalStorage', () => {
   });
 
   /**
-   * Проверяет, что хук не падает и возвращает необработанную строку,
-   * когда в localStorage хранится некорректный JSON.
+   * Проверяет, что хук не падает и возвращает значение по умолчанию,
+   * когда в localStorage для нестрокового значения лежит некорректный JSON.
    */
-  it('does not crash and returns the raw string when localStorage contains invalid JSON', () => {
+  it('returns the default value when a non-string value has invalid JSON', () => {
     localStorage.setItem('counter', '{not-valid-json');
 
     render(<StorageHarness storageKey="counter" defaultValue={0} />);
 
-    expect(screen.getByTestId('value')).toHaveTextContent('{not-valid-json');
+    expect(screen.getByTestId('value')).toHaveTextContent('0');
+  });
+
+  /**
+   * Проверяет, что при недоступном localStorage хук возвращает значение по умолчанию
+   * и не падает при обновлении.
+   */
+  it('keeps working in memory when localStorage throws', () => {
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new DOMException('denied', 'SecurityError');
+    });
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('quota', 'QuotaExceededError');
+    });
+
+    render(<StorageHarness storageKey="counter" defaultValue={0} />);
+    expect(screen.getByTestId('value')).toHaveTextContent('0');
+
+    fireEvent.click(screen.getByRole('button', { name: 'update' }));
+    expect(screen.getByTestId('value')).toHaveTextContent('42');
+
+    vi.restoreAllMocks();
   });
 
   /**

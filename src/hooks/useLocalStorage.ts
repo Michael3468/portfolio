@@ -3,14 +3,45 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 /**
  * Читает значение из localStorage и возвращает его либо значение по умолчанию.
  *
+ * Строковое значение по умолчанию означает, что в хранилище лежит строка «как есть».
+ * Для остальных типов значение парсится из JSON. Если localStorage недоступен
+ * (приватный режим, запрет доступа) или JSON повреждён, возвращается значение по умолчанию.
+ *
  * @template T - тип хранимого значения.
  * @param key - ключ в localStorage.
- * @param defaultValue - значение, возвращаемое при отсутствии данных по ключу.
+ * @param defaultValue - значение, возвращаемое при отсутствии или ошибке чтения.
  * @returns сохранённое значение либо defaultValue.
  */
-const getStorageValue = <T>(key: string, defaultValue: T): T => {
-  const savedData = localStorage.getItem(key);
-  return savedData ? (savedData as T) : defaultValue;
+const readStorage = <T>(key: string, defaultValue: T): T => {
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw === null) {
+      return defaultValue;
+    }
+    if (typeof defaultValue === 'string') {
+      return raw as T;
+    }
+    return JSON.parse(raw) as T;
+  } catch {
+    return defaultValue;
+  }
+};
+
+/**
+ * Сохраняет значение в localStorage. Строки пишутся как есть, остальные типы — через JSON.stringify.
+ * Ошибки записи (переполнение квоты, недоступное хранилище) игнорируются: состояние остаётся
+ * в памяти компонента, просто не переживёт перезагрузку страницы.
+ *
+ * @template T - тип сохраняемого значения.
+ * @param key - ключ в localStorage.
+ * @param value - значение для сохранения.
+ */
+const writeStorage = <T>(key: string, value: T): void => {
+  try {
+    localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
+  } catch {
+    // localStorage недоступен или заполнен — продолжаем работу без сохранения
+  }
 };
 
 /**
@@ -32,14 +63,10 @@ export const useLocalStorage = <T>(
   key: string,
   defaultValue: T,
 ): [T, Dispatch<SetStateAction<T>>] => {
-  const [value, setValue] = useState(() => getStorageValue<T>(key, defaultValue));
+  const [value, setValue] = useState(() => readStorage<T>(key, defaultValue));
 
   useEffect(() => {
-    if (typeof value === 'string') {
-      localStorage.setItem(key, value);
-    } else {
-      localStorage.setItem(key, JSON.stringify(value));
-    }
+    writeStorage(key, value);
   }, [key, value]);
 
   return [value, setValue];

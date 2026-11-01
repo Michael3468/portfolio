@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
 
-import detectDarkMode from '@/hooks/detectDarkMode';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { DarkMode } from '@/shared/types';
-import { useDarkModeStore } from '@/store/darkModeStore';
+import { DARK_MODE_STORAGE_KEY, getInitialDarkMode, useDarkModeStore } from '@/store/darkModeStore';
 
 import moon from './moon.svg';
 import sun from './sun.svg';
@@ -11,7 +10,10 @@ import sun from './sun.svg';
 import './ButtonToggleDarkMode.css';
 
 export default function ButtonToggleDarkMode() {
-  const [darkMode, setDarkMode] = useLocalStorage<DarkMode>('darkMode', detectDarkMode());
+  const [darkMode, setDarkMode] = useLocalStorage<DarkMode>(
+    DARK_MODE_STORAGE_KEY,
+    getInitialDarkMode(),
+  );
   const setDarkModeStore = useDarkModeStore((state) => state.setDarkMode);
 
   const toggleDarkMode = () => {
@@ -19,11 +21,8 @@ export default function ButtonToggleDarkMode() {
   };
 
   useEffect(() => {
-    if (darkMode === 'dark') {
-      document.body.classList.add('dark');
-    } else {
-      document.body.classList.remove('dark');
-    }
+    // Класс стоит на <html>: inline-скрипт в index.html ставит его до отрисовки
+    document.documentElement.classList.toggle('dark', darkMode === 'dark');
 
     setDarkModeStore(darkMode);
   }, [darkMode, setDarkModeStore]);
