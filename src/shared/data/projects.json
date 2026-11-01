@@ -1,0 +1,122 @@
+[
+  {
+    "id": 15,
+    "title": "React Landing",
+    "skills": "React, TailwindCSS, Vite",
+    "section": "project",
+    "img": "projects/15.webp",
+    "bigImg": "projects/15-big.webp",
+    "bigImgSmall": "projects/15-big-sm.webp",
+    "background": "rgb(0, 219, 255)",
+    "gitHubLink": "https://github.com/Michael3468/bank-modern",
+    "liveDemo": "https://bank-modern-rhccoder.vercel.app/"
+  },
+  {
+    "id": 14,
+    "title": "Blog",
+    "skills": "MongoDB, ExpressJS, React, Node.js, Mongoose, Axios",
+    "section": "project",
+    "img": "projects/14.webp",
+    "bigImg": "projects/14-big.webp",
+    "bigImgSmall": "projects/14-big-sm.webp",
+    "background": "rgb(76, 230, 7)",
+    "gitHubLink": "https://github.com/Michael3468/mern-blog",
+    "liveDemo": "https://mern-blog-fipk.onrender.com/"
+  },
+  {
+    "id": 13,
+    "title": "Social",
+    "skills": "Next.js, Next-Auth, Emoji-Mart, TailwindCSS, TypeScript, RecoilJS, Firebase",
+    "section": "project",
+    "img": "projects/13.webp",
+    "bigImg": "projects/13-big.webp",
+    "bigImgSmall": "projects/13-big-sm.webp",
+    "background": "rgb(98, 0, 153)",
+    "gitHubLink": "https://github.com/Michael3468/twitter-clone",
+    "liveDemo": "https://twitter-clone-rhccoder.vercel.app/"
+  },
+  {
+    "id": 12,
+    "title": "jQuery plugin",
+    "skills": "Pug, SCSS, jQuery, TypeScript, Jest, MVP, Webpack",
+    "section": "project",
+    "img": "projects/12.webp",
+    "bigImg": "projects/12-big.webp",
+    "bigImgSmall": "projects/12-big-sm.webp",
+    "background": "rgb(54, 54, 255)",
+    "gitHubLink": "https://github.com/Michael3468/RangeSlider",
+    "liveDemo": "https://Michael3468.github.io/RangeSlider/"
+  },
+  {
+    "id": 11,
+    "title": "Booking Service",
+    "skills": "Pug, SCSS, JavaScript, Webpack",
+    "section": "project",
+    "img": "projects/11.webp",
+    "bigImg": "projects/11-big.webp",
+    "bigImgSmall": "projects/11-big-sm.webp",
+    "background": "rgb(0, 255, 143)",
+    "gitHubLink": "https://github.com/Michael3468/BookingService",
+    "liveDemo": "https://Michael3468.github.io/BookingService/"
+  },
+  {
+    "id": 10,
+    "title": "Landing",
+    "skills": "Pug, SCSS, JavaScript, jQuery",
+    "section": "project",
+    "img": "projects/10.webp",
+    "bigImg": "projects/10-big.webp",
+    "bigImgSmall": "projects/10-big-sm.webp",
+    "background": "rgb(236, 213, 13)",
+    "gitHubLink": "https://github.com/Michael3468/LuxRest",
+    "liveDemo": "https://Michael3468.github.io/LuxRest/"
+  },
+  {
+    "id": 29,
+    "title": "React Landing",
+    "skills": "React, Typescript, Vite",
+    "section": "testTask",
+    "img": "testProjects/29.webp",
+    "bigImg": "testProjects/29-big.webp",
+    "bigImgSmall": "testProjects/29-big-sm.webp",
+    "background": "rgb(255, 178, 32)",
+    "gitHubLink": "https://github.com/Michael3468/astrum-entertainment-test",
+    "liveDemo": "https://astrum-entertainment-test.vercel.app/"
+  },
+  {
+    "id": 23,
+    "title": "React Saga TODO",
+    "skills": "React, Typescript, Saga, Vite",
+    "section": "testTask",
+    "img": "testProjects/23.webp",
+    "bigImg": "testProjects/23-big.webp",
+    "bigImgSmall": "testProjects/23-big-sm.webp",
+    "background": "rgb(187, 7, 167)",
+    "gitHubLink": "https://github.com/Michael3468/react-test-task",
+    "liveDemo": "https://react-test-task-rhccoder.vercel.app/"
+  },
+  {
+    "id": 22,
+    "title": "Vue TODO",
+    "skills": "Vue, Typescript, Vite",
+    "section": "testTask",
+    "img": "testProjects/22.webp",
+    "bigImg": "testProjects/22-big.webp",
+    "bigImgSmall": "testProjects/22-big-sm.webp",
+    "background": "rgb(63, 251, 11)",
+    "gitHubLink": "https://github.com/Michael3468/vue3-test-task-2",
+    "liveDemo": "https://vue3-test-task-2.vercel.app"
+  },
+  {
+    "id": 21,
+    "title": "Vue Landing",
+    "skills": "Vue, Typescript, Vite",
+    "section": "testTask",
+    "img": "testProjects/21.webp",
+    "bigImg": "testProjects/21-big.webp",
+    "bigImgSmall": "testProjects/21-big-sm.webp",
+    "background": "rgb(94, 69, 185)",
+    "gitHubLink": "https://github.com/Michael3468/vue-test-task",
+    "liveDemo": "https://vue-test-task-rhccoder.vercel.app/"
+  }
+]

@@ -42,7 +42,7 @@ export default function Projects() {
             <ul className="projects-list__block-items">
               {item.projects.map((project) => (
                 <Project
-                  key={project.title}
+                  key={project.id}
                   title={project.title}
                   img={project.img}
                   id={project.id}

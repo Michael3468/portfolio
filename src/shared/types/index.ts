@@ -1,1 +1,1 @@
-export type { DarkMode, ProjectItem } from './types';
+export type { DarkMode, ProjectItem, ProjectSection } from './types';

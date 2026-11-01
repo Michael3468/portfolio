@@ -1,3 +1,2 @@
-export { default as projectsList } from './projectsList';
-export { default as testTasksList } from './testTasksList';
+export { projects, projectsList, testTasksList } from './projects';
 export { styles } from './theme';
