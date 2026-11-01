@@ -10,7 +10,7 @@ export interface AnimationTextProps {
   readonly hiddenY?: number;
   readonly visibleX?: number;
   readonly visibleY?: number;
-  readonly dumping?: number;
+  readonly damping?: number;
   readonly stiffness?: number;
   readonly style?: CSSProperties;
 }
@@ -24,7 +24,7 @@ export default function AnimationText({
   hiddenY = 20,
   visibleX = 0,
   visibleY = 0,
-  dumping = 12,
+  damping = 12,
   stiffness = 100,
   style = {},
 }: AnimationTextProps) {
@@ -45,7 +45,7 @@ export default function AnimationText({
       y: hiddenY,
       transition: {
         type: 'spring' as const,
-        dumping,
+        damping,
         stiffness,
       },
     },
@@ -56,7 +56,7 @@ export default function AnimationText({
       y: visibleY,
       transition: {
         type: 'spring' as const,
-        dumping,
+        damping,
         stiffness,
       },
     },
