@@ -77,11 +77,11 @@ describe('Project page', () => {
   });
 
   /**
-   * Проверяет, что для несуществующего id страница проекта
-   * ничего не рендерит (ветка `if (!project) return null`).
+   * Проверяет, что для несуществующего id страница показывает
+   * сообщение «Проект не найден» и ссылку на главную, а не пустой экран.
    */
-  it('renders nothing when the project does not exist', () => {
-    const { container } = render(
+  it('renders the not-found message when the project does not exist', () => {
+    render(
       <MemoryRouter initialEntries={['/project/999']}>
         <Routes>
           <Route path="/project/:id" element={<ProjectPage />} />
@@ -89,7 +89,8 @@ describe('Project page', () => {
       </MemoryRouter>,
     );
 
-    expect(container).toBeEmptyDOMElement();
-    expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: '404' })).toBeInTheDocument();
+    expect(screen.getByText('Проект не найден')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'На главную' })).toHaveAttribute('href', '/');
   });
 });

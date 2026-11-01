@@ -1,4 +1,5 @@
 export { Contacts } from './Contacts';
 export { default as Home } from './Home';
+export { default as NotFound } from './NotFound';
 export { default as Project } from './Project';
 export { Projects } from './Projects';

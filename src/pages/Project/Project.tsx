@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import gitHubIcon from '@/assets/icons/gitHub-black.svg';
 import liveDemo from '@/assets/icons/live-demo-icon.svg';
 import { ButtonIconWithLink } from '@/components';
+import NotFound from '@/pages/NotFound';
 import { styles } from '@/shared/constants';
 
 import { BUTTON_GRADIENT } from './model/constants';
@@ -27,7 +28,7 @@ export default function Project() {
   const project = findProjectById(id);
 
   if (!project) {
-    return null;
+    return <NotFound message="Проект не найден" />;
   }
 
   /**
