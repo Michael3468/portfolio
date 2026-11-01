@@ -33,6 +33,31 @@ function StorageHarness({ storageKey, defaultValue }: StorageHarnessProps) {
 }
 
 /**
+ * Вспомогательный компонент для тестирования строковых значений хранилища.
+ */
+interface StringStorageHarnessProps {
+  readonly storageKey: string;
+  readonly defaultValue: string;
+}
+
+/**
+ * Вспомогательный компонент, оборачивающий хук `useLocalStorage`
+ * для строковых значений и позволяющий проверить их сохранение.
+ */
+function StringStorageHarness({ storageKey, defaultValue }: StringStorageHarnessProps) {
+  const [value, setValue] = useLocalStorage<string>(storageKey, defaultValue);
+
+  return (
+    <div>
+      <span data-testid="value">{value}</span>
+      <button type="button" onClick={() => setValue('updated-value')}>
+        update
+      </button>
+    </div>
+  );
+}
+
+/**
  * Набор тестов для хука `useLocalStorage`.
  */
 describe('useLocalStorage', () => {
@@ -88,5 +113,22 @@ describe('useLocalStorage', () => {
     render(<StorageHarness storageKey="counter" defaultValue={0} />);
 
     expect(screen.getByTestId('value')).toHaveTextContent('{not-valid-json');
+  });
+
+  /**
+   * Проверяет, что для строковых значений хук сохраняет значение
+   * в localStorage «как есть», без JSON-сериализации.
+   */
+  it('stores string values without JSON serialization', () => {
+    localStorage.setItem('stringKey', 'hello');
+
+    render(<StringStorageHarness storageKey="stringKey" defaultValue="world" />);
+
+    expect(screen.getByTestId('value')).toHaveTextContent('hello');
+
+    fireEvent.click(screen.getByRole('button', { name: 'update' }));
+
+    expect(screen.getByTestId('value')).toHaveTextContent('updated-value');
+    expect(localStorage.getItem('stringKey')).toBe('updated-value');
   });
 });

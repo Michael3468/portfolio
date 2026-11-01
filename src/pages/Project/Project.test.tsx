@@ -75,4 +75,21 @@ describe('Project page', () => {
       'project-details__container__loaded',
     );
   });
+
+  /**
+   * Проверяет, что для несуществующего id страница проекта
+   * ничего не рендерит (ветка `if (!project) return null`).
+   */
+  it('renders nothing when the project does not exist', () => {
+    const { container } = render(
+      <MemoryRouter initialEntries={['/project/999']}>
+        <Routes>
+          <Route path="/project/:id" element={<ProjectPage />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    expect(container).toBeEmptyDOMElement();
+    expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
+  });
 });
