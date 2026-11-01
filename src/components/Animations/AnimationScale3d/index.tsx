@@ -1,4 +1,3 @@
-// npm install framer-motion
 import { motion, useAnimationControls } from 'framer-motion';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 
@@ -24,7 +23,7 @@ export default function AnimationScale3d({
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   const rubberBand = useCallback(() => {
-    controls.start({
+    void controls.start({
       transform: [
         'scale3d(1, 1, 1)',
         'scale3d(1.4, .55, 1)',
