@@ -13,6 +13,7 @@ export interface AnimationTextProps {
   readonly damping?: number;
   readonly stiffness?: number;
   readonly style?: CSSProperties;
+  readonly className?: string;
 }
 
 export default function AnimationText({
@@ -27,6 +28,7 @@ export default function AnimationText({
   damping = 12,
   stiffness = 100,
   style = {},
+  className,
 }: AnimationTextProps) {
   const items = animationType === 'words' ? text.split(' ') : text.split('');
 
@@ -85,7 +87,7 @@ export default function AnimationText({
       {items.map((item, index) => (
         // this motion uses parent 'initial' and 'animate' props and values
         // causes they have same names 'hidden' and 'visible'
-        <m.span key={index} variants={child} style={{ ...style }}>
+        <m.span key={index} variants={child} style={{ ...style }} className={className}>
           {getDisplayText(item)}
         </m.span>
       ))}

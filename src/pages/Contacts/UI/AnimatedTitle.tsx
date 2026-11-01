@@ -1,5 +1,4 @@
 import { AnimationScale3d } from '@/components';
-import { styles } from '@/shared/constants';
 import { getLetters, replaceSpaceWithNbsp } from '@/shared/lib';
 
 export interface AnimatedTitleProps {
@@ -21,7 +20,7 @@ export default function AnimatedTitle({ title }: AnimatedTitleProps) {
   const letters = getLetters(title);
 
   return (
-    <h1 className="title-1" style={{ textShadow: `${styles.mainTheme.textShadow}` }}>
+    <h1 className="title-1 main-text-shadow">
       {letters.map((letter, index) => (
         <AnimationScale3d key={`${index}-${letter}`}>
           {replaceSpaceWithNbsp(letter)}

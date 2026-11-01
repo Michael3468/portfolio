@@ -2,7 +2,6 @@
 // src/components/index.ts реэкспортирует Header.
 import AnimationScale3d from '@/components/Animations/AnimationScale3d';
 import AnimationText from '@/components/Animations/AnimationText';
-import { styles } from '@/shared/constants';
 import { getLetters, replaceSpaceWithNbsp } from '@/shared/lib';
 import './styles.css';
 
@@ -12,7 +11,7 @@ export default function Header() {
   return (
     <header className="header">
       <div className="header__wrapper">
-        <h1 className="header__title" style={{ textShadow: `${styles.mainTheme.textShadow}` }}>
+        <h1 className="header__title main-text-shadow">
           {name.map((letter, index) => (
             <AnimationScale3d key={index} startOnInit>
               {replaceSpaceWithNbsp(letter)}
@@ -23,11 +22,11 @@ export default function Header() {
           text="frontend developer"
           animationType="words"
           delayChildren={3}
+          className="main-text-shadow"
           style={{
             fontSize: 36,
             fontWeight: 'bold',
             marginRight: 15,
-            textShadow: `${styles.mainTheme.textShadow}`,
           }}
         />
 
@@ -39,7 +38,7 @@ export default function Header() {
             delayChildren={5}
             hiddenX={-20}
             hiddenY={-20}
-            style={{ textShadow: `${styles.mainTheme.textShadow}` }}
+            className="main-text-shadow"
           />
         </div>
       </div>

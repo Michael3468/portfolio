@@ -12,19 +12,13 @@ export default defineConfig({
       '@': path.resolve(import.meta.dirname, 'src'),
     },
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        // В Vite 8 поддерживается только modern Sass API (legacy удалён)
-        silenceDeprecations: ['legacy-js-api', 'import'],
-      },
-    },
-  },
   test: {
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/setupTests.ts'],
     css: false,
+    // Один воркер-поток на несколько файлов: jsdom не создаётся заново для каждого файла
+    pool: 'vmThreads',
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],

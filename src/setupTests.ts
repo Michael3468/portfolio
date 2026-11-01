@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/vitest';
 // jsdom не реализует window.matchMedia — мокаем для компонентов тёмной темы
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
+  configurable: true,
   value: (query: string) => ({
     matches: false,
     media: query,

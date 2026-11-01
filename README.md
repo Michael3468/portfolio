@@ -15,7 +15,7 @@
 - **React Router 7** — роутинг (API v6 сохранён): `/`, `/projects`, `/project/:id`, `/contacts`
 - **framer-motion** — анимации (заголовки, буквы, «rubber band» эффект)
 - **zustand** — состояние тёмной темы (вместо Recoil, см. раздел «Перенос»)
-- **SCSS / CSS** — компиляция через dart-sass (modern API), глобальные стили, CSS-переменные темы
+- **CSS** — глобальные стили и CSS-переменные темы (без препроцессора)
 - **Vitest + Testing Library 16** — юнит-тесты (jsdom)
 - **ESLint 9 (flat config) + Prettier** — линтинг и форматирование
 
@@ -135,7 +135,7 @@ portfolio/
     │   └── Projects/
     │       ├── index.ts           # реэкспорт Projects и UI/Project
     │       ├── Projects.tsx       # страница списка проектов
-    │       ├── Projects.styles.scss
+    │       ├── Projects.styles.css
     │       ├── Projects.types.ts  # тип ProjectsSection
     │       ├── Projects.test.tsx
     │       └── UI/

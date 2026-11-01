@@ -3,6 +3,9 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@400;500;700&display=swap');
 
 :root {
+  /* Основная тень текста и графики (заголовки, навигация, футер) */
+  --main-text-shadow: 2px 2px 2px black;
+
   /* Colors */
   --black: #171718;
   --black-border: #26292d;
@@ -83,6 +86,14 @@ body {
 
 .text-shadow {
   text-shadow: 2px 2px 2px var(--text-shadow);
+}
+
+.main-text-shadow {
+  text-shadow: var(--main-text-shadow);
+}
+
+.main-drop-shadow {
+  filter: drop-shadow(var(--main-text-shadow));
 }
 
 /* Content list */

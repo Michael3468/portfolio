@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
-import { styles } from '@/shared/constants';
 
 import './styles.css';
 
@@ -30,9 +29,7 @@ export default function NotFound({ message = 'Страница не найден
   return (
     <main className="section">
       <div className="container not-found">
-        <h1 className="title-1" style={{ textShadow: `${styles.mainTheme.textShadow}` }}>
-          404
-        </h1>
+        <h1 className="title-1 main-text-shadow">404</h1>
 
         <p className="not-found__message text-shadow">{message}</p>
 

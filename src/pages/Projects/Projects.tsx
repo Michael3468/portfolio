@@ -1,39 +1,37 @@
 import { AnimationScale3d } from '@/components';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
-import { projectsList, styles, testTasksList } from '@/shared/constants';
+import { projectsList, testTasksList } from '@/shared/constants';
 import { PAGES } from '@/shared/constants/seo';
 import { getLetters, replaceSpaceWithNbsp } from '@/shared/lib';
 
 import { ProjectsSection } from './Projects.types';
 import Project from './UI/Project';
 
-import './Projects.styles.scss';
+import './Projects.styles.css';
+
+/** Секции страницы. Список статичен, поэтому создаётся один раз при загрузке модуля. */
+const PROJECTS_SECTIONS: readonly ProjectsSection[] = [
+  {
+    title: getLetters('Projects'),
+    projects: projectsList,
+  },
+  {
+    title: getLetters('Test Tasks'),
+    projects: testTasksList,
+  },
+];
 
 export default function Projects() {
   useDocumentMeta(PAGES.projects);
-  const projectsString = getLetters('Projects');
-  const testTasksString = getLetters('Test Tasks');
-
-  const projectsSections: ProjectsSection[] = [
-    {
-      title: projectsString,
-      projects: projectsList,
-    },
-    {
-      title: testTasksString,
-      projects: testTasksList,
-    },
-  ];
 
   return (
     <main className="section">
       {/* Класс 'container' задаёт общую ширину и центрирование контента
-          (определён в src/assets/styles/main.css); вынос в SCSS-mixin —
-          возможное улучшение для переиспользования в других страницах */}
+          (определён в src/assets/styles/main.css) */}
       <div className="projects-list container">
-        {projectsSections.map((item) => (
+        {PROJECTS_SECTIONS.map((item) => (
           <div className="projects-list__block" key={item.title.join('')}>
-            <h2 className="title-1" style={{ textShadow: `${styles.mainTheme.textShadow}` }}>
+            <h2 className="title-1 main-text-shadow">
               {item.title.map((letter, index) => (
                 <AnimationScale3d key={index}>{replaceSpaceWithNbsp(letter)}</AnimationScale3d>
               ))}

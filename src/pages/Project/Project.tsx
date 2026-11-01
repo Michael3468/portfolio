@@ -6,7 +6,6 @@ import liveDemo from '@/assets/icons/live-demo-icon.svg';
 import { ButtonIconWithLink } from '@/components';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import NotFound from '@/pages/NotFound';
-import { styles } from '@/shared/constants';
 
 import { BUTTON_GRADIENT } from './model/constants';
 import { findProjectById } from './model/lib';
@@ -61,9 +60,7 @@ export default function Project() {
     <main className="section">
       <div className="container">
         <div className="project-details">
-          <h1 className="title-1" style={{ textShadow: `${styles.mainTheme.textShadow}` }}>
-            {project.title}
-          </h1>
+          <h1 className="title-1 main-text-shadow">{project.title}</h1>
 
           <div className="project-details__desc text-shadow">
             <p>{`Skills: ${project.skills}`}</p>

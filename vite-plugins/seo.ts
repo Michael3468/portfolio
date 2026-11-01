@@ -10,18 +10,23 @@ import {
   STATIC_PAGES,
 } from '../src/shared/constants/seo.js';
 
-/** Теги, которые плагин заменяет в `<head>` готового index.html. */
-const MANAGED_HEAD_TAGS =
-  /\s*<title>.*?<\/title>|\s*<meta\s+(?:name="(?:description|robots)"|property="og:[^"]+")[^>]*>|\s*<link\s+rel="canonical"[^>]*>/gs;
+/** Маркер в index.html, на место которого плагин вставляет мета-теги страницы. */
+export const SEO_HEAD_MARKER = '<!--seo-head-->';
 
 const escapeAttr = (value: string): string =>
   value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 /**
- * Подставляет в `<head>` шаблона title, description, canonical и Open Graph
- * для конкретной страницы. Нужно для краулеров, которые не выполняют JavaScript.
+ * Подставляет на место маркера в шаблоне title, description, robots, canonical
+ * и Open Graph для конкретной страницы. Нужно для краулеров, которые не выполняют JavaScript.
+ *
+ * @throws если в шаблоне нет маркера `SEO_HEAD_MARKER`.
  */
 export const renderHead = (template: string, page: PageMeta): string => {
+  if (!template.includes(SEO_HEAD_MARKER)) {
+    throw new Error(`index.html must contain ${SEO_HEAD_MARKER}`);
+  }
+
   const url = buildUrl(page.path);
   const tags = [
     `<title>${escapeAttr(page.title)}</title>`,
@@ -35,7 +40,7 @@ export const renderHead = (template: string, page: PageMeta): string => {
     `<meta property="og:site_name" content="${escapeAttr(SITE_NAME)}" />`,
   ].join('\n    ');
 
-  return template.replace(MANAGED_HEAD_TAGS, '').replace('</head>', `    ${tags}\n  </head>`);
+  return template.replace(SEO_HEAD_MARKER, () => tags);
 };
 
 /** Текст robots.txt с указателем на sitemap. */
