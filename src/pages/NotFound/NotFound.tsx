@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 
+import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import { styles } from '@/shared/constants';
 
 import './styles.css';
@@ -19,6 +20,13 @@ type NotFoundProps = {
  * @returns {JSX.Element} Разметка страницы 404.
  */
 export default function NotFound({ message = 'Страница не найдена' }: NotFoundProps) {
+  useDocumentMeta({
+    title: '404 — Portfolio',
+    description: 'The page you are looking for does not exist.',
+    path: '/',
+    noindex: true,
+  });
+
   return (
     <main className="section">
       <div className="container not-found">

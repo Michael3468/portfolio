@@ -1,4 +1,6 @@
 import { Header } from '@/components';
+import { useDocumentMeta } from '@/hooks/useDocumentMeta';
+import { PAGES } from '@/shared/constants/seo';
 
 /**
  * Главная страница портфолио.
@@ -9,6 +11,8 @@ import { Header } from '@/components';
  * @returns {JSX.Element} Фрагмент с шапкой и списком навыков.
  */
 export default function Home() {
+  useDocumentMeta(PAGES.home);
+
   return (
     <>
       <Header />

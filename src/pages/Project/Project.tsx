@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import gitHubIcon from '@/assets/icons/gitHub-black.svg';
 import liveDemo from '@/assets/icons/live-demo-icon.svg';
 import { ButtonIconWithLink } from '@/components';
+import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import NotFound from '@/pages/NotFound';
 import { styles } from '@/shared/constants';
 
@@ -26,6 +27,21 @@ export default function Project() {
   const [imgLoaded, setImgLoaded] = useState(false);
 
   const project = findProjectById(id);
+
+  useDocumentMeta(
+    project
+      ? {
+          title: `${project.title} — Portfolio`,
+          description: `Skills: ${project.skills}`,
+          path: `/project/${project.id}`,
+        }
+      : {
+          title: 'Project not found — Portfolio',
+          description: 'The project you are looking for does not exist.',
+          path: '/',
+          noindex: true,
+        },
+  );
 
   if (!project) {
     return <NotFound message="Проект не найден" />;

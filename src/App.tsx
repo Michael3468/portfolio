@@ -1,8 +1,11 @@
 import { LazyMotion } from 'framer-motion';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { Footer, Navbar, ScrollToTop } from './components';
+import { upsertMeta } from './hooks/useDocumentMeta';
+import { THEME_COLORS } from './shared/constants/seo';
+import { useDarkModeStore } from './store/darkModeStore';
 
 // Наборы анимаций framer-motion подгружаются отдельным чанком, а не входят в главный бандл.
 const loadFeatures = () => import('framer-motion').then((res) => res.domAnimation);
@@ -17,6 +20,13 @@ const Contacts = lazy(() => import('./pages/Contacts/Contacts'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 export default function App() {
+  const darkMode = useDarkModeStore((state) => state.darkMode);
+
+  // Цвет адресной строки мобильных браузеров следует за выбранной темой сайта
+  useEffect(() => {
+    upsertMeta('name', 'theme-color', THEME_COLORS[darkMode]);
+  }, [darkMode]);
+
   return (
     // strict: framer-motion выбросит ошибку, если внутри случайно останется motion.* вместо m.*
     <LazyMotion features={loadFeatures} strict>

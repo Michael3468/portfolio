@@ -1,5 +1,7 @@
 import { AnimationScale3d } from '@/components';
+import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import { projectsList, styles, testTasksList } from '@/shared/constants';
+import { PAGES } from '@/shared/constants/seo';
 import { getLetters, replaceSpaceWithNbsp } from '@/shared/lib';
 
 import { ProjectsSection } from './Projects.types';
@@ -8,6 +10,7 @@ import Project from './UI/Project';
 import './Projects.styles.scss';
 
 export default function Projects() {
+  useDocumentMeta(PAGES.projects);
   const projectsString = getLetters('Projects');
   const testTasksString = getLetters('Test Tasks');
 
