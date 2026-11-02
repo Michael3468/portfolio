@@ -9,15 +9,19 @@
 
 ## Стек
 
-- **Vite** — сборщик и dev-сервер
+- **Vite 8** — сборщик и dev-сервер
 - **React 19** (`react` / `react-dom`), JSX transform `react-jsx`
 - **TypeScript 5.x** — строгая типизация, `moduleResolution: bundler`
-- **React Router 7** — роутинг (API v6 сохранён): `/`, `/projects`, `/project/:id`, `/contacts`
-- **framer-motion** — анимации (заголовки, буквы, «rubber band» эффект)
+- **React Router 7** — роутинг (API v6 сохранён): `/`, `/projects`, `/project/:id`, `/contacts`,
+  `*` → страница 404 (`NotFound`)
+- **framer-motion** — анимации (заголовки, буквы, «rubber band» эффект); через `LazyMotion`
+  наборы фич подгружаются отдельным чанком, в коде используется `m.*`, а не `motion.*`
 - **zustand** — состояние тёмной темы (вместо Recoil, см. раздел «Перенос»)
 - **CSS** — глобальные стили и CSS-переменные темы (без препроцессора)
 - **Vitest + Testing Library 16** — юнит-тесты (jsdom)
+- **Playwright** — e2e smoke-тесты собранного сайта (chromium)
 - **ESLint 9 (flat config) + Prettier** — линтинг и форматирование
+- **husky + lint-staged** — pre-commit хук
 
 ## Команды
 
@@ -26,74 +30,93 @@
 | `npm install`           | Установка зависимостей                                  |
 | `npm run dev`           | Dev-сервер Vite (HMR), http://localhost:5173            |
 | `npm run build`         | Проверка типов (`tsc -b`) + production-сборка в `dist/` |
+| `npm run typecheck`     | Только проверка типов (`tsc -b`)                        |
 | `npm run preview`       | Локальный просмотр production-сборки                    |
-| `npm test`              | Запуск тестов (Vitest, watch-режим)                     |
-| `npm run test:run`      | Однократный запуск тестов                               |
+| `npm test`              | Запуск юнит-тестов (Vitest, watch-режим)                |
+| `npm run test:run`      | Однократный запуск юнит-тестов                          |
 | `npm run test:coverage` | Coverage report (Vitest + provider v8)                  |
+| `npm run test:e2e`      | Сборка + Playwright smoke-тесты против `vite preview`   |
 | `npm run lint`          | Проверка ESLint (flat config)                           |
 | `npm run lint:fix`      | Автоисправление ESLint                                  |
 | `npm run format`        | Форматирование Prettier                                 |
 
-> Требуется Node.js **≥ 20.19** (проверено на Node 24). Версия зафиксирована в `.nvmrc`.
+> Требуется Node.js **≥ 20.19** — меньше не позволяет сам Vite (`engines: ^20.19.0 || >=22.12.0`).
+> Рабочая версия зафиксирована в `.nvmrc` — Node **v24**; на ней проект и проверяется.
 
 > Импорты вне текущего каталога пишутся через алиас `@` (= `src/`), например
-> `import { styles } from '@/shared/constants'`; относительные `./` — только внутри каталога.
+> `import { getLetters } from '@/shared/lib'`; относительные `./` — только внутри каталога.
 
 ## Структура проекта
 
 ```
 portfolio/
-├── index.html                     # точка входа Vite (в корне)
-├── vite.config.ts                 # Vite + React plugin + alias @ + Vitest config
-├── tsconfig.json                  # корневой (references)
-├── tsconfig.app.json              # конфиг приложения (src)
-├── tsconfig.node.json             # конфиг для vite.config.ts
-├── eslint.config.js               # ESLint 9 flat config
-├── .prettierrc                    # конфиг Prettier (перенесён из исходника)
+├── index.html                   # точка входа Vite (в корне); маркер <!--seo-head--> для мета-тегов
+├── vite.config.ts               # react-плагин + seo-плагин + alias @ + конфиг Vitest
+├── vite-plugins/
+│   ├── seo.ts                   # плагин предрендера: мета-теги страниц, robots.txt, sitemap.xml (в dist/)
+│   └── seo.test.ts              # тесты seo-плагина
+├── playwright.config.ts         # Playwright: smoke-тесты против vite preview
+├── e2e/
+│   └── routes.e2e.ts            # e2e: роутинг, 404, прямые заходы, сохранение темы
+├── scripts/
+│   └── optimize-images.sh       # конвертация исходных JPG → WebP (нужен ffmpeg с libwebp)
+├── agents/
+│   └── style-guide.md           # правила стиля и архитектуры кода
+├── docs/
+│   └── archive/
+│       └── MIGRATION_PLAN.md    # архивный план миграции CRA → Vite
+├── .github/workflows/ci.yml     # CI: lint → typecheck → unit-тесты → build → e2e
+├── .husky/pre-commit            # lint-staged (eslint --fix, prettier --write)
+├── .prettierrc                  # конфиг Prettier
 ├── .gitignore
-├── .nvmrc
-├── public/                        # favicon, логотипы, manifest.json, robots.txt
+├── .nvmrc                       # v24.16.0
+├── public/                      # favicon.ico, logo192/512.png, manifest.json
+│                                # (robots.txt и sitemap.xml в public/ нет: их генерирует seo-плагин
+│                                #  при сборке прямо в dist/, см. раздел «SEO и мета-теги»)
 └── src/
-    ├── main.tsx                   # точка входа приложения (бывший index.tsx)
-    ├── App.tsx                    # маршрутизация (BrowserRouter + Routes)
-    ├── App.test.tsx               # тест приложения (Vitest + Testing Library)
-    ├── setupTests.ts              # jest-dom + мок window.matchMedia
-    ├── vite-env.d.ts              # типы Vite (бывший react-app-env.d.ts)
+    ├── main.tsx                 # точка входа приложения (бывший index.tsx)
+    ├── App.tsx                  # маршрутизация (BrowserRouter + Routes) + LazyMotion
+    ├── App.test.tsx             # тест приложения (Vitest + Testing Library)
+    ├── setupTests.ts            # jest-dom + мок window.matchMedia
+    ├── vite-env.d.ts            # типы Vite (бывший react-app-env.d.ts)
     ├── store/
-    │   ├── darkModeStore.ts       # zustand-стор тёмной темы
-    │   └── darkModeStore.test.ts  # тест zustand-стора
-    ├── assets/
-    │   ├── icons/                 # иконки GitHub / Live Demo
-    │   └── styles/                # main.css, reset.css, pulse-animation.css
+    │   ├── darkModeStore.ts     # zustand-стор тёмной темы
+    │   └── darkModeStore.test.ts
     ├── hooks/
+    │   ├── useDocumentMeta.ts   # клиентские метаданные: title, description, canonical, OG
+    │   └── useDocumentMeta.test.ts
+    ├── assets/
+    │   ├── icons/               # иконки GitHub / Live Demo
+    │   └── styles/              # main.css, reset.css, pulse-animation.css
     ├── components/
-    │   ├── index.ts               # реэкспорт компонентов (баррель)
+    │   ├── index.ts             # реэкспорт компонентов (баррель)
     │   ├── ScrollToTop/
-    │   │   ├── index.tsx          # скролл к началу при смене маршрута
+    │   │   ├── index.tsx        # скролл к началу при смене маршрута
     │   │   └── index.test.tsx
     │   ├── Animations/
     │   │   ├── AnimationScale3d/
-    │   │   │   ├── index.tsx     # анимация «rubber band» букв
+    │   │   │   ├── index.tsx    # анимация «rubber band» букв
     │   │   │   └── index.test.tsx
     │   │   └── AnimationText/
-    │   │       ├── index.tsx     # анимация слов/букв
+    │   │       ├── index.tsx    # анимация слов/букв
     │   │       └── index.test.tsx
     │   ├── ButtonIconWithLink/
-    │   │   ├── index.tsx          # кнопка с иконкой
+    │   │   ├── index.tsx        # кнопка с иконкой
     │   │   ├── index.test.tsx
     │   │   └── styles.css
     │   ├── Footer/
-    │   │   ├── index.tsx          # подвал с соцсетями
+    │   │   ├── index.tsx        # подвал с соцсетями
     │   │   ├── index.test.tsx
     │   │   ├── styles.css
-    │   │   └── icons/             # иконки соцсетей
+    │   │   └── icons/           # иконки соцсетей (GitHub, LinkedIn, VK, Twitter, Instagram)
     │   ├── Header/
-    │   │   ├── index.tsx          # шапка с анимациями
+    │   │   ├── index.tsx        # шапка с анимациями
     │   │   ├── index.test.tsx
-    │   │   └── styles.css
+    │   │   ├── styles.css
+    │   │   └── header-bg.png
     │   └── Navbar/
-    │       ├── index.ts           # реэкспорт Navbar и UI/ButtonToggleDarkMode
-    │       ├── Navbar.tsx         # навигация (логотип, ссылки, переключатель темы)
+    │       ├── index.ts         # реэкспорт Navbar и UI/ButtonToggleDarkMode
+    │       ├── Navbar.tsx       # навигация (логотип, ссылки, переключатель темы)
     │       ├── Navbar.test.tsx
     │       ├── styles.css
     │       └── UI/
@@ -103,13 +126,13 @@ portfolio/
     │           ├── colorMode.css  # CSS-переменные светлой/тёмной темы
     │           ├── moon.svg
     │           └── sun.svg
-    ├── pages/
-    │   ├── index.ts               # реэкспорт страниц
-    │   ├── Home.tsx               # главная (Header + навыки)
+    ├── pages/                   # барреля pages/index.ts нет: App импортирует страницы
+    │   │                        # напрямую, чтобы ленивые чанки разделились
+    │   ├── Home.tsx             # главная (Header + навыки)
     │   ├── Home.test.tsx
     │   ├── Contacts/
-    │   │   ├── index.ts           # реэкспорт страницы
-    │   │   ├── Contacts.tsx       # страница контактов
+    │   │   ├── index.ts         # реэкспорт страницы
+    │   │   ├── Contacts.tsx     # страница контактов
     │   │   ├── Contacts.types.ts  # типы ContactItem, ContactLink
     │   │   ├── Contacts.test.tsx
     │   │   ├── model/
@@ -120,44 +143,83 @@ portfolio/
     │   │       ├── ContactItem.tsx    # элемент списка контактов
     │   │       └── index.ts
     │   ├── Project/
-    │   │   ├── index.ts           # реэкспорт страницы
-    │   │   ├── Project.tsx        # страница проекта
+    │   │   ├── index.ts         # реэкспорт страницы
+    │   │   ├── Project.tsx      # страница проекта
     │   │   ├── Project.test.tsx
     │   │   ├── styles.css
     │   │   └── model/
     │   │       ├── constants.ts   # локальные константы (BUTTON_GRADIENT)
+    │   │       ├── constants.test.ts
     │   │       ├── lib.ts         # findProjectById(id)
     │   │       └── lib.test.ts
-    │   └── Projects/
-    │       ├── index.ts           # реэкспорт Projects и UI/Project
-    │       ├── Projects.tsx       # страница списка проектов
-    │       ├── Projects.styles.css
-    │       ├── Projects.types.ts  # тип ProjectsSection
-    │       ├── Projects.test.tsx
-    │       └── UI/
-    │           ├── Project.tsx    # карточка проекта
-    │           ├── Project.css
-    │           ├── Project.test.tsx
-    │           └── model/
-    │               ├── constants.ts  # DEFAULT_SHADOW_COLOR, INNER_SHADOW_COLOR_DARK
-    │               └── constants.test.ts
+    │   ├── Projects/
+    │   │   ├── index.ts         # реэкспорт Projects и UI/Project
+    │   │   ├── Projects.tsx     # страница списка проектов
+    │   │   ├── Projects.styles.css
+    │   │   ├── Projects.types.ts  # тип ProjectsSection
+    │   │   ├── Projects.test.tsx
+    │   │   └── UI/
+    │   │       ├── Project.tsx    # карточка проекта
+    │   │       ├── Project.css
+    │   │       ├── Project.test.tsx
+    │   │       └── model/
+    │   │           ├── constants.ts  # DEFAULT_SHADOW_COLOR, INNER_SHADOW_COLOR_DARK
+    │   │           └── constants.test.ts
+    │   └── NotFound/
+    │       ├── index.ts         # реэкспорт страницы
+    │       ├── NotFound.tsx     # страница 404
+    │       ├── NotFound.test.tsx
+    │       └── styles.css
     └── shared/
-        ├── assets/img/            # изображения проектов
+        ├── assets/img/
+        │   ├── projects/        # изображения проектов (WebP: X, X-big, X-big-sm)
+        │   └── testProjects/    # изображения тестовых заданий (те же размеры)
+        ├── data/
+        │   └── projects.json    # данные проектов и тестовых заданий
         ├── constants/
-        │   ├── index.ts           # реэкспорт констант
-        │   ├── projectsList.ts    # список проектов
-        │   ├── projectsList.test.ts
-        │   ├── testTasksList.ts   # список тестовых заданий
-        │   ├── testTasksList.test.ts
-        │   └── theme.ts           # стили темы (styles.mainTheme)
+        │   ├── index.ts         # реэкспорт констант
+        │   ├── projects.ts      # projects.json → projects, projectsList, testTasksList
+        │   ├── projects.test.ts
+        │   └── seo.ts           # SITE_URL, SITE_NAME, PAGES, THEME_COLORS, STATIC_PAGES
         ├── lib/
-        │   ├── index.ts           # реэкспорт утилит
-        │   ├── text.ts            # getLetters, replaceSpaceWithNbsp
+        │   ├── index.ts         # реэкспорт утилит
+        │   ├── text.ts          # getLetters, replaceSpaceWithNbsp
         │   └── text.test.ts
-        ├── types/
-        │   ├── index.ts           # реэкспорт типов
-        │   └── types.ts           # DarkMode, ProjectItem
+        └── types/
+            ├── index.ts         # реэкспорт типов
+            └── types.ts         # DarkMode, ProjectSection, ProjectItem
 ```
+
+## SEO и мета-теги
+
+`robots.txt`, `sitemap.xml` и per-page мета-теги — сгенерированные артефакты сборки, а не статика:
+в `public/` их нет, всё создаёт плагин [`vite-plugins/seo.ts`](./vite-plugins/seo.ts) (`seo-prerender`,
+выполняется после сборки, `closeBundle`):
+
+- для каждой страницы из `STATIC_PAGES` (`src/shared/constants/seo.ts`) создаёт
+  `dist/<path>/index.html`, подставляя на место маркера `<!--seo-head-->` из шаблона
+  `title`, `description`, `robots`, `canonical` и Open Graph — чтобы краулеры, не
+  выполняющие JavaScript, видели правильные метаданные;
+- пишет `dist/robots.txt` (со ссылкой на sitemap) и `dist/sitemap.xml`.
+
+Клиентские метаданные (для SPA-переходов и цветных страниц) обновляет
+`src/hooks/useDocumentMeta.ts`: `upsertMeta`/`upsertCanonical` управляют `<meta>` и
+`<link>` в `<head>`, а `App.tsx` выставляет `theme-color` под выбранную тему
+(`THEME_COLORS` в `src/shared/constants/seo.ts`).
+
+> В `src/shared/constants/seo.ts` задаётся `SITE_URL` (canonical, og:url, sitemap).
+> Перед деплоем заменить placeholder на реальный домен.
+
+## Контент: данные и изображения
+
+- Проекты и тестовые задания хранятся в `src/shared/data/projects.json`.
+  `src/shared/constants/projects.ts` мапит его в `ProjectItem`, а URL картинок
+  разрешает через `import.meta.glob` по `src/shared/assets/img/**/*.webp` — опечатка
+  в имени файла ломает сборку сразу, а не сайт.
+- Изображения — WebP трёх размеров: превью для списка (≤ 600px), обложка проекта
+  (1200px) и её уменьшенная версия для `srcset` (800px).
+- Конвертация из исходных JPG (для каталогов `projects/` и `testProjects/`) —
+  `bash scripts/optimize-images.sh`; нужен ffmpeg с libwebp, исходные JPG не удаляются.
 
 ## Как перенесён проект (CRA → Vite)
 
@@ -211,16 +273,20 @@ portfolio/
 
 ## Тесты
 
-Тесты запускаются через Vitest (`environment: jsdom`, `setupFiles: ./src/setupTests.ts`).
-`src/setupTests.ts` подключает матчеры `@testing-library/jest-dom/vitest` и мок
-`window.matchMedia`, необходимый для компонентов тёмной темы в jsdom.
+Юнит-тесты запускаются через Vitest (`environment: jsdom`, `setupFiles: ./src/setupTests.ts`,
+`pool: vmThreads` на один воркер-поток для всех файлов). `src/setupTests.ts` подключает матчеры
+`@testing-library/jest-dom/vitest` и мок `window.matchMedia`, необходимый для компонентов
+тёмной темы в jsdom.
 
-Покрытие тестов — **100%** statements / branches / functions / lines.
-Все тесты проходят: **86 тестов в 27 файлах**.
+Все юнит-тесты проходят: **93 теста в 26 файлах** (включая тесты seo-плагина).
+Покрытие по v8 на момент обновления README: **89.3%** statements / **98.3%** branches /
+**86.7%** functions / **89.8%** lines. Непокрытое — в основном код самого seo-плагина
+(сборочная часть: `closeBundle`, `renderRobots`, `renderSitemap`) и отдельные ветки
+`App`/`darkModeStore`; актуальные цифры после каждого запуска печатает `npm run test:coverage`.
 
 | Модуль                                             | Файл теста                                                  |
 | -------------------------------------------------- | ----------------------------------------------------------- |
-| `App` (маршрутизация)                              | `src/App.test.tsx`                                          |
+| `App` (маршрутизация, ленивые чанки)               | `src/App.test.tsx`                                          |
 | `Navbar`                                           | `src/components/Navbar/Navbar.test.tsx`                     |
 | `ButtonToggleDarkMode`                             | `src/components/Navbar/UI/ButtonToggleDarkMode.test.tsx`    |
 | `Footer`                                           | `src/components/Footer/index.test.tsx`                      |
@@ -240,11 +306,12 @@ portfolio/
 | `Project` (страница)                               | `src/pages/Project/Project.test.tsx`                        |
 | `findProjectById`                                  | `src/pages/Project/model/lib.test.ts`                       |
 | `BUTTON_GRADIENT`                                  | `src/pages/Project/model/constants.test.ts`                 |
+| `NotFound` (404)                                   | `src/pages/NotFound/NotFound.test.tsx`                      |
+| `useDocumentMeta` / `upsertMeta`                   | `src/hooks/useDocumentMeta.test.ts`                         |
 | `darkModeStore` (zustand-стор)                     | `src/store/darkModeStore.test.ts`                           |
-| `theme` (`styles.mainTheme`)                       | `src/shared/constants/theme.test.ts`                        |
-| `projectsList`                                     | `src/shared/constants/projectsList.test.ts`                 |
-| `testTasksList`                                    | `src/shared/constants/testTasksList.test.ts`                |
+| `projects` / `projectsList` / `testTasksList`      | `src/shared/constants/projects.test.ts`                     |
 | `getLetters` / `replaceSpaceWithNbsp`              | `src/shared/lib/text.test.ts`                               |
+| `renderHead` (seo-плагин)                          | `vite-plugins/seo.test.ts`                                  |
 
 Команда запуска (однократно):
 
@@ -252,7 +319,28 @@ portfolio/
 npm run test:run
 ```
 
-В watch-режиме — `npm test`.
+В watch-режиме — `npm test`, с отчётом покрытия — `npm run test:coverage`.
+
+## E2E-тесты (Playwright)
+
+`e2e/routes.e2e.ts` — smoke-тесты на собранном сайте: страница открывается, роутинг работает,
+deep link открывается без SPA-навигации, неизвестные маршруты и id проекта дают 404,
+тёмная тема применяется при загрузке и сохраняется после перезагрузки. Uncaught
+ошибки в консоли браузера считаются падением теста.
+
+```
+npm run test:e2e   # сначала производит сборку, затем playwright test
+```
+
+Playwright запускает `vite preview` на порту 4173 (см. `playwright.config.ts`) и гоняет
+тесты в chromium.
+
+## CI и Git-хуки
+
+- `.github/workflows/ci.yml` — на Node из `.nvmrc`: `lint` → `typecheck` → `test:run` →
+  `build` → Playwright smoke-тесты; при падении upload-ится playwright-отчёт.
+- Pre-commit хук (`husky` + `lint-staged`): для `*.{ts,tsx}` — `eslint --fix` и
+  `prettier --write`; для css/scss/json/md/html — `prettier --write`.
 
 ## Лицензия
 
