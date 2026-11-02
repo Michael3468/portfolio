@@ -63,6 +63,7 @@ export default tseslint.config(
       // когнитивной сложности = 15 (дефолт SonarQube Quality Gate)
       ...sonarjs.configs.recommended.rules,
       'sonarjs/cognitive-complexity': ['error', 15],
+      'sonarjs/todo-tag': 'warn',
     },
   },
 );

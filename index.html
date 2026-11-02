@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" href="/favicon.ico" />
@@ -12,16 +12,14 @@
       // Выставляет тему до первой отрисовки, чтобы не было вспышки неверной темы (FOUC).
       // Логика совпадает с getInitialDarkMode() в src/store/darkModeStore.ts.
       (function () {
-        var theme = 'light';
+        var theme = 'dark';
         try {
           var saved = localStorage.getItem('darkMode');
           if (saved === 'light' || saved === 'dark') {
             theme = saved;
-          } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            theme = 'dark';
           }
         } catch (e) {
-          // localStorage недоступен — остаётся системная тема или светлая
+          // localStorage недоступен — остаётся тёмная тема по умолчанию
         }
         if (theme === 'dark') {
           document.documentElement.classList.add('dark');

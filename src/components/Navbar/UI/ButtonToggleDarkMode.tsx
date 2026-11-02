@@ -1,8 +1,6 @@
 import { useEffect } from 'react';
 
-import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { DarkMode } from '@/shared/types';
-import { DARK_MODE_STORAGE_KEY, getInitialDarkMode, useDarkModeStore } from '@/store/darkModeStore';
+import { useDarkModeStore } from '@/store/darkModeStore';
 
 import moon from './moon.svg';
 import sun from './sun.svg';
@@ -10,34 +8,17 @@ import sun from './sun.svg';
 import './ButtonToggleDarkMode.css';
 
 export default function ButtonToggleDarkMode() {
-  const [darkMode, setDarkMode] = useLocalStorage<DarkMode>(
-    DARK_MODE_STORAGE_KEY,
-    getInitialDarkMode(),
-  );
-  const setDarkModeStore = useDarkModeStore((state) => state.setDarkMode);
+  const darkMode = useDarkModeStore((state) => state.darkMode);
+  const setDarkMode = useDarkModeStore((state) => state.setDarkMode);
 
   const toggleDarkMode = () => {
-    setDarkMode((currentValue) => (currentValue === 'light' ? 'dark' : 'light'));
+    setDarkMode(darkMode === 'light' ? 'dark' : 'light');
   };
 
   useEffect(() => {
     // Класс стоит на <html>: inline-скрипт в index.html ставит его до отрисовки
     document.documentElement.classList.toggle('dark', darkMode === 'dark');
-
-    setDarkModeStore(darkMode);
-  }, [darkMode, setDarkModeStore]);
-
-  useEffect(() => {
-    const systemColorScheme = window.matchMedia('(prefers-color-scheme: dark)');
-
-    const changeSiteColorMode = (event: MediaQueryListEvent) => {
-      const newColorScheme = event.matches ? 'dark' : 'light';
-      setDarkMode(newColorScheme);
-    };
-
-    systemColorScheme.addEventListener('change', changeSiteColorMode);
-    return () => systemColorScheme.removeEventListener('change', changeSiteColorMode);
-  }, [setDarkMode]);
+  }, [darkMode]);
 
   const btnNormal = 'dark-mode-btn';
   const btnActive = 'dark-mode-btn dark-mode-btn--active';

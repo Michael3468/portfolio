@@ -1,5 +1,5 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { useDarkModeStore } from '@/store/darkModeStore';
 
@@ -9,19 +9,18 @@ import ButtonToggleDarkMode from './ButtonToggleDarkMode';
  * Набор тестов для компонента ButtonToggleDarkMode.
  *
  * Покрывает рендер кнопки переключения тёмной темы, переключение темы
- * по клику с обновлением ARIA-атрибутов и реакцию на изменение
- * системной цветовой схемы (prefers-color-scheme).
+ * по клику с обновлением ARIA-атрибутов и класса на <html>.
  */
 describe('ButtonToggleDarkMode', () => {
   /**
    * Сбрасывает окружение перед каждым тестом:
    * очищает localStorage, удаляет класс `dark` с <html>
-   * и возвращает хранилище темы (darkMode store) в состояние `dark`.
+   * и возвращает хранилище темы (darkMode store) в состояние `light`.
    */
   beforeEach(() => {
     localStorage.clear();
     document.documentElement.classList.remove('dark');
-    useDarkModeStore.setState({ darkMode: 'dark' });
+    useDarkModeStore.setState({ darkMode: 'light' });
   });
 
   /**
@@ -38,7 +37,7 @@ describe('ButtonToggleDarkMode', () => {
 
   /**
    * Проверяет, что клик по кнопке переключает тему на тёмную:
-   * обновляет aria-pressed на true, добавляет класс `dark` на body
+   * обновляет aria-pressed на true, добавляет класс `dark` на <html>
    * и сохраняет значение 'dark' в localStorage.
    */
   it('switches to dark theme on click and updates aria-pressed', () => {
@@ -56,7 +55,7 @@ describe('ButtonToggleDarkMode', () => {
 
   /**
    * Проверяет, что повторный клик по кнопке возвращает светлую тему:
-   * aria-pressed становится false, класс `dark` снимается с body,
+   * aria-pressed становится false, класс `dark` снимается с <html>,
    * а в localStorage сохраняется значение 'light'.
    */
   it('switches back to light theme on the second click', () => {
@@ -69,57 +68,5 @@ describe('ButtonToggleDarkMode', () => {
     expect(toggle).toHaveAttribute('aria-pressed', 'false');
     expect(document.documentElement.classList.contains('dark')).toBe(false);
     expect(localStorage.getItem('darkMode')).toBe('light');
-  });
-
-  /**
-   * Проверяет, что компонент реагирует на изменение системной цветовой схемы:
-   * при matches: true включается тёмная тема, при matches: false — светлая.
-   * window.matchMedia подменяется через vi.stubGlobal, чтобы слушатель
-   * события change можно было вызвать вручную из теста.
-   */
-  it('updates the theme when the system color scheme changes', () => {
-    // Локально переопределяем window.matchMedia, чтобы слушатель события
-    // change сохранялся и его можно было вызвать вручную из теста.
-    let changeListener: ((event: { matches: boolean }) => void) | null = null;
-
-    vi.stubGlobal(
-      'matchMedia',
-      vi.fn((query: string) => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: vi.fn(),
-        removeListener: vi.fn(),
-        addEventListener: vi.fn(
-          (_event: string, listener: (event: { matches: boolean }) => void) => {
-            changeListener = listener;
-          },
-        ),
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(() => false),
-      })),
-    );
-
-    try {
-      render(<ButtonToggleDarkMode />);
-
-      expect(changeListener).not.toBeNull();
-
-      act(() => {
-        changeListener?.({ matches: true });
-      });
-
-      expect(document.documentElement.classList.contains('dark')).toBe(true);
-      expect(localStorage.getItem('darkMode')).toBe('dark');
-
-      act(() => {
-        changeListener?.({ matches: false });
-      });
-
-      expect(document.documentElement.classList.contains('dark')).toBe(false);
-      expect(localStorage.getItem('darkMode')).toBe('light');
-    } finally {
-      vi.unstubAllGlobals();
-    }
   });
 });

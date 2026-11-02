@@ -66,10 +66,6 @@ portfolio/
     │   ├── icons/                 # иконки GitHub / Live Demo
     │   └── styles/                # main.css, reset.css, pulse-animation.css
     ├── hooks/
-    │   ├── useLocalStorage.ts     # хук localStorage
-    │   ├── useLocalStorage.test.tsx  # тест хука
-    │   ├── detectDarkMode.ts      # определение системной темы
-    │   └── detectDarkMode.test.ts  # тест хука
     ├── components/
     │   ├── index.ts               # реэкспорт компонентов (баррель)
     │   ├── ScrollToTop/
@@ -210,7 +206,8 @@ portfolio/
 **zustand**. Затронутые файлы: `src/store/darkModeStore.ts`,
 `src/components/Navbar/UI/ButtonToggleDarkMode.tsx`, `src/pages/Projects/UI/Project.tsx`,
 `src/App.tsx` (убран `RecoilRoot`). Функциональность тёмной темы сохранена:
-переключение кнопкой, сохранение в `localStorage`, отслеживание системной схемы.
+переключение кнопкой, сохранение в `localStorage`. По умолчанию включена тёмная тема,
+системная схема не учитывается.
 
 ## Тесты
 
@@ -243,8 +240,6 @@ portfolio/
 | `Project` (страница)                               | `src/pages/Project/Project.test.tsx`                        |
 | `findProjectById`                                  | `src/pages/Project/model/lib.test.ts`                       |
 | `BUTTON_GRADIENT`                                  | `src/pages/Project/model/constants.test.ts`                 |
-| `useLocalStorage`                                  | `src/hooks/useLocalStorage.test.tsx`                        |
-| `detectDarkMode`                                   | `src/hooks/detectDarkMode.test.ts`                          |
 | `darkModeStore` (zustand-стор)                     | `src/store/darkModeStore.test.ts`                           |
 | `theme` (`styles.mainTheme`)                       | `src/shared/constants/theme.test.ts`                        |
 | `projectsList`                                     | `src/shared/constants/projectsList.test.ts`                 |
