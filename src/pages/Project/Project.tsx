@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import gitHubIcon from '@/assets/icons/gitHub-black.svg';
@@ -24,6 +24,18 @@ import './styles.css';
 export default function Project() {
   const { id } = useParams();
   const [imgLoaded, setImgLoaded] = useState(false);
+
+  /**
+   * Сброс флага загрузки обложки при смене проекта.
+   *
+   * Компонент не размонтируется при переходе между проектами
+   * (изменяется только параметр маршрута `id`), поэтому без сброса
+   * `imgLoaded` остаётся `true` и анимация появления новой обложки
+   * не отрабатывает.
+   */
+  useEffect(() => {
+    setImgLoaded(false);
+  }, [id]);
 
   const project = findProjectById(id);
 
