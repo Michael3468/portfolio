@@ -98,8 +98,11 @@ portfolio/
     │   │   ├── AnimationScale3d/
     │   │   │   ├── index.tsx    # анимация «rubber band» букв
     │   │   │   └── index.test.tsx
-    │   │   └── AnimationText/
-    │   │       ├── index.tsx    # анимация слов/букв
+    │   │   ├── AnimationText/
+    │   │   │   ├── index.tsx    # анимация слов/букв
+    │   │   │   └── index.test.tsx
+    │   │   └── AnimationTyping/
+    │   │       ├── index.tsx    # анимация «печатной машинки» с мигающим курсором
     │   │       └── index.test.tsx
     │   ├── ButtonIconWithLink/
     │   │   ├── index.tsx        # кнопка с иконкой
@@ -111,8 +114,11 @@ portfolio/
     │   │   ├── styles.css
     │   │   └── icons/           # иконки соцсетей (GitHub, LinkedIn, VK, Twitter, Instagram)
     │   ├── Header/
-    │   │   ├── index.tsx        # шапка с анимациями
+    │   │   ├── index.tsx        # шапка (OrbsTitle + AnimationTyping)
     │   │   ├── index.test.tsx
+    │   │   ├── OrbsTitle.tsx    # заголовок с анимацией падения букв (Web Animations API)
+    │   │   ├── OrbsTitle.css
+    │   │   ├── OrbsTitle.test.tsx
     │   │   ├── styles.css
     │   │   └── header-bg.png
     │   └── Navbar/

@@ -28,8 +28,48 @@
   line-height: 1.4;
 }
 
+.typing-cursor {
+  display: inline-block;
+  margin-left: 2px;
+  width: 10px;
+  height: 1em;
+  background: currentColor;
+  position: relative;
+  top: 4px;
+}
+
 .header__text {
   margin-bottom: 40px;
-  font-size: 18px;
+  font-size: 22px;
   line-height: 1.333;
+}
+
+.neon-text {
+  color: #fff;
+  text-shadow:
+    0 0 5px #9900ff,
+    0 0 10px #9900ff,
+    0 0 20px #9900ff,
+    0 0 40px #9900ff,
+    0 0 80px #9900ff;
+  animation: glow 1.5s infinite alternate;
+}
+
+@keyframes glow {
+  0% {
+    text-shadow:
+      0 0 5px #9900ff,
+      0 0 10px #9900ff,
+      0 0 20px #9900ff,
+      0 0 40px #9900ff,
+      0 0 80px #9900ff;
+  }
+  100% {
+    text-shadow:
+      0 0 10px #00ff55,
+      0 0 20px #00ff55,
+      0 0 40px #00ff55,
+      0 0 80px #00ff55,
+      0 0 160px #00ff55;
+  }
 }
