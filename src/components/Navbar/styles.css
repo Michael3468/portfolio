@@ -1,11 +1,17 @@
 /* Nav */
 
 .nav {
-  padding: 20px 0;
+  padding: 15px 0;
   background-color: var(--nav-bg);
   border-bottom: 1px solid var(--nav-border);
   color: var(--nav-text);
   letter-spacing: normal;
+
+  position: sticky;
+  top: 0;
+  z-index: 20;
+
+  opacity: 0.9;
 }
 
 .nav-row {
