@@ -16,6 +16,8 @@ export interface ProjectProps {
   readonly img: string;
   readonly id: number;
   readonly background: string;
+  /** Скрыть карточку от вспомогательных технологий (используется для повторов в слайдере). */
+  readonly ariaHidden?: boolean;
 }
 
 /**
@@ -31,7 +33,7 @@ export interface ProjectProps {
  * @param props.background - Цвет фона контейнера в тёмной теме.
  * @returns Элемент списка с карточкой проекта.
  */
-export default function Project({ title, img, id, background }: ProjectProps) {
+export default function Project({ title, img, id, background, ariaHidden }: ProjectProps) {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [projectShadowColor, setProjectShadowColor] = useState<string>(DEFAULT_SHADOW_COLOR);
   const [innerShadow, setInnerShadow] = useState<string>(DEFAULT_SHADOW_COLOR);
@@ -54,6 +56,7 @@ export default function Project({ title, img, id, background }: ProjectProps) {
   return (
     <li
       className="project pulse-animation"
+      aria-hidden={ariaHidden || undefined}
       style={
         !img
           ? {

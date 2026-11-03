@@ -6,6 +6,7 @@ import { getLetters, replaceSpaceWithNbsp } from '@/shared/lib';
 
 import { ProjectsSection } from './Projects.types';
 import Project from './UI/Project';
+import ProjectsSlider from './UI/ProjectsSlider';
 
 import './Projects.styles.css';
 
@@ -14,10 +15,12 @@ const PROJECTS_SECTIONS: readonly ProjectsSection[] = [
   {
     title: getLetters('Projects'),
     projects: projectsList,
+    isSlider: true,
   },
   {
     title: getLetters('Test Tasks'),
     projects: testTasksList,
+    isSlider: true,
   },
 ];
 
@@ -37,17 +40,21 @@ export default function Projects() {
               ))}
             </h2>
 
-            <ul className="projects-list__block-items">
-              {item.projects.map((project) => (
-                <Project
-                  key={project.id}
-                  title={project.title}
-                  img={project.img}
-                  id={project.id}
-                  background={project.background}
-                />
-              ))}
-            </ul>
+            {item.isSlider ? (
+              <ProjectsSlider projects={item.projects} />
+            ) : (
+              <ul className="projects-list__block-items">
+                {item.projects.map((project) => (
+                  <Project
+                    key={project.id}
+                    title={project.title}
+                    img={project.img}
+                    id={project.id}
+                    background={project.background}
+                  />
+                ))}
+              </ul>
+            )}
           </div>
         ))}
       </div>

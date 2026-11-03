@@ -1,0 +1,150 @@
+.projects-slider {
+  --slide-w: min(370px, calc(100vw - 150px));
+  --slide-gap: 30px;
+  --slider-arrow-size: 40px;
+  --slider-arrow-gap: 8px;
+  --slider-fade-w: 5rem; /* ширина полупрозрачных боковых зон */
+
+  position: relative;
+  width: 100%;
+}
+
+/* Блок со стрелками и карточками: центр стрелок совпадает с центром карточек */
+.projects-slider__stage {
+  position: relative;
+  /* Отступы по бокам под стрелки, чтобы они не перекрывали карточки */
+  padding: 0 calc(var(--slider-arrow-size) + var(--slider-arrow-gap) * 2);
+}
+
+/* Видимая область: обрезает соседние слайды по краям.
+   По бокам слайды плавно исчезают через маску-градиент */
+.projects-slider__viewport {
+  overflow: hidden;
+  padding: 20px 0;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--slider-fade-w),
+    #000 calc(100% - var(--slider-fade-w)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--slider-fade-w),
+    #000 calc(100% - var(--slider-fade-w)),
+    transparent 100%
+  );
+}
+
+/* Лента: центр первого слайда совпадает с центром видимой области,
+   сдвиг задаётся в инлайн-стиле через позицию */
+.projects-slider__track {
+  position: relative;
+  left: 50%;
+  display: flex;
+  gap: var(--slide-gap);
+  width: max-content;
+  transition: transform 0.5s ease-in-out;
+}
+
+.projects-slider__track > .project {
+  flex: 0 0 var(--slide-w);
+  width: var(--slide-w);
+}
+
+.projects-slider__arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--slider-arrow-size);
+  height: var(--slider-arrow-size);
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background-color: var(--project-card-bg);
+  box-shadow: var(--box-shadow);
+  color: var(--project-card-text);
+  font-size: 32px;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.projects-slider__arrow:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
+.projects-slider__arrow:focus-visible,
+.projects-slider__dot:focus-visible {
+  outline: 2px solid var(--project-card-text);
+  outline-offset: 3px;
+}
+
+.projects-slider__arrow_prev {
+  left: 0;
+}
+
+.projects-slider__arrow_next {
+  right: 0;
+}
+
+.projects-slider__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 20px;
+}
+
+.projects-slider__info-line {
+  padding: 0 15px;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--project-card-text);
+}
+
+.projects-slider__stack {
+  min-height: 3em;
+}
+
+.projects-slider__dots {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.projects-slider__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--project-card-bg);
+  box-shadow: var(--box-shadow);
+  opacity: 0.5;
+  cursor: pointer;
+  transition:
+    opacity 0.3s ease-in-out,
+    transform 0.3s ease-in-out;
+}
+
+.projects-slider__dot:hover {
+  opacity: 0.8;
+}
+
+.projects-slider__dot_active {
+  opacity: 1;
+  transform: scale(1.3);
+  background-color: var(--project-card-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .projects-slider__track,
+  .projects-slider__arrow,
+  .projects-slider__dot {
+    transition: none;
+  }
+}
