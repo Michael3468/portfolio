@@ -27,6 +27,6 @@ describe('Footer', () => {
   it('renders the copyright text', () => {
     render(<Footer />);
 
-    expect(screen.getByText('© 2023')).toBeInTheDocument();
+    expect(screen.getByText('© 2026')).toBeInTheDocument();
   });
 });

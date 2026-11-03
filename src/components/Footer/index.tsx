@@ -39,7 +39,7 @@ export default function Footer() {
             </li>
           </ul>
           <div className="footer__copyright">
-            <p className="footer__copyright-p main-text-shadow">© 2023</p>
+            <p className="footer__copyright-p main-text-shadow">© 2026</p>
           </div>
         </div>
       </div>
