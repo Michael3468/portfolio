@@ -32,7 +32,8 @@ const imageUrls = import.meta.glob<string>('../assets/img/**/*.webp', {
  * @param file - Путь вида `projects/15.webp`.
  * @returns URL изображения.
  */
-const resolveImage = (file: string): string => {
+// Экспортируется для тестов: ветка с ошибкой недостижима на валидных данных из JSON
+export const resolveImage = (file: string): string => {
   const url = imageUrls[`../assets/img/${file}`];
   if (!url) {
     throw new Error(`Image not found: src/shared/assets/img/${file}`);

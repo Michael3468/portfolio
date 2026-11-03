@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { projects, projectsList, testTasksList } from './projects';
+import { projects, projectsList, resolveImage, testTasksList } from './projects';
 
 /**
  * Тесты данных проектов из `src/shared/data/projects.json`.
@@ -54,5 +54,22 @@ describe('projects data', () => {
       expect(project.bigImg).toBeTruthy();
       expect(project.bigImgSmall).toBeTruthy();
     }
+  });
+
+  /**
+   * Проверяет, что существующий файл изображения разрешается в непустой URL.
+   */
+  it('resolves a known image file to a URL', () => {
+    expect(resolveImage('projects/10.webp')).toBeTruthy();
+  });
+
+  /**
+   * Проверяет, что опечатка в имени файла изображения из JSON падает с понятной
+   * ошибкой на этапе сборки, а не даёт на сайте битую картинку.
+   */
+  it('throws a descriptive error when the image file does not exist', () => {
+    expect(() => resolveImage('projects/definitely-missing.webp')).toThrow(
+      'Image not found: src/shared/assets/img/projects/definitely-missing.webp',
+    );
   });
 });

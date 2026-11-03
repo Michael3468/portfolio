@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { domAnimation, LazyMotion } from 'framer-motion';
 import { describe, expect, it } from 'vitest';
 
 import AnimationText from './index';
@@ -46,5 +47,37 @@ describe('AnimationText', () => {
     // Сравниваем textContent напрямую: jest-dom нормализует неразрывные
     // пробелы (\u00A0) как обычные и схлопывает их в пустую строку.
     expect(spans[1].textContent).toBe('\u00A0');
+  });
+
+  /**
+   * Проверяет, что при активных анимационных фичах (LazyMotion + domAnimation)
+   * в режиме `words` запускается анимация контейнера: framer-motion вызывает
+   * вариантную функцию `visible` (с кастомом по умолчанию) и рендерит слова.
+   */
+  it('resolves the visible variant and renders words with motion features', () => {
+    render(
+      <LazyMotion features={domAnimation}>
+        <AnimationText text="react vite" animationType="words" />
+      </LazyMotion>,
+    );
+
+    expect(screen.getByText('react')).toBeInTheDocument();
+    expect(screen.getByText('vite')).toBeInTheDocument();
+  });
+
+  /**
+   * Проверяет, что при активных анимационных фичах в режиме `letters`
+   * анимация контейнера также запускается без ошибок и буквы рендерятся.
+   */
+  it('resolves the visible variant and renders letters with motion features', () => {
+    const { container } = render(
+      <LazyMotion features={domAnimation}>
+        <AnimationText text="ab" animationType="letters" />
+      </LazyMotion>,
+    );
+
+    expect(container.querySelectorAll('span')).toHaveLength(2);
+    expect(screen.getByText('a')).toBeInTheDocument();
+    expect(screen.getByText('b')).toBeInTheDocument();
   });
 });

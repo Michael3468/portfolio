@@ -144,4 +144,46 @@ describe('darkModeStore', () => {
       vi.restoreAllMocks();
     }
   });
+
+  /**
+   * Проверяет, что ошибка чтения localStorage при создании стора не ломает приложение:
+   * persist возвращает null, тема остаётся по умолчанию, ошибка логируется.
+   * Модуль перезагружается, потому что стор читает хранилище при импорте.
+   */
+  it('falls back to the default when reading localStorage fails at store creation', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new DOMException('denied', 'SecurityError');
+    });
+
+    try {
+      vi.resetModules();
+      const { useDarkModeStore: freshStore } = await import('./darkModeStore');
+
+      expect(freshStore.getState().darkMode).toBe(DEFAULT_DARK_MODE);
+      expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('getItem error:'));
+    } finally {
+      errorSpy.mockRestore();
+      vi.restoreAllMocks();
+    }
+  });
+
+  /**
+   * Проверяет, что ошибка удаления из localStorage не ломает очистку хранилища:
+   * clearStorage не бросает, ошибка логируется.
+   */
+  it('logs and ignores an error thrown by removeItem during clearStorage', () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(() => {
+      throw new DOMException('denied', 'SecurityError');
+    });
+
+    try {
+      expect(() => useDarkModeStore.persist.clearStorage()).not.toThrow();
+      expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('removeItem error:'));
+    } finally {
+      errorSpy.mockRestore();
+      vi.restoreAllMocks();
+    }
+  });
 });

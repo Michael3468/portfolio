@@ -90,6 +90,7 @@ portfolio/
     │   └── styles/              # main.css, reset.css, pulse-animation.css
     ├── components/
     │   ├── index.ts             # реэкспорт компонентов (баррель)
+    │   ├── index.test.ts        # barrel-тест реэкспортов
     │   ├── ScrollToTop/
     │   │   ├── index.tsx        # скролл к началу при смене маршрута
     │   │   └── index.test.tsx
@@ -116,6 +117,7 @@ portfolio/
     │   │   └── header-bg.png
     │   └── Navbar/
     │       ├── index.ts         # реэкспорт Navbar и UI/ButtonToggleDarkMode
+    │       ├── index.test.ts    # barrel-тест реэкспортов Navbar
     │       ├── Navbar.tsx       # навигация (логотип, ссылки, переключатель темы)
     │       ├── Navbar.test.tsx
     │       ├── styles.css
@@ -132,8 +134,10 @@ portfolio/
     │   ├── Home.test.tsx
     │   ├── Contacts/
     │   │   ├── index.ts         # реэкспорт страницы
+    │   │   ├── index.test.ts    # barrel-тест реэкспорта
     │   │   ├── Contacts.tsx     # страница контактов
     │   │   ├── Contacts.types.ts  # типы ContactItem, ContactLink
+    │   │   ├── Contacts.types.test.ts  # тесты типов
     │   │   ├── Contacts.test.tsx
     │   │   ├── model/
     │   │   │   ├── constants.ts   # локальные константы (CONTACTS_LIST)
@@ -144,6 +148,7 @@ portfolio/
     │   │       └── index.ts
     │   ├── Project/
     │   │   ├── index.ts         # реэкспорт страницы
+    │   │   ├── index.test.ts    # barrel-тест реэкспорта
     │   │   ├── Project.tsx      # страница проекта
     │   │   ├── Project.test.tsx
     │   │   ├── styles.css
@@ -154,9 +159,11 @@ portfolio/
     │   │       └── lib.test.ts
     │   ├── Projects/
     │   │   ├── index.ts         # реэкспорт Projects и UI/Project
+    │   │   ├── index.test.ts    # barrel-тест реэкспортов
     │   │   ├── Projects.tsx     # страница списка проектов
     │   │   ├── Projects.styles.css
     │   │   ├── Projects.types.ts  # тип ProjectsSection
+    │   │   ├── Projects.types.test.ts  # тесты типов
     │   │   ├── Projects.test.tsx
     │   │   └── UI/
     │   │       ├── Project.tsx    # карточка проекта
@@ -178,16 +185,22 @@ portfolio/
         │   └── projects.json    # данные проектов и тестовых заданий
         ├── constants/
         │   ├── index.ts         # реэкспорт констант
-        │   ├── projects.ts      # projects.json → projects, projectsList, testTasksList
+        │   ├── index.test.ts    # barrel-тест реэкспортов
+        │   ├── projects.ts      # projects.json → projects, projectsList, testTasksList,
+        │   │                    # resolveImage (путь картинки через import.meta.glob)
         │   ├── projects.test.ts
-        │   └── seo.ts           # SITE_URL, SITE_NAME, PAGES, THEME_COLORS, STATIC_PAGES
+        │   ├── seo.ts           # SITE_URL, SITE_NAME, PAGES, THEME_COLORS, STATIC_PAGES
+        │   └── seo.test.ts      # тесты seo-констант
         ├── lib/
         │   ├── index.ts         # реэкспорт утилит
+        │   ├── index.test.ts    # barrel-тест реэкспортов
         │   ├── text.ts          # getLetters, replaceSpaceWithNbsp
         │   └── text.test.ts
         └── types/
             ├── index.ts         # реэкспорт типов
-            └── types.ts         # DarkMode, ProjectSection, ProjectItem
+            ├── index.test.ts    # barrel-тест реэкспортов
+            ├── types.ts         # DarkMode, ProjectSection, ProjectItem
+            └── types.test.ts    # тесты типов
 ```
 
 ## SEO и мета-теги
@@ -214,8 +227,9 @@ portfolio/
 
 - Проекты и тестовые задания хранятся в `src/shared/data/projects.json`.
   `src/shared/constants/projects.ts` мапит его в `ProjectItem`, а URL картинок
-  разрешает через `import.meta.glob` по `src/shared/assets/img/**/*.webp` — опечатка
-  в имени файла ломает сборку сразу, а не сайт.
+  разрешает через экспортируемую функцию `resolveImage` (по `import.meta.glob`
+  из `src/shared/assets/img/**/*.webp`) — опечатка в имени файла ломает сборку
+  сразу, а не сайт.
 - Изображения — WebP трёх размеров: превью для списка (≤ 600px), обложка проекта
   (1200px) и её уменьшенная версия для `srcset` (800px).
 - Конвертация из исходных JPG (для каталогов `projects/` и `testProjects/`) —
@@ -278,40 +292,52 @@ portfolio/
 `@testing-library/jest-dom/vitest` и мок `window.matchMedia`, необходимый для компонентов
 тёмной темы в jsdom.
 
-Все юнит-тесты проходят: **93 теста в 26 файлах** (включая тесты seo-плагина).
-Покрытие по v8 на момент обновления README: **89.3%** statements / **98.3%** branches /
-**86.7%** functions / **89.8%** lines. Непокрытое — в основном код самого seo-плагина
-(сборочная часть: `closeBundle`, `renderRobots`, `renderSitemap`) и отдельные ветки
-`App`/`darkModeStore`; актуальные цифры после каждого запуска печатает `npm run test:coverage`.
+Все юнит-тесты проходят: **138 тестов в 38 файлах** (включая barrel-тесты, тесты типов
+и тесты seo-плагина). Покрытие по v8 на момент обновления README: **100%** statements /
+**100%** branches / **100%** functions / **100%** lines — покрыт весь прикладной код
+(`src/` и `vite-plugins/`); актуальные цифры после каждого запуска печатает
+`npm run test:coverage`.
 
-| Модуль                                             | Файл теста                                                  |
-| -------------------------------------------------- | ----------------------------------------------------------- |
-| `App` (маршрутизация, ленивые чанки)               | `src/App.test.tsx`                                          |
-| `Navbar`                                           | `src/components/Navbar/Navbar.test.tsx`                     |
-| `ButtonToggleDarkMode`                             | `src/components/Navbar/UI/ButtonToggleDarkMode.test.tsx`    |
-| `Footer`                                           | `src/components/Footer/index.test.tsx`                      |
-| `Header`                                           | `src/components/Header/index.test.tsx`                      |
-| `ScrollToTop`                                      | `src/components/ScrollToTop/index.test.tsx`                 |
-| `ButtonIconWithLink`                               | `src/components/ButtonIconWithLink/index.test.tsx`          |
-| `AnimationScale3d`                                 | `src/components/Animations/AnimationScale3d/index.test.tsx` |
-| `AnimationText`                                    | `src/components/Animations/AnimationText/index.test.tsx`    |
-| `Home`                                             | `src/pages/Home.test.tsx`                                   |
-| `Contacts`                                         | `src/pages/Contacts/Contacts.test.tsx`                      |
-| `AnimatedTitle` (`Contacts`)                       | `src/pages/Contacts/UI/AnimatedTitle.test.tsx`              |
-| `ContactItem` (`Contacts`)                         | `src/pages/Contacts/UI/ContactItem.test.tsx`                |
-| константы `Contacts`                               | `src/pages/Contacts/model/constants.test.ts`                |
-| `Projects`                                         | `src/pages/Projects/Projects.test.tsx`                      |
-| `Project` (карточка)                               | `src/pages/Projects/UI/Project.test.tsx`                    |
-| `DEFAULT_SHADOW_COLOR` / `INNER_SHADOW_COLOR_DARK` | `src/pages/Projects/UI/model/constants.test.ts`             |
-| `Project` (страница)                               | `src/pages/Project/Project.test.tsx`                        |
-| `findProjectById`                                  | `src/pages/Project/model/lib.test.ts`                       |
-| `BUTTON_GRADIENT`                                  | `src/pages/Project/model/constants.test.ts`                 |
-| `NotFound` (404)                                   | `src/pages/NotFound/NotFound.test.tsx`                      |
-| `useDocumentMeta` / `upsertMeta`                   | `src/hooks/useDocumentMeta.test.ts`                         |
-| `darkModeStore` (zustand-стор)                     | `src/store/darkModeStore.test.ts`                           |
-| `projects` / `projectsList` / `testTasksList`      | `src/shared/constants/projects.test.ts`                     |
-| `getLetters` / `replaceSpaceWithNbsp`              | `src/shared/lib/text.test.ts`                               |
-| `renderHead` (seo-плагин)                          | `vite-plugins/seo.test.ts`                                  |
+| Модуль                                                                    | Файл теста                                                  |
+| ------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| `App` (маршрутизация, ленивые загрузчики)                                 | `src/App.test.tsx`                                          |
+| баррель компонентов                                                       | `src/components/index.test.ts`                              |
+| баррель `Navbar`                                                          | `src/components/Navbar/index.test.ts`                       |
+| `Navbar`                                                                  | `src/components/Navbar/Navbar.test.tsx`                     |
+| `ButtonToggleDarkMode`                                                    | `src/components/Navbar/UI/ButtonToggleDarkMode.test.tsx`    |
+| `Footer`                                                                  | `src/components/Footer/index.test.tsx`                      |
+| `Header`                                                                  | `src/components/Header/index.test.tsx`                      |
+| `ScrollToTop`                                                             | `src/components/ScrollToTop/index.test.tsx`                 |
+| `ButtonIconWithLink`                                                      | `src/components/ButtonIconWithLink/index.test.tsx`          |
+| `AnimationScale3d`                                                        | `src/components/Animations/AnimationScale3d/index.test.tsx` |
+| `AnimationText` (варианты `words` / `letters`)                            | `src/components/Animations/AnimationText/index.test.tsx`    |
+| `Home`                                                                    | `src/pages/Home.test.tsx`                                   |
+| баррель страницы `Contacts`                                               | `src/pages/Contacts/index.test.ts`                          |
+| типы `ContactItem` / `ContactLink`                                        | `src/pages/Contacts/Contacts.types.test.ts`                 |
+| `Contacts`                                                                | `src/pages/Contacts/Contacts.test.tsx`                      |
+| `AnimatedTitle` (`Contacts`)                                              | `src/pages/Contacts/UI/AnimatedTitle.test.tsx`              |
+| `ContactItem` (`Contacts`)                                                | `src/pages/Contacts/UI/ContactItem.test.tsx`                |
+| константы `Contacts`                                                      | `src/pages/Contacts/model/constants.test.ts`                |
+| баррель страницы `Projects`                                               | `src/pages/Projects/index.test.ts`                          |
+| тип `ProjectsSection`                                                     | `src/pages/Projects/Projects.types.test.ts`                 |
+| `Projects`                                                                | `src/pages/Projects/Projects.test.tsx`                      |
+| `Project` (карточка)                                                      | `src/pages/Projects/UI/Project.test.tsx`                    |
+| `DEFAULT_SHADOW_COLOR` / `INNER_SHADOW_COLOR_DARK`                        | `src/pages/Projects/UI/model/constants.test.ts`             |
+| баррель страницы `Project`                                                | `src/pages/Project/index.test.ts`                           |
+| `Project` (страница)                                                      | `src/pages/Project/Project.test.tsx`                        |
+| `findProjectById`                                                         | `src/pages/Project/model/lib.test.ts`                       |
+| `BUTTON_GRADIENT`                                                         | `src/pages/Project/model/constants.test.ts`                 |
+| `NotFound` (404)                                                          | `src/pages/NotFound/NotFound.test.tsx`                      |
+| `useDocumentMeta` / `upsertMeta`                                          | `src/hooks/useDocumentMeta.test.ts`                         |
+| `darkModeStore` (zustand-стор, catch-ветки)                               | `src/store/darkModeStore.test.ts`                           |
+| `projects` / `projectsList` / `testTasksList` / `resolveImage`            | `src/shared/constants/projects.test.ts`                     |
+| баррель констант                                                          | `src/shared/constants/index.test.ts`                        |
+| seo-константы (`SITE_URL`, `PAGES`, …)                                    | `src/shared/constants/seo.test.ts`                          |
+| баррель утилит                                                            | `src/shared/lib/index.test.ts`                              |
+| `getLetters` / `replaceSpaceWithNbsp`                                     | `src/shared/lib/text.test.ts`                               |
+| баррель типов                                                             | `src/shared/types/index.test.ts`                            |
+| типы `DarkMode` / `ProjectSection` / `ProjectItem`                        | `src/shared/types/types.test.ts`                            |
+| seo-плагин (`renderHead`, `renderRobots`, `renderSitemap`, `closeBundle`) | `vite-plugins/seo.test.ts`                                  |
 
 Команда запуска (однократно):
 
