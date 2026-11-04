@@ -186,7 +186,7 @@ body {
   }
 
   .footer__wrapper {
-    row-gap: 20px;
+    column-gap: 10px;
   }
 
   /* Social */

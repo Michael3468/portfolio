@@ -80,7 +80,7 @@ export default function ButtonIconWithLink({
         ...style,
       }}
       href={link ?? undefined}
-      {...(link && { target: '_blank', rel: 'noreferrer' })}
+      {...(link && { target: '_blank', rel: 'noopener noreferrer' })}
     >
       {img && (
         <img
