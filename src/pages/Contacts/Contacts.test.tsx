@@ -40,13 +40,28 @@ describe('Contacts page', () => {
   });
 
   /**
+   * Проверяет, что вместо заголовка «Location» отображается иконка геометки,
+   * а местоположение рендерится в одной строке с ней.
+   */
+  it('renders the location icon instead of the Location title', () => {
+    render(<Contacts />);
+
+    const icon = screen.getByRole('img', { name: 'Location' });
+    expect(icon.tagName.toLowerCase()).toBe('svg');
+    expect(screen.queryByText(/Location:/)).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Location St. Petersburg, Russia' }),
+    ).toContainElement(icon);
+  });
+
+  /**
    * Проверяет, что заголовок контакта и его значение рендерятся в одной строке.
    */
   it('renders every contact title and value in one heading', () => {
     render(<Contacts />);
 
     expect(
-      screen.getByRole('heading', { name: 'Location: St. Petersburg, Russia' }),
+      screen.getByRole('heading', { name: 'Location St. Petersburg, Russia' }),
     ).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /^Telegram:/ })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /^Email:/ })).toBeInTheDocument();

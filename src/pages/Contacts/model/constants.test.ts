@@ -59,6 +59,7 @@ describe('Contacts model constants', () => {
     expect(CONTACTS_LIST[0]).toEqual({
       id: 'location',
       title: 'Location',
+      icon: 'location',
       text: LOCATION_TEXT,
     });
 

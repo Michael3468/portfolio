@@ -1,5 +1,7 @@
 import type { ContactItem } from '@/pages/Contacts/Contacts.types';
 
+import LocationIcon from './LocationIcon';
+
 export interface ContactItemProps {
   readonly item: ContactItem;
 }
@@ -23,6 +25,8 @@ export const CONTACT_LINK_REL = 'nofollow';
  * Особенности разметки:
  * - значение идёт сразу после заголовка в том же `<h2>`, поэтому, например,
  *   получается «Location: St. Petersburg, Russia» без переноса на новую строку;
+ * - если задан `icon`, вместо текстового заголовка выводится SVG-иконка,
+ *   а `title` становится её доступной подписью (например, геометка для Location);
  * - для ссылки используется `link.label` — открытый адрес или URL
  *   (например, `mikhail3468@yandex.ru`), а не текст вроде «Click to send message»;
  * - ссылка помечается `rel="nofollow"`, чтобы поисковики не переходили по ней
@@ -33,14 +37,14 @@ export const CONTACT_LINK_REL = 'nofollow';
  * @returns {JSX.Element} Разметка элемента списка контактов.
  */
 export default function ContactItem({ item }: ContactItemProps) {
-  const { title, text, link, withTextShadow } = item;
+  const { title, text, link, icon, withTextShadow } = item;
   // Тень применяется только к Telegram и Email, как задано в CONTACTS_LIST.
   const headingClass = withTextShadow ? 'title-2 text-shadow' : 'title-2';
 
   return (
     <li className="content-list__item">
       <h2 className={headingClass}>
-        {title}:{' '}
+        {icon === 'location' ? <LocationIcon label={title} /> : `${title}:`}{' '}
         {/*
           `text ??` позволяет показать простое значение (Location), а если его нет —
           отрендерить ссылку. Обёртка `<p>` не используется намеренно: она вернула бы

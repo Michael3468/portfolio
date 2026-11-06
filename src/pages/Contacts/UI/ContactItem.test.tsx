@@ -48,6 +48,31 @@ describe('ContactItem', () => {
   });
 
   /**
+   * Проверяет, что при заданной иконке вместо текстового заголовка
+   * рендерится SVG-геометка, а `title` становится её доступной подписью.
+   */
+  it('renders the location icon instead of the title when icon is set', () => {
+    render(
+      <ContactItem
+        item={createItem({
+          id: 'location',
+          title: 'Location',
+          icon: 'location',
+          text: 'St. Petersburg, Russia',
+        })}
+      />,
+    );
+
+    const icon = screen.getByRole('img', { name: 'Location' });
+    expect(icon).toBeInTheDocument();
+    expect(icon.tagName.toLowerCase()).toBe('svg');
+    expect(screen.queryByText(/Location:/)).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Location St. Petersburg, Russia' }),
+    ).toContainElement(icon);
+  });
+
+  /**
    * Проверяет, что открытая ссылка рендерится в одной строке с заголовком,
    * без промежуточной подписи и обёртки в абзац.
    */

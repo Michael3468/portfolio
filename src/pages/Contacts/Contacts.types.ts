@@ -14,16 +14,27 @@ export interface ContactLink {
 }
 
 /**
+ * Иконка, которая заменяет видимый заголовок контакта.
+ *
+ * `location` — геометка для местоположения.
+ */
+export type ContactIcon = 'location';
+
+/**
  * Элемент списка контактов страницы «Контакты».
  *
  * Может содержать либо простой текст (`text`), либо ссылку (`link`).
  * Заголовок и значение рендерятся в одной строке компонентом `ContactItem`.
+ * Если задан `icon`, вместо текстового заголовка показывается иконка,
+ * а `title` используется как её доступная подпись.
  */
 export interface ContactItem {
   readonly id: string;
   readonly title: string;
   readonly text?: string;
   readonly link?: ContactLink;
+  /** Иконка вместо видимого текстового заголовка. */
+  readonly icon?: ContactIcon;
   /** Добавлять ли класс `text-shadow` заголовку секции. */
   readonly withTextShadow?: boolean;
 }

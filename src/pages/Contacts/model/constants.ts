@@ -45,6 +45,7 @@ export const CONTACTS_LIST: readonly ContactItem[] = [
   {
     id: 'location',
     title: 'Location',
+    icon: 'location',
     text: LOCATION_TEXT,
   },
   {
