@@ -20,7 +20,7 @@
    По бокам слайды плавно исчезают через маску-градиент */
 .projects-slider__viewport {
   overflow: hidden;
-  padding: 20px 0;
+  padding: 1.25rem 0;
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0,
@@ -79,8 +79,8 @@
 
 .projects-slider__arrow:focus-visible,
 .projects-slider__dot:focus-visible {
-  outline: 2px solid var(--project-card-text);
-  outline-offset: 3px;
+  outline: 0.125rem solid var(--project-card-text);
+  outline-offset: 0.1875rem;
 }
 
 .projects-slider__arrow_prev {
@@ -119,8 +119,8 @@
 }
 
 .projects-slider__dot {
-  width: 12px;
-  height: 12px;
+  width: 0.75rem;
+  height: 0.75rem;
   border-radius: 50%;
   background-color: var(--project-card-bg);
   box-shadow: var(--box-shadow);

@@ -105,10 +105,10 @@ describe('Project card', () => {
     );
 
     expect(container.querySelector('.project')).toHaveStyle({
-      boxShadow: '0 0 11px black',
+      boxShadow: '0 0 0.6875rem black',
     });
 
     const link = container.querySelector('a');
-    expect(link).toHaveStyle({ boxShadow: '0 0 10px black inset' });
+    expect(link).toHaveStyle({ boxShadow: '0 0 0.625rem black inset' });
   });
 });

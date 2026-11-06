@@ -5,7 +5,7 @@ const START_DELAY = 400; // мс до начала анимации
 const STAGGER = 100; // задержка между буквами
 const DROP_DURATION = 400; // падение буквы
 const SETTLE_DURATION = 1000; // переход в белый и масштаб 1
-const DROP_HEIGHT = -300; // стартовое смещение по Y (px)
+const DROP_HEIGHT = -18.75; // стартовое смещение по Y (rem)
 
 /**
  * Запускает анимацию «падения» букв через Web Animations API.

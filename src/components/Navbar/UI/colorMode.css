@@ -18,7 +18,7 @@
 
   --project-card-bg: var(--card-bg);
   --project-card-text: var(--dark-purple);
-  --box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+  --box-shadow: 0 0 0.9375rem rgba(0, 0, 0, 0.5);
 }
 
 .dark {
@@ -33,5 +33,5 @@
 
   --project-card-bg: var(--black-pure);
   --project-card-text: var(--light-yellow);
-  --box-shadow: 0px 5px 35px rgba(0, 0, 0, 0.8);
+  --box-shadow: 0 0.3125rem 2.1875rem rgba(0, 0, 0, 0.8);
 }

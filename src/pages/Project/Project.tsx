@@ -89,7 +89,7 @@ export default function Project() {
             <img
               src={project.bigImg}
               srcSet={`${project.bigImgSmall} 800w, ${project.bigImg} 1200w`}
-              sizes="(max-width: 865px) 100vw, 865px"
+              sizes="(max-width: 54.0625rem) 100vw, 54.0625rem"
               alt={project.title}
               className={`project-details__cover ${
                 imgLoaded ? 'project-details__cover_loaded' : ''

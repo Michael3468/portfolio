@@ -8,6 +8,6 @@
   display: inline-block;
   text-align: center;
   color: white;
-  text-shadow: 0 0 10px rgb(4, 255, 4);
+  text-shadow: 0 0 0.625rem rgb(4, 255, 4);
   will-change: transform, color;
 }

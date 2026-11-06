@@ -35,12 +35,12 @@
   height: 1em;
   background: currentColor;
   position: relative;
-  top: 4px;
+  top: 0.25rem;
 }
 
 .header__text {
-  margin-bottom: 40px;
-  font-size: 22px;
+  margin-bottom: 2.5rem;
+  font-size: 1.375rem;
   line-height: 1.333;
 }
 

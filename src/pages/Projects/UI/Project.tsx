@@ -62,10 +62,10 @@ export default function Project({ title, img, id, background, ariaHidden }: Proj
           ? {
               display: 'flex',
               alignItems: 'center',
-              boxShadow: `0 0 11px ${projectShadowColor}`,
+              boxShadow: `0 0 0.6875rem ${projectShadowColor}`,
             }
           : {
-              boxShadow: `0 0 11px ${projectShadowColor}`,
+              boxShadow: `0 0 0.6875rem ${projectShadowColor}`,
             }
       }
     >
@@ -75,7 +75,7 @@ export default function Project({ title, img, id, background, ariaHidden }: Proj
           width: 'inherit',
           maxWidth: 'inherit',
           borderRadius: 'inherit',
-          boxShadow: `0 0 10px ${innerShadow} inset`,
+          boxShadow: `0 0 0.625rem ${innerShadow} inset`,
         }}
       >
         {img && (

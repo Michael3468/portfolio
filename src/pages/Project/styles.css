@@ -19,7 +19,7 @@
 }
 
 .project-details__container.project-details__container__loaded {
-  padding: 20px;
+  padding: 1.25rem;
   opacity: 1;
   height: 100%;
   transition: all 3s ease-in-out;
@@ -29,7 +29,7 @@
   max-width: 100%;
 
   box-shadow: var(--box-shadow);
-  border-radius: 10px;
+  border-radius: 0.625rem;
   width: 100%;
   opacity: 0;
 }

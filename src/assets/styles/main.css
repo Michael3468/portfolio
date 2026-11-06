@@ -143,7 +143,7 @@ body {
   }
 
   .header__title strong {
-    font-size: 40px;
+    font-size: 2.5rem;
   }
 
   /* Nav */
@@ -195,7 +195,7 @@ body {
   }
 
   .footer__wrapper {
-    column-gap: 10px;
+    column-gap: 0.625rem;
   }
 
   /* Social */
@@ -205,6 +205,6 @@ body {
   }
 
   .social__item {
-    width: 28px;
+    width: 1.75rem;
   }
 }

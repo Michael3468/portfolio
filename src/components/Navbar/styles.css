@@ -1,9 +1,9 @@
 /* Nav */
 
 .nav {
-  padding: 15px 0;
+  padding: 0.9375rem 0;
   background-color: var(--nav-bg);
-  border-bottom: 1px solid var(--nav-border);
+  border-bottom: 0.0625rem solid var(--nav-border);
   color: var(--nav-text);
   letter-spacing: normal;
 
@@ -18,15 +18,15 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  column-gap: 30px;
-  row-gap: 20px;
+  column-gap: 1.875rem;
+  row-gap: 1.25rem;
   flex-wrap: wrap;
 }
 
 .logo {
   margin-right: auto;
   color: var(--nav-text);
-  font-size: 24px;
+  font-size: 1.5rem;
   font-family: 'Poppins', sans-serif;
 }
 
@@ -37,10 +37,10 @@
 .nav-list {
   display: flex;
   flex-wrap: wrap;
-  row-gap: 10px;
+  row-gap: 0.625rem;
   align-items: center;
-  column-gap: 40px;
-  font-size: 16px;
+  column-gap: 2.5rem;
+  font-size: 1rem;
   font-weight: 500;
   font-family: 'Poppins', sans-serif;
 }
@@ -66,12 +66,12 @@
   top: 100%;
 
   display: block;
-  height: 2px;
+  height: 0.125rem;
   width: 100%;
   background-color: var(--purple);
 }
 
-@media (max-width: 531px) {
+@media (max-width: 33.1875rem) {
   .nav-list {
     width: 100%;
     justify-content: space-between;

@@ -24,7 +24,7 @@ export default function Contacts() {
   return (
     <main className="section">
       <div className="container">
-        <div style={{ marginBottom: '80px' }}>
+        <div style={{ marginBottom: '5rem' }}>
           <AnimatedTitle title={CONTACTS_TITLE} />
         </div>
 
