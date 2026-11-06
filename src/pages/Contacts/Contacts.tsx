@@ -24,7 +24,9 @@ export default function Contacts() {
   return (
     <main className="section">
       <div className="container">
-        <AnimatedTitle title={CONTACTS_TITLE} />
+        <div style={{ marginBottom: '80px' }}>
+          <AnimatedTitle title={CONTACTS_TITLE} />
+        </div>
 
         <ul className="content-list">
           {CONTACTS_LIST.map((item) => (
