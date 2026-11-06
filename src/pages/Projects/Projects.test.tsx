@@ -24,8 +24,8 @@ describe('Projects page', () => {
 
     const sectionHeadings = screen.getAllByRole('heading', { level: 2 });
     expect(sectionHeadings).toHaveLength(2);
-    expect(sectionHeadings[0]).toHaveTextContent('Projects');
-    expect(sectionHeadings[1]).toHaveTextContent('Test Tasks');
+    expect(sectionHeadings[0]).toHaveTextContent('PROJECTS');
+    expect(sectionHeadings[1]).toHaveTextContent('TEST TASKS');
   });
 
   /**

@@ -13,12 +13,12 @@ import './Projects.styles.css';
 /** Секции страницы. Список статичен, поэтому создаётся один раз при загрузке модуля. */
 const PROJECTS_SECTIONS: readonly ProjectsSection[] = [
   {
-    title: getLetters('Projects'),
+    title: getLetters('PROJECTS'),
     projects: projectsList,
     isSlider: true,
   },
   {
-    title: getLetters('Test Tasks'),
+    title: getLetters('TEST TASKS'),
     projects: testTasksList,
     isSlider: true,
   },
@@ -36,7 +36,9 @@ export default function Projects() {
           <div className="projects-list__block" key={item.title.join('')}>
             <h2 className="title-1 main-text-shadow">
               {item.title.map((letter, index) => (
-                <AnimationScale3d key={index}>{replaceSpaceWithNbsp(letter)}</AnimationScale3d>
+                <AnimationScale3d key={index + letter}>
+                  {replaceSpaceWithNbsp(letter)}
+                </AnimationScale3d>
               ))}
             </h2>
 

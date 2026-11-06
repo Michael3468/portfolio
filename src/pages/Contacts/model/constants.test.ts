@@ -19,7 +19,7 @@ describe('Contacts model constants', () => {
    * Проверяет, что заголовок страницы «Контакты» задан корректно.
    */
   it('defines the contacts title', () => {
-    expect(CONTACTS_TITLE).toBe('Contacts');
+    expect(CONTACTS_TITLE).toBe('CONTACTS');
   });
 
   /**

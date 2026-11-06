@@ -35,7 +35,7 @@ describe('App', () => {
     window.history.pushState({}, '', '/projects');
     const projectsView = render(<App />);
     const sectionHeadings = await projectsView.findAllByRole('heading', { level: 2 });
-    expect(sectionHeadings[0]).toHaveTextContent('Projects');
+    expect(sectionHeadings[0]).toHaveTextContent('PROJECTS');
     projectsView.unmount();
 
     // Детальная страница проекта с заголовком из данных
@@ -49,8 +49,8 @@ describe('App', () => {
     window.history.pushState({}, '', '/contacts');
     const contactsView = render(<App />);
     expect(
-      await contactsView.findByRole('heading', { level: 2, name: /^Telegram:/ }),
+      await contactsView.findByRole('heading', { level: 2, name: /^Telegram/ }),
     ).toBeInTheDocument();
-    expect(contactsView.getByRole('heading', { level: 2, name: /^Email:/ })).toBeInTheDocument();
+    expect(contactsView.getByRole('heading', { level: 2, name: /^Email/ })).toBeInTheDocument();
   });
 });

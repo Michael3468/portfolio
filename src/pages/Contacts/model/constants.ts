@@ -3,7 +3,7 @@ import type { ContactItem } from '@/pages/Contacts/Contacts.types';
 /**
  * Заголовок страницы «Контакты».
  */
-export const CONTACTS_TITLE = 'Contacts';
+export const CONTACTS_TITLE = 'CONTACTS';
 
 /**
  * Ссылка на Telegram.

@@ -19,7 +19,7 @@ describe('Contacts page', () => {
   it('renders the heading', () => {
     render(<Contacts />);
 
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Contacts');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('CONTACTS');
   });
 
   /**
