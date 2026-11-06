@@ -94,6 +94,15 @@ portfolio/
     │   ├── ScrollToTop/
     │   │   ├── index.tsx        # скролл к началу при смене маршрута
     │   │   └── index.test.tsx
+    │   ├── SkillBackground/
+    │   │   ├── index.tsx        # фон с SVG-иконками навыков, параллакс за мышью
+    │   │   ├── index.test.tsx
+    │   │   ├── styles.css
+    │   │   └── model/
+    │   │       ├── constants.ts       # позиции и прозрачность плиток
+    │   │       ├── constants.test.ts
+    │   │       ├── lib.ts             # getParallaxOffset (в 3 раза медленнее курсора)
+    │   │       └── lib.test.ts
     │   ├── Animations/
     │   │   ├── AnimationScale3d/
     │   │   │   ├── index.tsx    # анимация «rubber band» букв
@@ -184,9 +193,12 @@ portfolio/
     │       ├── NotFound.test.tsx
     │       └── styles.css
     └── shared/
-        ├── assets/img/
-        │   ├── projects/        # изображения проектов (WebP: X, X-big, X-big-sm)
-        │   └── testProjects/    # изображения тестовых заданий (те же размеры)
+        ├── assets/
+        │   ├── img/
+        │   │   ├── projects/        # изображения проектов (WebP: X, X-big, X-big-sm)
+        │   │   └── testProjects/    # изображения тестовых заданий (те же размеры)
+        │   └── icons/
+        │       └── skill-tiles/     # белые SVG-плитки навыков с прозрачным логотипом
         ├── data/
         │   └── projects.json    # данные проектов и тестовых заданий
         ├── constants/
@@ -240,6 +252,16 @@ portfolio/
   (1200px) и её уменьшенная версия для `srcset` (800px).
 - Конвертация из исходных JPG (для каталогов `projects/` и `testProjects/`) —
   `bash scripts/optimize-images.sh`; нужен ffmpeg с libwebp, исходные JPG не удаляются.
+
+## Фон с иконками навыков
+
+`SkillBackground` — фиксированный декоративный слой под контентом. На нём разложены
+SVG-плитки всех навыков из `projects.json`: белые квадраты со скруглёнными углами,
+логотип внутри вырезан прозрачностью. Плитки неподвижны, пока пользователь не двигает
+мышью; движение курсора смещает весь слой в ту же сторону, но в 3 раза медленнее
+(`getParallaxOffset`, коэффициент `1 / 3`). На тач-экранах и при
+`prefers-reduced-motion: reduce` фон остаётся статичным. Слой имеет `pointer-events: none`
+и `aria-hidden`, поэтому не мешает кликам и скринридерам.
 
 ## Как перенесён проект (CRA → Vite)
 
@@ -298,11 +320,10 @@ portfolio/
 `@testing-library/jest-dom/vitest` и мок `window.matchMedia`, необходимый для компонентов
 тёмной темы в jsdom.
 
-Все юнит-тесты проходят: **138 тестов в 38 файлах** (включая barrel-тесты, тесты типов
-и тесты seo-плагина). Покрытие по v8 на момент обновления README: **100%** statements /
-**100%** branches / **100%** functions / **100%** lines — покрыт весь прикладной код
-(`src/` и `vite-plugins/`); актуальные цифры после каждого запуска печатает
-`npm run test:coverage`.
+Все юнит-тесты проходят: **176 тестов в 44 файлах** (включая barrel-тесты, тесты типов
+и тесты seo-плагина). Покрытие по v8 на момент обновления README: **96.61%** statements /
+**94.79%** branches / **96.37%** functions / **97.3%** lines; актуальные цифры после
+каждого запуска печатает `npm run test:coverage`.
 
 | Модуль                                                                    | Файл теста                                                  |
 | ------------------------------------------------------------------------- | ----------------------------------------------------------- |
@@ -314,6 +335,9 @@ portfolio/
 | `Footer`                                                                  | `src/components/Footer/index.test.tsx`                      |
 | `Header`                                                                  | `src/components/Header/index.test.tsx`                      |
 | `ScrollToTop`                                                             | `src/components/ScrollToTop/index.test.tsx`                 |
+| `SkillBackground`                                                         | `src/components/SkillBackground/index.test.tsx`             |
+| `getParallaxOffset` / `clamp`                                             | `src/components/SkillBackground/model/lib.test.ts`          |
+| константы `SkillBackground`                                               | `src/components/SkillBackground/model/constants.test.ts`    |
 | `ButtonIconWithLink`                                                      | `src/components/ButtonIconWithLink/index.test.tsx`          |
 | `AnimationScale3d`                                                        | `src/components/Animations/AnimationScale3d/index.test.tsx` |
 | `AnimationText` (варианты `words` / `letters`)                            | `src/components/Animations/AnimationText/index.test.tsx`    |

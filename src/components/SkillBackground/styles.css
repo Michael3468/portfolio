@@ -1,0 +1,41 @@
+/* Декоративный фон: лежит под контентом и не мешает взаимодействию. */
+.skill-background {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/*
+ * Слой больше окна, чтобы при смещении на 18% по краям не появлялось пустоты.
+ * Плитки позиционируются в процентах от этого увеличенного слоя.
+ */
+.skill-background__layer {
+  position: absolute;
+  inset: -20%;
+  will-change: transform;
+}
+
+.skill-background__tile {
+  position: absolute;
+  width: var(--tile-size);
+  height: var(--tile-size);
+  transform: translate(-50%, -50%) rotate(var(--tile-rotate));
+  user-select: none;
+}
+
+/* На узких экранах уменьшаем плитки, чтобы фон не становился слишком плотным. */
+@media (max-width: 40rem) {
+  .skill-background__tile {
+    width: calc(var(--tile-size) * 0.68);
+    height: calc(var(--tile-size) * 0.68);
+  }
+}
+
+/* При отключённой анимации слой остаётся статичным. */
+@media (prefers-reduced-motion: reduce) {
+  .skill-background__layer {
+    will-change: auto;
+  }
+}

@@ -20,5 +20,6 @@ describe('components index exports', () => {
     expect(mod.Footer).toBeDefined();
     expect(mod.Header).toBeDefined();
     expect(mod.ScrollToTop).toBeDefined();
+    expect(mod.SkillBackground).toBeDefined();
   });
 });

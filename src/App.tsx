@@ -2,7 +2,7 @@ import { LazyMotion } from 'framer-motion';
 import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import { Footer, Navbar, ScrollToTop } from './components';
+import { Footer, Navbar, ScrollToTop, SkillBackground } from './components';
 import { upsertMeta } from './hooks/useDocumentMeta';
 import { THEME_COLORS } from './shared/constants/seo';
 import { useDarkModeStore } from './store/darkModeStore';
@@ -31,6 +31,8 @@ export default function App() {
     // strict: framer-motion выбросит ошибку, если внутри случайно останется motion.* вместо m.*
     <LazyMotion features={loadFeatures} strict>
       <div className="App">
+        <SkillBackground />
+
         <BrowserRouter>
           <ScrollToTop />
           <Navbar />

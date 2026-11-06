@@ -20,6 +20,24 @@ test('home page renders with its own title', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Frontend' })).toBeVisible();
 });
 
+test('skill background follows the mouse three times slower', async ({ page }) => {
+  await page.goto('/');
+
+  const layer = page.locator('.skill-background__layer');
+  const tiles = page.locator('.skill-background__tile');
+
+  expect(await tiles.count()).toBeGreaterThan(0);
+  await expect(tiles.first()).toHaveAttribute('src', /\.svg$/);
+
+  await page.mouse.move(300, 300);
+  await page.mouse.move(600, 450, { steps: 10 });
+
+  // Курсор прошёл 300px по X и 150px по Y — слой должен пройти 100px и 50px.
+  await expect
+    .poll(() => layer.evaluate((element) => element.style.transform))
+    .toBe('translate3d(100px, 50px, 0px)');
+});
+
 test('projects page lists projects and test tasks', async ({ page }) => {
   await page.goto('/projects');
 
