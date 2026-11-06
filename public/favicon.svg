@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Portfolio — floppy disk">
+  <rect width="64" height="64" rx="7.5" fill="#00ff55" />
+
+  <path d="M29.28125 0h22.875v13.3a2 2 0 0 1-2 2H31.28125a2 2 0 0 1-2-2V0Z" fill="#171718" />
+  <rect x="32.38125" y="12.5" width="4.6" height="7" rx="0.5" fill="#00ff55" />
+
+  <rect x="10.7" y="32" width="42.7" height="22.3" rx="3" fill="#f2f2f2" />
+  <path d="M16.8 40.3h30.5M16.8 47.3h19.8" stroke="#171718" stroke-width="3.8" stroke-linecap="round" />
+</svg>
