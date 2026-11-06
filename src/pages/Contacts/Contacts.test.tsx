@@ -1,7 +1,7 @@
 /**
  * Тесты страницы «Контакты».
  *
- * Проверяют рендеринг заголовка страницы, наличие ссылок на Telegram и Email,
+ * Проверяют рендеринг заголовка страницы, открытых ссылок на Telegram и Email,
  * а также заголовки соответствующих секций.
  */
 import { render, screen } from '@testing-library/react';
@@ -23,20 +23,58 @@ describe('Contacts page', () => {
   });
 
   /**
-   * Проверяет, что на странице отображаются две ссылки для отправки сообщения:
-   * одна ведёт на Telegram (https://t.me/mikhail3468), другая — на Email
-   * (mailto:mikhail3468@yandex.ru).
+   * Проверяет, что на странице отображаются открытые ссылки на Telegram
+   * (https://t.me/mikhail3468) и Email (mikhail3468@yandex.ru).
    */
-  it('renders the Telegram and Email links', () => {
+  it('renders the Telegram and Email links with visible addresses', () => {
     render(<Contacts />);
 
-    const links = screen.getAllByRole('link', { name: 'Click to send message' });
-    expect(links).toHaveLength(2);
-    expect(links.some((link) => link.getAttribute('href') === 'https://t.me/mikhail3468')).toBe(
-      true,
+    expect(screen.getByRole('link', { name: 'https://t.me/mikhail3468' })).toHaveAttribute(
+      'href',
+      'https://t.me/mikhail3468',
     );
-    expect(links.some((link) => link.getAttribute('href') === 'mailto:mikhail3468@yandex.ru')).toBe(
-      true,
+    expect(screen.getByRole('link', { name: 'mikhail3468@yandex.ru' })).toHaveAttribute(
+      'href',
+      'mailto:mikhail3468@yandex.ru',
+    );
+  });
+
+  /**
+   * Проверяет, что заголовок контакта и его значение рендерятся в одной строке.
+   */
+  it('renders every contact title and value in one heading', () => {
+    render(<Contacts />);
+
+    expect(
+      screen.getByRole('heading', { name: 'Location: St. Petersburg, Russia' }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /^Telegram:/ })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /^Email:/ })).toBeInTheDocument();
+  });
+
+  /**
+   * Проверяет, что ссылки на контакты помечены `rel="nofollow"`,
+   * чтобы поисковые системы не индексировали их.
+   */
+  it('marks the Telegram and Email links as nofollow', () => {
+    render(<Contacts />);
+
+    const telegramLink = screen.getByRole('link', { name: 'https://t.me/mikhail3468' });
+    const emailLink = screen.getByRole('link', { name: 'mikhail3468@yandex.ru' });
+
+    expect(telegramLink).toHaveAttribute('rel', 'nofollow');
+    expect(emailLink).toHaveAttribute('rel', 'nofollow');
+  });
+
+  /**
+   * Проверяет, что страница контактов закрыта от индексации поисковыми системами.
+   */
+  it('marks the page as noindex, nofollow', () => {
+    render(<Contacts />);
+
+    expect(document.querySelector('meta[name="robots"]')).toHaveAttribute(
+      'content',
+      'noindex, nofollow',
     );
   });
 
@@ -46,7 +84,7 @@ describe('Contacts page', () => {
   it('renders the Telegram and Email section titles', () => {
     render(<Contacts />);
 
-    expect(screen.getByRole('heading', { name: 'Telegram' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Email' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /^Telegram:/ })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /^Email:/ })).toBeInTheDocument();
   });
 });

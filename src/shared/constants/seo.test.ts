@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
 
-import { PAGES, SITE_NAME, SITE_URL, STATIC_PAGES, THEME_COLORS, buildUrl } from './seo';
+import {
+  INDEXABLE_PAGES,
+  PAGES,
+  SITE_NAME,
+  SITE_URL,
+  STATIC_PAGES,
+  THEME_COLORS,
+  buildUrl,
+} from './seo';
 
 /**
  * Тесты SEO-констант и утилит из `src/shared/constants/seo.ts`.
@@ -70,6 +78,15 @@ describe('PAGES', () => {
   });
 
   /**
+   * Проверяет, что страница контактов закрыта от индексации, а остальные — нет.
+   */
+  it('marks only the contacts page as noindex', () => {
+    expect(PAGES.contacts.noindex).toBe(true);
+    expect(PAGES.home).not.toHaveProperty('noindex');
+    expect(PAGES.projects).not.toHaveProperty('noindex');
+  });
+
+  /**
    * Проверяет, что все страницы имеют уникальные пути.
    */
   it('has unique paths across all pages', () => {
@@ -100,6 +117,14 @@ describe('STATIC_PAGES', () => {
   it('is an array with correct length', () => {
     expect(Array.isArray(STATIC_PAGES)).toBe(true);
     expect(STATIC_PAGES).toHaveLength(3);
+  });
+
+  /**
+   * Проверяет, что в INDEXABLE_PAGES не попадают страницы с noindex.
+   */
+  it('excludes noindex pages from INDEXABLE_PAGES', () => {
+    expect(INDEXABLE_PAGES.map((page) => page.path)).toEqual(['/', '/projects']);
+    expect(INDEXABLE_PAGES.some((page) => page.path === '/contacts')).toBe(false);
   });
 });
 

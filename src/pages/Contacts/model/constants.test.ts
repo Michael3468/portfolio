@@ -3,9 +3,9 @@ import { describe, expect, it } from 'vitest';
 import {
   CONTACTS_LIST,
   CONTACTS_TITLE,
+  EMAIL_ADDRESS,
   EMAIL_URL,
   LOCATION_TEXT,
-  SEND_MESSAGE_TEXT,
   TELEGRAM_URL,
 } from './constants';
 
@@ -22,17 +22,17 @@ describe('Contacts model constants', () => {
   });
 
   /**
-   * Проверяет, что текст ссылки для отправки сообщения задан корректно.
-   */
-  it('defines the send message text', () => {
-    expect(SEND_MESSAGE_TEXT).toBe('Click to send message');
-  });
-
-  /**
    * Проверяет, что ссылка на Telegram задана корректно.
    */
   it('defines the telegram url', () => {
     expect(TELEGRAM_URL).toBe('https://t.me/mikhail3468');
+  });
+
+  /**
+   * Проверяет, что адрес электронной почты задан корректно.
+   */
+  it('defines the email address', () => {
+    expect(EMAIL_ADDRESS).toBe('mikhail3468@yandex.ru');
   });
 
   /**
@@ -67,7 +67,7 @@ describe('Contacts model constants', () => {
       title: 'Telegram',
       link: {
         href: TELEGRAM_URL,
-        label: SEND_MESSAGE_TEXT,
+        label: TELEGRAM_URL,
       },
       withTextShadow: true,
     });
@@ -77,8 +77,7 @@ describe('Contacts model constants', () => {
       title: 'Email',
       link: {
         href: EMAIL_URL,
-        label: SEND_MESSAGE_TEXT,
-        wrapInParagraph: true,
+        label: EMAIL_ADDRESS,
       },
       withTextShadow: true,
     });

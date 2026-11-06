@@ -4,7 +4,7 @@ import path from 'node:path';
 import type { ResolvedConfig } from 'vite';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { STATIC_PAGES } from '../src/shared/constants/seo.js';
+import { INDEXABLE_PAGES, STATIC_PAGES } from '../src/shared/constants/seo.js';
 import seoPlugin, { renderHead, renderRobots, renderSitemap, SEO_HEAD_MARKER } from './seo';
 
 const template = `<html><head>\n    ${SEO_HEAD_MARKER}\n  </head></html>`;
@@ -46,6 +46,7 @@ describe('renderHead', () => {
     expect(html).not.toContain(SEO_HEAD_MARKER);
     expect(html).toContain('<title>Projects — Portfolio</title>');
     expect(html).toContain('<meta name="description" content="List of projects" />');
+    expect(html).toContain('<meta name="robots" content="index, follow" />');
     expect(html).toContain('<link rel="canonical" href="https://example.com/projects" />');
     expect(html).toContain('<meta property="og:url" content="https://example.com/projects" />');
   });
@@ -62,6 +63,20 @@ describe('renderHead', () => {
 
     expect(html).toContain('content="Tom &amp; Jerry"');
     expect(html).toContain('<title>A &quot;quoted&quot; &lt;tag&gt;</title>');
+  });
+
+  /**
+   * Проверяет, что для страницы с noindex выставляется запрет индексации.
+   */
+  it('marks noindex pages as noindex, nofollow', () => {
+    const html = renderHead(template, {
+      path: '/contacts',
+      title: 'Contacts',
+      description: 'Contacts',
+      noindex: true,
+    });
+
+    expect(html).toContain('<meta name="robots" content="noindex, nofollow" />');
   });
 
   /**
@@ -93,16 +108,17 @@ describe('renderRobots', () => {
  */
 describe('renderSitemap', () => {
   /**
-   * Проверяет, что sitemap.xml содержит XML-заголовок и URL каждой статической страницы.
+   * Проверяет, что sitemap.xml содержит XML-заголовок и URL каждой индексируемой страницы.
    */
-  it('renders sitemap.xml with every static page URL', () => {
+  it('renders sitemap.xml with every indexable page URL', () => {
     const sitemap = renderSitemap();
 
     expect(sitemap).toContain('<?xml version="1.0" encoding="UTF-8"?>');
     expect(sitemap).toContain('xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"');
-    for (const page of STATIC_PAGES) {
+    for (const page of INDEXABLE_PAGES) {
       expect(sitemap).toContain(`<loc>https://example.com${page.path}</loc>`);
     }
+    expect(sitemap).not.toContain('<loc>https://example.com/contacts</loc>');
   });
 });
 
@@ -147,6 +163,10 @@ describe('seoPlugin closeBundle', () => {
       expect(html).toContain(`<title>${page.title}</title>`);
       expect(html).toContain(`<link rel="canonical" href="https://example.com${page.path}" />`);
     }
+
+    // Страница контактов закрыта от индексации
+    const contactsHtml = fs.readFileSync(path.join(outDir, 'contacts', 'index.html'), 'utf8');
+    expect(contactsHtml).toContain('<meta name="robots" content="noindex, nofollow" />');
 
     expect(fs.readFileSync(path.join(outDir, 'robots.txt'), 'utf8')).toBe(renderRobots());
     expect(fs.readFileSync(path.join(outDir, 'sitemap.xml'), 'utf8')).toBe(renderSitemap());

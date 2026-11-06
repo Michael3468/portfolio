@@ -22,12 +22,13 @@ describe('ContactLink type contract', () => {
   });
 
   /**
-   * Проверяет, что wrapInParagraph (если указан) имеет тип boolean.
+   * Проверяет, что label (видимый текст ссылки) задан строкой.
    */
-  it('wrapInParagraph is boolean when present', () => {
+  it('label is a non-empty string when present', () => {
     for (const contact of CONTACTS_LIST) {
-      if (contact.link?.wrapInParagraph !== undefined) {
-        expect(typeof contact.link.wrapInParagraph).toBe('boolean');
+      if (contact.link) {
+        expect(typeof contact.link.label).toBe('string');
+        expect(contact.link.label.length).toBeGreaterThan(0);
       }
     }
   });

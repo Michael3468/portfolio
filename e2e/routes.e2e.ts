@@ -24,14 +24,16 @@ test('projects page lists projects and test tasks', async ({ page }) => {
   await page.goto('/projects');
 
   await expect(page).toHaveTitle('Projects — Portfolio');
-  await expect(page.locator('a[href="/project/15"]')).toBeVisible();
-  await expect(page.locator('a[href="/project/29"]')).toBeVisible();
+  // В слайдере три копии ленты, и ссылки в крайних копиях помечены aria-hidden.
+  // Берём карточку из основной (видимой) копии.
+  await expect(page.locator('li:not([aria-hidden="true"]) a[href="/project/15"]')).toBeVisible();
+  await expect(page.locator('li:not([aria-hidden="true"]) a[href="/project/29"]')).toBeVisible();
 });
 
 test('navigating from a project card opens the project page', async ({ page }) => {
   await page.goto('/projects');
 
-  await page.locator('a[href="/project/15"]').click();
+  await page.locator('li:not([aria-hidden="true"]) a[href="/project/15"]').click();
 
   await expect(page).toHaveURL('/project/15');
   await expect(page.getByRole('heading', { level: 1, name: 'React Landing' })).toBeVisible();
@@ -45,6 +47,20 @@ test('contacts page is reachable from the navbar', async ({ page }) => {
 
   await expect(page).toHaveURL('/contacts');
   await expect(page).toHaveTitle('Contacts — Portfolio');
+});
+
+test('contacts page is closed from indexing and shows open contacts', async ({ page }) => {
+  await page.goto('/contacts');
+
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+  await expect(page.getByRole('link', { name: 'https://t.me/mikhail3468' })).toHaveAttribute(
+    'rel',
+    'nofollow',
+  );
+  await expect(page.getByRole('link', { name: 'mikhail3468@yandex.ru' })).toHaveAttribute(
+    'href',
+    'mailto:mikhail3468@yandex.ru',
+  );
 });
 
 test('unknown project id shows the not-found message', async ({ page }) => {
@@ -66,7 +82,9 @@ test('direct visit to a deep link works without client-side navigation', async (
   await page.goto('/projects');
 
   await expect(page).toHaveTitle('Projects — Portfolio');
-  await expect(page.locator('a[href="/project/15"]')).toBeVisible();
+  // В слайдере три копии ленты, и ссылки в крайних копиях помечены aria-hidden.
+  // Берём карточку из основной (видимой) копии.
+  await expect(page.locator('li:not([aria-hidden="true"]) a[href="/project/15"]')).toBeVisible();
 });
 
 test('dark theme is applied on load and survives a reload', async ({ page }) => {

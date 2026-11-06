@@ -11,6 +11,11 @@ import { AnimatedTitle, ContactItem } from './UI';
  * (компонент `AnimatedTitle`) и список контактов из `CONTACTS_LIST`:
  * местоположение (Санкт-Петербург), ссылка на Telegram и ссылка на Email.
  *
+ * `useDocumentMeta(PAGES.contacts)` выставляет для страницы
+ * `<meta name="robots" content="noindex, nofollow">`: контактные данные
+ * не должны попадать в поисковую выдачу. Дополнительно сами ссылки
+ * помечаются `rel="nofollow"` в компоненте `ContactItem`.
+ *
  * @returns {JSX.Element} Разметка страницы «Контакты».
  */
 export default function Contacts() {

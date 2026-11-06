@@ -49,8 +49,8 @@ describe('App', () => {
     window.history.pushState({}, '', '/contacts');
     const contactsView = render(<App />);
     expect(
-      await contactsView.findByRole('heading', { level: 2, name: 'Telegram' }),
+      await contactsView.findByRole('heading', { level: 2, name: /^Telegram:/ }),
     ).toBeInTheDocument();
-    expect(contactsView.getByRole('heading', { level: 2, name: 'Email' })).toBeInTheDocument();
+    expect(contactsView.getByRole('heading', { level: 2, name: /^Email:/ })).toBeInTheDocument();
   });
 });

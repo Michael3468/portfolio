@@ -1,33 +1,32 @@
-import type { ContactItem, ContactLink } from '@/pages/Contacts/Contacts.types';
+import type { ContactItem } from '@/pages/Contacts/Contacts.types';
 
 export interface ContactItemProps {
   readonly item: ContactItem;
 }
 
 /**
- * Рендерит ссылку контакта.
+ * Значение `rel` для ссылок на контакты.
  *
- * Если у ссылки установлен флаг `wrapInParagraph`, оборачивает её в абзац `<p>`,
- * иначе возвращает ссылку без обёртки.
- *
- * @param link - данные ссылки контакта.
- * @returns {JSX.Element} Разметка ссылки (возможно, обёрнутой в абзац).
+ * `nofollow` — подсказка поисковым системам не переходить по ссылке и не
+ * учитывать её при ранжировании. Это дополнение к страничному
+ * `<meta name="robots" content="noindex, nofollow">`, который задаётся
+ * в `PAGES.contacts` и закрывает от индексации всю страницу контактов.
  */
-function renderContactLink(link: ContactLink) {
-  const anchorElement = (
-    <a href={link.href} className="text-shadow">
-      {link.label}
-    </a>
-  );
-
-  return link.wrapInParagraph ? <p>{anchorElement}</p> : anchorElement;
-}
+export const CONTACT_LINK_REL = 'nofollow';
 
 /**
  * Элемент списка контактов страницы «Контакты».
  *
- * Рендерит заголовок секции, а также либо текст (`text`), либо ссылку (`link`).
- * Если у ссылки установлен флаг `wrapInParagraph`, она оборачивается в абзац `<p>`.
+ * Рендерит заголовок секции и значение в одну строку: либо текст (`text`),
+ * либо видимую ссылку (`link`) без промежуточной подписи.
+ *
+ * Особенности разметки:
+ * - значение идёт сразу после заголовка в том же `<h2>`, поэтому, например,
+ *   получается «Location: St. Petersburg, Russia» без переноса на новую строку;
+ * - для ссылки используется `link.label` — открытый адрес или URL
+ *   (например, `mikhail3468@yandex.ru`), а не текст вроде «Click to send message»;
+ * - ссылка помечается `rel="nofollow"`, чтобы поисковики не переходили по ней
+ *   и не учитывали её при ранжировании.
  *
  * @param props - пропсы компонента.
  * @param props.item - данные контакта.
@@ -35,15 +34,25 @@ function renderContactLink(link: ContactLink) {
  */
 export default function ContactItem({ item }: ContactItemProps) {
   const { title, text, link, withTextShadow } = item;
+  // Тень применяется только к Telegram и Email, как задано в CONTACTS_LIST.
   const headingClass = withTextShadow ? 'title-2 text-shadow' : 'title-2';
-
-  const linkElement = link ? renderContactLink(link) : null;
 
   return (
     <li className="content-list__item">
-      <h2 className={headingClass}>{title}</h2>
-      {text ? <p>{text}</p> : null}
-      {linkElement}
+      <h2 className={headingClass}>
+        {title}:{' '}
+        {/*
+          `text ??` позволяет показать простое значение (Location), а если его нет —
+          отрендерить ссылку. Обёртка `<p>` не используется намеренно: она вернула бы
+          перенос значения на новую строку.
+        */}
+        {text ??
+          (link ? (
+            <a href={link.href} className="text-shadow" rel={CONTACT_LINK_REL}>
+              {link.label}
+            </a>
+          ) : null)}
+      </h2>
     </li>
   );
 }

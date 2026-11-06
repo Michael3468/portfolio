@@ -5,6 +5,7 @@
 :root {
   /* Основная тень текста и графики (заголовки, навигация, футер) */
   --main-text-shadow: 2px 2px 2px black;
+  --title-2-font-size: 20px;
 
   /* Colors */
   --black: #171718;
@@ -79,7 +80,7 @@ body {
 .title-2 {
   margin-bottom: 20px;
 
-  font-size: 30px;
+  font-size: var(--title-2-font-size);
   font-weight: 700;
   line-height: 1.3;
 }
@@ -160,7 +161,7 @@ body {
 
   .title-2 {
     margin-bottom: 10px;
-    font-size: 30px;
+    font-size: var(--title-2-font-size);
   }
 
   /* Projects */

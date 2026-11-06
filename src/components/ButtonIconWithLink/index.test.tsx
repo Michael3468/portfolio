@@ -17,7 +17,7 @@ describe('ButtonIconWithLink', () => {
     const link = screen.getByRole('link', { name: /GitHub/i });
     expect(link).toHaveAttribute('href', 'https://github.com/example');
     expect(link).toHaveAttribute('target', '_blank');
-    expect(link).toHaveAttribute('rel', 'noreferrer');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
   it('renders the icon image with the provided alt text', () => {

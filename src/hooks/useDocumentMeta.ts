@@ -7,6 +7,11 @@ export interface DocumentMeta {
   readonly description: string;
   /** Путь страницы, например `/projects`. */
   readonly path: string;
+  /**
+   * Если `true`, страница закрывается от индексации:
+   * выставляется `<meta name="robots" content="noindex, nofollow" />`.
+   * Используется, например, для страницы контактов и 404.
+   */
   readonly noindex?: boolean;
 }
 

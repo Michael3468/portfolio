@@ -28,64 +28,45 @@ describe('ContactItem', () => {
   it('renders the section title', () => {
     render(<ContactItem item={createItem({ title: 'Location' })} />);
 
-    expect(screen.getByRole('heading', { name: 'Location' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Location:' })).toBeInTheDocument();
   });
 
   /**
-   * Проверяет, что компонент рендерит текст контакта
+   * Проверяет, что заголовок и текст контакта рендерятся в одной строке
    * (используется, например, для местоположения).
    */
-  it('renders the text of the contact', () => {
+  it('renders the title and text in one heading', () => {
     render(
       <ContactItem
         item={createItem({ id: 'location', title: 'Location', text: 'St. Petersburg, Russia' })}
       />,
     );
 
-    expect(screen.getByText('St. Petersburg, Russia')).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Location: St. Petersburg, Russia' }),
+    ).toBeInTheDocument();
   });
 
   /**
-   * Проверяет, что компонент рендерит ссылку без обёртки в абзац,
-   * когда флаг `wrapInParagraph` не задан.
+   * Проверяет, что открытая ссылка рендерится в одной строке с заголовком,
+   * без промежуточной подписи и обёртки в абзац.
    */
-  it('renders the link without wrapping it into a paragraph', () => {
+  it('renders the visible link next to the title', () => {
     render(
       <ContactItem
         item={createItem({
           id: 'telegram',
           title: 'Telegram',
-          link: { href: 'https://t.me/mikhail3468', label: 'Click to send message' },
+          link: { href: 'https://t.me/mikhail3468', label: 'https://t.me/mikhail3468' },
         })}
       />,
     );
 
-    const link = screen.getByRole('link', { name: 'Click to send message' });
+    const link = screen.getByRole('link', { name: 'https://t.me/mikhail3468' });
     expect(link).toHaveAttribute('href', 'https://t.me/mikhail3468');
+    expect(link).toHaveAttribute('rel', 'nofollow');
     expect(link.closest('p')).toBeNull();
-  });
-
-  /**
-   * Проверяет, что ссылка оборачивается в абзац `<p>`,
-   * когда флаг `wrapInParagraph` установлен.
-   */
-  it('wraps the link into a paragraph when wrapInParagraph is true', () => {
-    render(
-      <ContactItem
-        item={createItem({
-          id: 'email',
-          title: 'Email',
-          link: {
-            href: 'mailto:mikhail3468@yandex.ru',
-            label: 'Click to send message',
-            wrapInParagraph: true,
-          },
-        })}
-      />,
-    );
-
-    const link = screen.getByRole('link', { name: 'Click to send message' });
-    expect(link.closest('p')).not.toBeNull();
+    expect(screen.getByRole('heading', { name: /Telegram/ })).toContainElement(link);
   });
 
   /**
@@ -98,24 +79,24 @@ describe('ContactItem', () => {
         item={createItem({
           id: 'telegram',
           title: 'Telegram',
-          link: { href: 'https://t.me/mikhail3468', label: 'Click to send message' },
+          link: { href: 'https://t.me/mikhail3468', label: 'https://t.me/mikhail3468' },
           withTextShadow: true,
         })}
       />,
     );
 
-    expect(screen.getByRole('heading', { name: 'Telegram' })).toHaveClass('text-shadow');
+    expect(screen.getByRole('heading', { name: /Telegram/ })).toHaveClass('text-shadow');
 
     rerender(
       <ContactItem
         item={createItem({
           id: 'telegram',
           title: 'Telegram',
-          link: { href: 'https://t.me/mikhail3468', label: 'Click to send message' },
+          link: { href: 'https://t.me/mikhail3468', label: 'https://t.me/mikhail3468' },
         })}
       />,
     );
 
-    expect(screen.getByRole('heading', { name: 'Telegram' })).not.toHaveClass('text-shadow');
+    expect(screen.getByRole('heading', { name: /Telegram/ })).not.toHaveClass('text-shadow');
   });
 });
