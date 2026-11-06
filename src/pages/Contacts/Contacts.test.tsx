@@ -24,12 +24,12 @@ describe('Contacts page', () => {
 
   /**
    * Проверяет, что на странице отображаются открытые ссылки на Telegram
-   * (https://t.me/mikhail3468) и Email (mikhail3468@yandex.ru).
+   * (@mikhail3468) и Email (mikhail3468@yandex.ru).
    */
   it('renders the Telegram and Email links with visible addresses', () => {
     render(<Contacts />);
 
-    expect(screen.getByRole('link', { name: 'https://t.me/mikhail3468' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: '@mikhail3468' })).toHaveAttribute(
       'href',
       'https://t.me/mikhail3468',
     );
@@ -64,9 +64,7 @@ describe('Contacts page', () => {
     const icon = screen.getByRole('img', { name: 'Telegram' });
     expect(icon.tagName.toLowerCase()).toBe('svg');
     expect(screen.queryByText(/Telegram:/)).not.toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { name: 'Telegram https://t.me/mikhail3468' }),
-    ).toContainElement(icon);
+    expect(screen.getByRole('heading', { name: 'Telegram @mikhail3468' })).toContainElement(icon);
   });
 
   /**
@@ -104,7 +102,7 @@ describe('Contacts page', () => {
   it('marks the Telegram and Email links as nofollow', () => {
     render(<Contacts />);
 
-    const telegramLink = screen.getByRole('link', { name: 'https://t.me/mikhail3468' });
+    const telegramLink = screen.getByRole('link', { name: '@mikhail3468' });
     const emailLink = screen.getByRole('link', { name: 'mikhail3468@yandex.ru' });
 
     expect(telegramLink).toHaveAttribute('rel', 'nofollow');

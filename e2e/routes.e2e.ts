@@ -53,10 +53,7 @@ test('contacts page is closed from indexing and shows open contacts', async ({ p
   await page.goto('/contacts');
 
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
-  await expect(page.getByRole('link', { name: 'https://t.me/mikhail3468' })).toHaveAttribute(
-    'rel',
-    'nofollow',
-  );
+  await expect(page.getByRole('link', { name: '@mikhail3468' })).toHaveAttribute('rel', 'nofollow');
   await expect(page.getByRole('link', { name: 'mikhail3468@yandex.ru' })).toHaveAttribute(
     'href',
     'mailto:mikhail3468@yandex.ru',

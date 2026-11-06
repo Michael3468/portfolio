@@ -6,6 +6,7 @@ import {
   EMAIL_ADDRESS,
   EMAIL_URL,
   LOCATION_TEXT,
+  TELEGRAM_LABEL,
   TELEGRAM_URL,
 } from './constants';
 
@@ -26,6 +27,13 @@ describe('Contacts model constants', () => {
    */
   it('defines the telegram url', () => {
     expect(TELEGRAM_URL).toBe('https://t.me/mikhail3468');
+  });
+
+  /**
+   * Проверяет, что видимая подпись Telegram — короткий ник, а не URL.
+   */
+  it('defines the telegram label', () => {
+    expect(TELEGRAM_LABEL).toBe('@mikhail3468');
   });
 
   /**
@@ -69,7 +77,7 @@ describe('Contacts model constants', () => {
       icon: 'telegram',
       link: {
         href: TELEGRAM_URL,
-        label: TELEGRAM_URL,
+        label: TELEGRAM_LABEL,
       },
       withTextShadow: true,
     });

@@ -8,10 +8,17 @@ export const CONTACTS_TITLE = 'Contacts';
 /**
  * Ссылка на Telegram.
  *
- * Используется и как `href`, и как видимый текст ссылки — пользователь видит
- * открытый адрес, а не подпись «Click to send message».
+ * Используется как `href`: ведёт на профиль в Telegram.
  */
 export const TELEGRAM_URL = 'https://t.me/mikhail3468';
+
+/**
+ * Видимая подпись ссылки на Telegram.
+ *
+ * Пользователь видит короткий ник `@mikhail3468`, а не полный URL.
+ * Сам `href` при этом остаётся равным `TELEGRAM_URL`.
+ */
+export const TELEGRAM_LABEL = '@mikhail3468';
 
 /**
  * Адрес электронной почты в человекочитаемом виде.
@@ -55,7 +62,7 @@ export const CONTACTS_LIST: readonly ContactItem[] = [
     link: {
       // href ведёт на Telegram, а label показывает этот же URL пользователю.
       href: TELEGRAM_URL,
-      label: TELEGRAM_URL,
+      label: TELEGRAM_LABEL,
     },
     withTextShadow: true,
   },

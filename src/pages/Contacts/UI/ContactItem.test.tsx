@@ -83,7 +83,7 @@ describe('ContactItem', () => {
           id: 'telegram',
           title: 'Telegram',
           icon: 'telegram',
-          link: { href: 'https://t.me/mikhail3468', label: 'https://t.me/mikhail3468' },
+          link: { href: 'https://t.me/mikhail3468', label: '@mikhail3468' },
         })}
       />,
     );
@@ -92,9 +92,7 @@ describe('ContactItem', () => {
     expect(icon).toBeInTheDocument();
     expect(icon.tagName.toLowerCase()).toBe('svg');
     expect(screen.queryByText(/Telegram:/)).not.toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { name: 'Telegram https://t.me/mikhail3468' }),
-    ).toContainElement(icon);
+    expect(screen.getByRole('heading', { name: 'Telegram @mikhail3468' })).toContainElement(icon);
   });
 
   /**
@@ -132,12 +130,12 @@ describe('ContactItem', () => {
         item={createItem({
           id: 'telegram',
           title: 'Telegram',
-          link: { href: 'https://t.me/mikhail3468', label: 'https://t.me/mikhail3468' },
+          link: { href: 'https://t.me/mikhail3468', label: '@mikhail3468' },
         })}
       />,
     );
 
-    const link = screen.getByRole('link', { name: 'https://t.me/mikhail3468' });
+    const link = screen.getByRole('link', { name: '@mikhail3468' });
     expect(link).toHaveAttribute('href', 'https://t.me/mikhail3468');
     expect(link).toHaveAttribute('rel', 'nofollow');
     expect(link.closest('p')).toBeNull();
@@ -154,7 +152,7 @@ describe('ContactItem', () => {
         item={createItem({
           id: 'telegram',
           title: 'Telegram',
-          link: { href: 'https://t.me/mikhail3468', label: 'https://t.me/mikhail3468' },
+          link: { href: 'https://t.me/mikhail3468', label: '@mikhail3468' },
           withTextShadow: true,
         })}
       />,
@@ -167,7 +165,7 @@ describe('ContactItem', () => {
         item={createItem({
           id: 'telegram',
           title: 'Telegram',
-          link: { href: 'https://t.me/mikhail3468', label: 'https://t.me/mikhail3468' },
+          link: { href: 'https://t.me/mikhail3468', label: '@mikhail3468' },
         })}
       />,
     );
