@@ -98,6 +98,31 @@ describe('ContactItem', () => {
   });
 
   /**
+   * Проверяет, что при заданной иконке Email вместо текстового заголовка
+   * рендерится SVG-конверт, а `title` становится его доступной подписью.
+   */
+  it('renders the email icon instead of the title when icon is set', () => {
+    render(
+      <ContactItem
+        item={createItem({
+          id: 'email',
+          title: 'Email',
+          icon: 'email',
+          link: { href: 'mailto:mikhail3468@yandex.ru', label: 'mikhail3468@yandex.ru' },
+        })}
+      />,
+    );
+
+    const icon = screen.getByRole('img', { name: 'Email' });
+    expect(icon).toBeInTheDocument();
+    expect(icon.tagName.toLowerCase()).toBe('svg');
+    expect(screen.queryByText(/Email:/)).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Email mikhail3468@yandex.ru' })).toContainElement(
+      icon,
+    );
+  });
+
+  /**
    * Проверяет, что открытая ссылка рендерится в одной строке с заголовком,
    * без промежуточной подписи и обёртки в абзац.
    */

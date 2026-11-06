@@ -16,9 +16,10 @@ export interface ContactLink {
 /**
  * Иконка, которая заменяет видимый заголовок контакта.
  *
- * `location` — геометка для местоположения, `telegram` — самолётик Telegram.
+ * `location` — геометка для местоположения, `telegram` — самолётик Telegram,
+ * `email` — конверт.
  */
-export type ContactIcon = 'location' | 'telegram';
+export type ContactIcon = 'location' | 'telegram' | 'email';
 
 /**
  * Элемент списка контактов страницы «Контакты».

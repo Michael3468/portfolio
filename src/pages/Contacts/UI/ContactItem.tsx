@@ -2,6 +2,7 @@ import type { ComponentType } from 'react';
 
 import type { ContactIcon, ContactItem } from '@/pages/Contacts/Contacts.types';
 
+import EmailIcon from './EmailIcon';
 import LocationIcon from './LocationIcon';
 import TelegramIcon from './TelegramIcon';
 
@@ -13,6 +14,7 @@ export interface ContactItemProps {
 const CONTACT_ICONS: Record<ContactIcon, ComponentType<{ label: string }>> = {
   location: LocationIcon,
   telegram: TelegramIcon,
+  email: EmailIcon,
 };
 
 /**
@@ -36,7 +38,7 @@ export const CONTACT_LINK_REL = 'nofollow';
  *   получается «Location: St. Petersburg, Russia» без переноса на новую строку;
  * - если задан `icon`, вместо текстового заголовка выводится SVG-иконка,
  *   а `title` становится её доступной подписью (геометка для Location,
- *   самолётик для Telegram);
+ *   самолётик для Telegram, конверт для Email);
  * - для ссылки используется `link.label` — открытый адрес или URL
  *   (например, `mikhail3468@yandex.ru`), а не текст вроде «Click to send message»;
  * - ссылка помечается `rel="nofollow"`, чтобы поисковики не переходили по ней

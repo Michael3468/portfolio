@@ -62,6 +62,7 @@ export const CONTACTS_LIST: readonly ContactItem[] = [
   {
     id: 'email',
     title: 'Email',
+    icon: 'email',
     link: {
       // href открывает почтовый клиент, а label показывает чистый адрес.
       href: EMAIL_URL,

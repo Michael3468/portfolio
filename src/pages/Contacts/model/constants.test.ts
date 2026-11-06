@@ -77,6 +77,7 @@ describe('Contacts model constants', () => {
     expect(CONTACTS_LIST[2]).toEqual({
       id: 'email',
       title: 'Email',
+      icon: 'email',
       link: {
         href: EMAIL_URL,
         label: EMAIL_ADDRESS,
