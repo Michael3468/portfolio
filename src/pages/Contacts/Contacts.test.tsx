@@ -55,6 +55,21 @@ describe('Contacts page', () => {
   });
 
   /**
+   * Проверяет, что вместо заголовка «Telegram» отображается иконка самолётика,
+   * а ссылка рендерится в одной строке с ней.
+   */
+  it('renders the telegram icon instead of the Telegram title', () => {
+    render(<Contacts />);
+
+    const icon = screen.getByRole('img', { name: 'Telegram' });
+    expect(icon.tagName.toLowerCase()).toBe('svg');
+    expect(screen.queryByText(/Telegram:/)).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Telegram https://t.me/mikhail3468' }),
+    ).toContainElement(icon);
+  });
+
+  /**
    * Проверяет, что заголовок контакта и его значение рендерятся в одной строке.
    */
   it('renders every contact title and value in one heading', () => {
@@ -63,7 +78,7 @@ describe('Contacts page', () => {
     expect(
       screen.getByRole('heading', { name: 'Location St. Petersburg, Russia' }),
     ).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /^Telegram:/ })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /^Telegram / })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /^Email:/ })).toBeInTheDocument();
   });
 
@@ -99,7 +114,7 @@ describe('Contacts page', () => {
   it('renders the Telegram and Email section titles', () => {
     render(<Contacts />);
 
-    expect(screen.getByRole('heading', { name: /^Telegram:/ })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /^Telegram / })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /^Email:/ })).toBeInTheDocument();
   });
 });

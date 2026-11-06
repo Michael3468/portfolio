@@ -51,6 +51,7 @@ export const CONTACTS_LIST: readonly ContactItem[] = [
   {
     id: 'telegram',
     title: 'Telegram',
+    icon: 'telegram',
     link: {
       // href ведёт на Telegram, а label показывает этот же URL пользователю.
       href: TELEGRAM_URL,

@@ -73,6 +73,31 @@ describe('ContactItem', () => {
   });
 
   /**
+   * Проверяет, что при заданной иконке Telegram вместо текстового заголовка
+   * рендерится SVG-самолётик, а `title` становится его доступной подписью.
+   */
+  it('renders the telegram icon instead of the title when icon is set', () => {
+    render(
+      <ContactItem
+        item={createItem({
+          id: 'telegram',
+          title: 'Telegram',
+          icon: 'telegram',
+          link: { href: 'https://t.me/mikhail3468', label: 'https://t.me/mikhail3468' },
+        })}
+      />,
+    );
+
+    const icon = screen.getByRole('img', { name: 'Telegram' });
+    expect(icon).toBeInTheDocument();
+    expect(icon.tagName.toLowerCase()).toBe('svg');
+    expect(screen.queryByText(/Telegram:/)).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Telegram https://t.me/mikhail3468' }),
+    ).toContainElement(icon);
+  });
+
+  /**
    * Проверяет, что открытая ссылка рендерится в одной строке с заголовком,
    * без промежуточной подписи и обёртки в абзац.
    */

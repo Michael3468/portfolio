@@ -66,6 +66,7 @@ describe('Contacts model constants', () => {
     expect(CONTACTS_LIST[1]).toEqual({
       id: 'telegram',
       title: 'Telegram',
+      icon: 'telegram',
       link: {
         href: TELEGRAM_URL,
         label: TELEGRAM_URL,

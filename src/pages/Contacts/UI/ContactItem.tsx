@@ -1,10 +1,19 @@
-import type { ContactItem } from '@/pages/Contacts/Contacts.types';
+import type { ComponentType } from 'react';
+
+import type { ContactIcon, ContactItem } from '@/pages/Contacts/Contacts.types';
 
 import LocationIcon from './LocationIcon';
+import TelegramIcon from './TelegramIcon';
 
 export interface ContactItemProps {
   readonly item: ContactItem;
 }
+
+/** Компоненты иконок, заменяющих видимые заголовки контактов. */
+const CONTACT_ICONS: Record<ContactIcon, ComponentType<{ label: string }>> = {
+  location: LocationIcon,
+  telegram: TelegramIcon,
+};
 
 /**
  * Значение `rel` для ссылок на контакты.
@@ -26,7 +35,8 @@ export const CONTACT_LINK_REL = 'nofollow';
  * - значение идёт сразу после заголовка в том же `<h2>`, поэтому, например,
  *   получается «Location: St. Petersburg, Russia» без переноса на новую строку;
  * - если задан `icon`, вместо текстового заголовка выводится SVG-иконка,
- *   а `title` становится её доступной подписью (например, геометка для Location);
+ *   а `title` становится её доступной подписью (геометка для Location,
+ *   самолётик для Telegram);
  * - для ссылки используется `link.label` — открытый адрес или URL
  *   (например, `mikhail3468@yandex.ru`), а не текст вроде «Click to send message»;
  * - ссылка помечается `rel="nofollow"`, чтобы поисковики не переходили по ней
@@ -40,11 +50,12 @@ export default function ContactItem({ item }: ContactItemProps) {
   const { title, text, link, icon, withTextShadow } = item;
   // Тень применяется только к Telegram и Email, как задано в CONTACTS_LIST.
   const headingClass = withTextShadow ? 'title-2 text-shadow' : 'title-2';
+  const Icon = icon ? CONTACT_ICONS[icon] : null;
 
   return (
     <li className="content-list__item">
       <h2 className={headingClass}>
-        {icon === 'location' ? <LocationIcon label={title} /> : `${title}:`}{' '}
+        {Icon ? <Icon label={title} /> : `${title}:`}{' '}
         {/*
           `text ??` позволяет показать простое значение (Location), а если его нет —
           отрендерить ссылку. Обёртка `<p>` не используется намеренно: она вернула бы
