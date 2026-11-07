@@ -1,12 +1,56 @@
 .project {
+  position: relative;
+  isolation: isolate;
   display: flex;
   justify-content: center;
   max-width: 23.125rem;
   width: 100%;
+  overflow: hidden;
   background-color: var(--project-card-bg);
   box-shadow: var(--box-shadow);
   border-radius: 0.625rem;
-  transition: background-color 1s ease-in-out;
+  transition:
+    background-color 1s ease-in-out,
+    filter 0.5s ease;
+}
+
+/* Голографический блик: широкий градиент, который выезжает по карточке при наведении */
+.project::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  z-index: 1;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(0deg, transparent, transparent 30%, rgba(0, 255, 255, 0.3));
+  transform: rotate(-45deg);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.5s ease,
+    opacity 0.5s ease;
+}
+
+@media (hover: hover) {
+  .project:hover {
+    filter: drop-shadow(0 0 1.25rem rgba(0, 255, 255, 0.5));
+  }
+
+  .project:hover::before {
+    opacity: 1;
+    transform: rotate(-45deg) translateY(100%);
+  }
+}
+
+/* Для клавиатурной навигации показываем тот же блик, что и при наведении */
+.project:focus-within {
+  filter: drop-shadow(0 0 1.25rem rgba(0, 255, 255, 0.5));
+}
+
+.project:focus-within::before {
+  opacity: 1;
+  transform: rotate(-45deg) translateY(100%);
 }
 
 .project__container {
@@ -33,6 +77,8 @@
 }
 
 .project__title {
+  position: relative;
+  z-index: 2;
   display: flex;
   justify-content: center;
   text-align: center;
@@ -43,4 +89,11 @@
   color: var(--project-card-text);
   text-shadow: 0 0 0.0625rem;
   transition: color 2s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project,
+  .project::before {
+    transition: none;
+  }
 }
