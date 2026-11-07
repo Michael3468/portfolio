@@ -25,18 +25,41 @@
   transition: all 3s ease-in-out;
 }
 
-.project-details__cover {
-  max-width: 100%;
+/* Секция mouse-parallax: обрезает увеличенный фоновый слой по границам контейнера. */
+.mouse-parallax {
+  position: relative;
+  overflow: hidden;
 
-  box-shadow: var(--box-shadow);
   border-radius: 0.625rem;
+  box-shadow: var(--box-shadow);
   width: 100%;
-  opacity: 0;
+  height: 500px;
 }
 
-.project-details__cover.project-details__cover_loaded {
-  opacity: 1;
-  transition: all 5s ease-in-out;
+/*
+ * Фоновый слой секции mouse-parallax: большая картинка проекта.
+ * Слой на 10% больше секции, чтобы при сдвиге против курсора
+ * (до 50px по каждой оси) не было пустых полос по краям.
+ */
+.mouse-parallax-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 110%;
+  height: 110%;
+  transition: all 0.5s ease-out;
+  will-change: transform;
+}
+
+/* При reduced motion фоновый слой не двигается (переход отключён на всякий случай). */
+@media (prefers-reduced-motion: reduce) {
+  .mouse-parallax-bg {
+    transition: none;
+  }
 }
 
 .project-details__desc {

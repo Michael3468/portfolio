@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import gitHubIcon from '@/assets/icons/gitHub-black.svg';
@@ -8,7 +8,7 @@ import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import NotFound from '@/pages/NotFound';
 
 import { BUTTON_GRADIENT } from './model/constants';
-import { findProjectById } from './model/lib';
+import { findProjectById, getParallaxTransform } from './model/lib';
 
 import './styles.css';
 
@@ -19,6 +19,9 @@ import './styles.css';
  * находит проект по идентификатору и отображает его детали:
  * название, навыки, обложку и ссылки на GitHub и Live Demo.
  *
+ * Обложка проекта — секция mouse-parallax: её фоновый слой (`mouse-parallax-bg`)
+ * сдвигается против движения курсора мыши на величину до 50 пикселей.
+ *
  * @returns {JSX.Element} Разметка страницы с деталями проекта.
  */
 export default function Project() {
@@ -26,15 +29,73 @@ export default function Project() {
   const [imgLoaded, setImgLoaded] = useState(false);
 
   /**
-   * Сброс флага загрузки обложки при смене проекта.
+   * Ссылки на фоновые слои всех секций mouse-parallax на странице.
+   *
+   * Индексы массива позволяют поддерживать несколько секций параллакса:
+   * каждая секция сохраняет свой DOM-узел через callback ref.
+   */
+  const parallaxBgRefs = useRef<Array<HTMLDivElement | null>>([]);
+
+  /**
+   * Подписка на движение мыши для параллакса фоновых слоёв.
+   *
+   * Один обработчик на `window` двигает все секции параллакса синхронно,
+   * как в образце: `translate(-(x * 50)px, -(y * 50)px)`. Подписка снимается
+   * при размонтировании компонента. При `prefers-reduced-motion: reduce`
+   * параллакс не включается вовсе.
+   */
+  useEffect(() => {
+    // Пользователь просил уменьшить анимацию — оставляем фон статичным.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const layers = parallaxBgRefs.current.filter(
+      (layer): layer is HTMLDivElement => layer !== null,
+    );
+    if (layers.length === 0) return;
+
+    const handleMouseMove = (event: MouseEvent) => {
+      const transform = getParallaxTransform(
+        event.clientX,
+        event.clientY,
+        window.innerWidth,
+        window.innerHeight,
+      );
+
+      layers.forEach((layer) => {
+        layer.style.transform = transform;
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
+  /**
+   * Сброс флага загрузки обложки при смене проекта и предзагрузка большого
+   * изображения обложки.
    *
    * Компонент не размонтируется при переходе между проектами
    * (изменяется только параметр маршрута `id`), поэтому без сброса
    * `imgLoaded` остаётся `true` и анимация появления новой обложки
-   * не отрабатывает.
+   * не отрабатывает. Обложка теперь фоновый слой параллакса, поэтому
+   * загрузка отслеживается через `new Image()` без вывода `<img>`.
    */
   useEffect(() => {
     setImgLoaded(false);
+
+    const project = findProjectById(id);
+    if (!project) return;
+
+    const image = new Image();
+    image.onload = () => setImgLoaded(true);
+    image.src = project.bigImg;
+
+    return () => {
+      image.onload = null;
+    };
   }, [id]);
 
   const project = findProjectById(id);
@@ -58,16 +119,6 @@ export default function Project() {
     return <NotFound message="Проект не найден" />;
   }
 
-  /**
-   * Обработчик события загрузки изображения проекта.
-   *
-   * Устанавливает флаг `imgLoaded` в значение `true`,
-   * что запускает анимацию появления обложки проекта.
-   */
-  const handleImgLoaded = () => {
-    setImgLoaded(true);
-  };
-
   return (
     <main className="section">
       <div className="container">
@@ -86,16 +137,18 @@ export default function Project() {
               background: `${project.background}`,
             }}
           >
-            <img
-              src={project.bigImg}
-              srcSet={`${project.bigImgSmall} 800w, ${project.bigImg} 1200w`}
-              sizes="(max-width: 54.0625rem) 100vw, 54.0625rem"
-              alt={project.title}
-              className={`project-details__cover ${
-                imgLoaded ? 'project-details__cover_loaded' : ''
-              }`}
-              onLoad={handleImgLoaded}
-            />
+            {/* Секция mouse-parallax: фоновый слой с большой картинкой проекта. */}
+            <div className="mouse-parallax">
+              <div
+                ref={(element) => {
+                  parallaxBgRefs.current[0] = element;
+                }}
+                className="mouse-parallax-bg"
+                style={{ backgroundImage: `url("${project.bigImg}")` }}
+                role="img"
+                aria-label={project.title}
+              />
+            </div>
           </div>
 
           <div>

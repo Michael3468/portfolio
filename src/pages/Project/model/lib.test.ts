@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { findProjectById } from './lib';
+import { findProjectById, getParallaxTransform } from './lib';
 
 /**
  * Группа тестов для функции `findProjectById`.
@@ -40,5 +40,46 @@ describe('findProjectById', () => {
     expect(findProjectById(' 15 ')).toBeUndefined();
     expect(findProjectById('')).toBeUndefined();
     expect(findProjectById(undefined)).toBeUndefined();
+  });
+});
+
+/**
+ * Группа тестов для функции `getParallaxTransform`.
+ * Проверяет расчёт CSS-transform фонового слоя mouse-parallax по позиции курсора.
+ */
+describe('getParallaxTransform', () => {
+  /**
+   * В центре окна фон смещается против курсора на половину амплитуды (25px).
+   */
+  it('returns a 25px shift for the window center', () => {
+    expect(getParallaxTransform(512, 384, 1024, 768)).toBe('translate(-25px, -25px)');
+  });
+
+  /**
+   * В правом нижнем углу смещение достигает полной амплитуды — 50px по каждой оси.
+   */
+  it('reaches the full 50px shift at the bottom-right corner', () => {
+    expect(getParallaxTransform(1024, 768, 1024, 768)).toBe('translate(-50px, -50px)');
+  });
+
+  /**
+   * В левом верхнем углу курсора смещение нулевое.
+   */
+  it('returns a zero shift at the top-left corner', () => {
+    expect(getParallaxTransform(0, 0, 1024, 768)).toBe('translate(-0px, -0px)');
+  });
+
+  /**
+   * Смещение линейно зависит от позиции курсора: четверть окна — четверть амплитуды.
+   */
+  it('scales linearly with the cursor position', () => {
+    expect(getParallaxTransform(256, 192, 1024, 768)).toBe('translate(-12.5px, -12.5px)');
+  });
+
+  /**
+   * Амплитуду можно переопределить — например, для нестандартной секции параллакса.
+   */
+  it('allows overriding the shift amplitude', () => {
+    expect(getParallaxTransform(512, 384, 1024, 768, 100)).toBe('translate(-50px, -50px)');
   });
 });

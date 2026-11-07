@@ -164,7 +164,7 @@ portfolio/
     │   ├── Project/
     │   │   ├── index.ts         # реэкспорт страницы
     │   │   ├── index.test.ts    # barrel-тест реэкспорта
-    │   │   ├── Project.tsx      # страница проекта
+    │   │   ├── Project.tsx      # страница проекта (обложка — секция mouse-parallax)
     │   │   ├── Project.test.tsx
     │   │   ├── styles.css
     │   │   └── model/
@@ -266,6 +266,20 @@ SVG-плитки всех навыков из `projects.json`: белые ква
 и при `prefers-reduced-motion: reduce` анимация отключается. Слой имеет
 `pointer-events: none` и `aria-hidden`, поэтому не мешает кликам и скринридерам.
 
+## Mouse-parallax на странице проекта
+
+Обложка проекта на странице `/project/:id` — секция mouse-parallax (структура и стили
+по образцу: контейнер `.mouse-parallax` с `overflow: hidden` и фоновый слой
+`.mouse-parallax-bg` размером 110%×110% с `background-size: cover` и переходом
+`all 0.5s ease-out`; большая картинка проекта подставляется в `background-image`).
+Один обработчик `mousemove` на `window` двигает все секции параллакса на странице
+синхронно — `translate(-(x * 50)px, -(y * 50)px)`. Расчёт transform вынесен в чистую
+функцию `getParallaxTransform` (`src/pages/Project/model/lib.ts`), амплитуда —
+константа `MOUSE_PARALLAX_SHIFT_PX` (50px). Подписка снимается при размонтировании,
+а при `prefers-reduced-motion: reduce` параллакс не включается вовсе. Обложка
+рендерится как фоновый слой (без `<img>`), поэтому загрузка отслеживается через
+предзагрузку `new Image()` — она запускает анимацию появления контейнера.
+
 ## Как перенесён проект (CRA → Vite)
 
 | Что                                              | Как                                                                                                                    |
@@ -323,7 +337,7 @@ SVG-плитки всех навыков из `projects.json`: белые ква
 `@testing-library/jest-dom/vitest` и мок `window.matchMedia`, необходимый для компонентов
 тёмной темы в jsdom.
 
-Все юнит-тесты проходят: **184 теста в 44 файлах** (включая barrel-тесты, тесты типов
+Все юнит-тесты проходят: **192 теста в 44 файлах** (включая barrel-тесты, тесты типов
 и тесты seo-плагина). Покрытие по v8 на момент обновления README: **96.63%** statements /
 **94.25%** branches / **95.97%** functions / **97.44%** lines; актуальные цифры после
 каждого запуска печатает `npm run test:coverage`.
@@ -358,8 +372,8 @@ SVG-плитки всех навыков из `projects.json`: белые ква
 | `DEFAULT_SHADOW_COLOR` / `INNER_SHADOW_COLOR_DARK`                        | `src/pages/Projects/UI/model/constants.test.ts`             |
 | баррель страницы `Project`                                                | `src/pages/Project/index.test.ts`                           |
 | `Project` (страница)                                                      | `src/pages/Project/Project.test.tsx`                        |
-| `findProjectById`                                                         | `src/pages/Project/model/lib.test.ts`                       |
-| `BUTTON_GRADIENT`                                                         | `src/pages/Project/model/constants.test.ts`                 |
+| `findProjectById` / `getParallaxTransform`                                | `src/pages/Project/model/lib.test.ts`                       |
+| `BUTTON_GRADIENT` / `MOUSE_PARALLAX_SHIFT_PX`                             | `src/pages/Project/model/constants.test.ts`                 |
 | `NotFound` (404)                                                          | `src/pages/NotFound/NotFound.test.tsx`                      |
 | `useDocumentMeta` / `upsertMeta`                                          | `src/hooks/useDocumentMeta.test.ts`                         |
 | `darkModeStore` (zustand-стор, catch-ветки)                               | `src/store/darkModeStore.test.ts`                           |

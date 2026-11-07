@@ -1,16 +1,44 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import ProjectPage from './Project';
 
 /**
+ * Подмена конструктора Image для проверки предзагрузки обложки.
+ *
+ * Обложка проекта выводится как фоновый слой mouse-parallax (без `<img>`),
+ * поэтому компонент отслеживает загрузку через `new Image()`.
+ */
+class FakeImage {
+  /** Все экземпляры, созданные в текущем тесте. */
+  static readonly instances: FakeImage[] = [];
+
+  /** Обработчик загрузки изображения. */
+  onload: (() => void) | null = null;
+
+  /** URL изображения. */
+  src = '';
+
+  constructor() {
+    FakeImage.instances.push(this);
+  }
+}
+
+/**
  * Тесты страницы проекта.
  *
- * Проверяют рендер деталей проекта для существующего id,
- * а также наличие ссылок на GitHub и живое демо.
+ * Проверяют рендер деталей проекта для существующего id, ссылки на GitHub
+ * и живое демо, предзагрузку обложки с анимацией появления и mouse-parallax
+ * фонового слоя обложки.
  */
 describe('Project page', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    FakeImage.instances = [];
+    vi.restoreAllMocks();
+  });
+
   /**
    * Проверяет, что для существующего id страница отображает
    * заголовок проекта и список его навыков.
@@ -52,11 +80,13 @@ describe('Project page', () => {
   });
 
   /**
-   * Проверяет, что после успешной загрузки обложки проекта к изображению
-   * и его контейнеру добавляются классы анимации появления
-   * (`project-details__cover_loaded` и `project-details__container__loaded`).
+   * Проверяет, что обложка — фоновый слой mouse-parallax с aria-label
+   * из названия проекта, и что после предзагрузки большого изображения
+   * к контейнеру добавляется класс анимации появления.
    */
-  it('adds the loaded classes to the cover after the image load event', () => {
+  it('adds the loaded class to the cover container after the big image is preloaded', () => {
+    vi.stubGlobal('Image', FakeImage);
+
     const { container } = render(
       <MemoryRouter initialEntries={['/project/15']}>
         <Routes>
@@ -65,15 +95,95 @@ describe('Project page', () => {
       </MemoryRouter>,
     );
 
-    const cover = container.querySelector('.project-details__cover');
-    expect(cover).not.toBeNull();
+    const parallaxBg = container.querySelector('.mouse-parallax-bg');
+    expect(parallaxBg).not.toBeNull();
+    expect(parallaxBg).toHaveAttribute('aria-label', 'React Landing');
 
-    fireEvent.load(cover as HTMLImageElement);
+    // Компонент начинает предзагрузку большой картинки проекта.
+    const image = FakeImage.instances[FakeImage.instances.length - 1];
+    expect(image?.src).toContain('15-big');
 
-    expect(cover).toHaveClass('project-details__cover_loaded');
+    act(() => {
+      image?.onload?.();
+    });
+
     expect(container.querySelector('.project-details__container')).toHaveClass(
       'project-details__container__loaded',
     );
+  });
+
+  /**
+   * Проверяет, что при движении мыши фоновый слой секции mouse-parallax
+   * сдвигается против курсора: в центре окна — на 25px по каждой оси,
+   * в правом нижнем углу — на все 50px (как в образце).
+   */
+  it('moves the parallax background against the cursor on mousemove', () => {
+    const { container } = render(
+      <MemoryRouter initialEntries={['/project/15']}>
+        <Routes>
+          <Route path="/project/:id" element={<ProjectPage />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    const parallaxBg = container.querySelector('.mouse-parallax-bg') as HTMLElement;
+    expect(parallaxBg).not.toBeNull();
+
+    // jsdom: окно 1024x768, центр — 512x384 → смещение 25px.
+    fireEvent.mouseMove(window, { clientX: 512, clientY: 384 });
+    expect(parallaxBg.style.transform).toBe('translate(-25px, -25px)');
+
+    // Правый нижний угол — максимальное смещение 50px.
+    fireEvent.mouseMove(window, { clientX: 1024, clientY: 768 });
+    expect(parallaxBg.style.transform).toBe('translate(-50px, -50px)');
+  });
+
+  /**
+   * Проверяет, что при размонтировании страницы обработчик mousemove
+   * снимается с window.
+   */
+  it('removes the mousemove listener on unmount', () => {
+    const removeSpy = vi.spyOn(window, 'removeEventListener');
+
+    const { unmount } = render(
+      <MemoryRouter initialEntries={['/project/15']}>
+        <Routes>
+          <Route path="/project/:id" element={<ProjectPage />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+    unmount();
+
+    expect(removeSpy).toHaveBeenCalledWith('mousemove', expect.any(Function));
+  });
+
+  /**
+   * Проверяет, что при включённом `prefers-reduced-motion: reduce`
+   * параллакс не подписывается на движение мыши — фон остаётся статичным.
+   */
+  it('does not subscribe to mousemove when prefers-reduced-motion is set', () => {
+    vi.spyOn(window, 'matchMedia').mockReturnValue({
+      matches: true,
+      media: '(prefers-reduced-motion: reduce)',
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    });
+
+    const addSpy = vi.spyOn(window, 'addEventListener');
+
+    render(
+      <MemoryRouter initialEntries={['/project/15']}>
+        <Routes>
+          <Route path="/project/:id" element={<ProjectPage />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    expect(addSpy).not.toHaveBeenCalledWith('mousemove', expect.any(Function));
   });
 
   /**
