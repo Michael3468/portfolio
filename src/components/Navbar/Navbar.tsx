@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom';
 
 // Прямой импорт подкомпонента вместо '../index.ts' — чтобы избежать циклической
 // зависимости: src/components/Navbar/index.ts реэкспортирует Navbar.
+import gitHub from './icons/gitHub.svg';
 import ButtonToggleDarkMode from './UI/ButtonToggleDarkMode';
 
 import './styles.css';
@@ -14,9 +15,19 @@ export default function Navbar() {
     <nav className="nav">
       <div className="container">
         <div className="nav-row">
-          <NavLink to="/" className="logo">
-            <strong className="main-text-shadow">Portfolio</strong>
-          </NavLink>
+          <div className="logo">
+            <a
+              className="logo__github"
+              href="https://github.com/Michael3468"
+              aria-label="Link to GitHub"
+            >
+              <img className="logo__icon main-drop-shadow" src={gitHub} alt="link to github" />
+            </a>
+
+            <NavLink to="/" className="logo__link">
+              <strong className="main-text-shadow">Portfolio</strong>
+            </NavLink>
+          </div>
 
           <ButtonToggleDarkMode />
 

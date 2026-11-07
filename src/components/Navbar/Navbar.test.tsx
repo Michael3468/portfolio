@@ -32,6 +32,10 @@ describe('Navbar', () => {
     );
 
     expect(screen.getByRole('link', { name: 'Portfolio' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Link to GitHub' })).toHaveAttribute(
+      'href',
+      'https://github.com/Michael3468',
+    );
     expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Projects' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Contacts' })).toBeInTheDocument();

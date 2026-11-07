@@ -24,10 +24,37 @@
 }
 
 .logo {
+  display: flex;
+  align-items: center;
+  column-gap: 0.625rem;
   margin-right: auto;
   color: var(--nav-text);
   font-size: 1.5rem;
   font-family: 'Poppins', sans-serif;
+}
+
+.logo__github {
+  display: flex;
+  align-items: center;
+  perspective: 10rem;
+}
+
+.logo__icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  transform: rotateY(0deg);
+  transition: transform 0.5s cubic-bezier(0.45, 0, 0.55, 1);
+  will-change: transform;
+}
+
+/* Три оборота влево при наведении и три обратно при уходе курсора. */
+.logo__github:hover .logo__icon,
+.logo__github:focus-visible .logo__icon {
+  transform: rotateY(-360deg);
+}
+
+.logo__link {
+  color: var(--nav-text);
 }
 
 .logo strong {
@@ -132,6 +159,15 @@
   .nav-list__link::before,
   .nav-list__link::after {
     transition: none;
+  }
+
+  .logo__icon {
+    transition: none;
+  }
+
+  .logo__github:hover .logo__icon,
+  .logo__github:focus-visible .logo__icon {
+    transform: none;
   }
 }
 
