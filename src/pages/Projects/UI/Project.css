@@ -9,12 +9,12 @@
   background-color: var(--project-card-bg);
   box-shadow: var(--box-shadow);
   border-radius: 0.625rem;
-  transition:
-    background-color 1s ease-in-out,
-    filter 0.5s ease;
+  transition: background-color 1s ease-in-out;
 }
 
-/* Голографический блик: широкий градиент, который выезжает по карточке при наведении */
+/* Голографический блик: широкий градиент, который выезжает по карточке при наведении.
+   Цвет блика — var(--project-border-color) (цвет рамки проекта, задаётся в Project.tsx);
+   прозрачность как у прежнего циана сохранена через color-mix */
 .project::before {
   content: '';
   position: absolute;
@@ -23,7 +23,12 @@
   z-index: 1;
   width: 200%;
   height: 200%;
-  background: linear-gradient(0deg, transparent, transparent 30%, rgba(0, 255, 255, 0.3));
+  background: linear-gradient(
+    0deg,
+    transparent,
+    transparent 30%,
+    color-mix(in srgb, var(--project-border-color) 30%, transparent)
+  );
   transform: rotate(-45deg);
   opacity: 0;
   pointer-events: none;
@@ -33,10 +38,6 @@
 }
 
 @media (hover: hover) {
-  .project:hover {
-    filter: drop-shadow(0 0 1.25rem rgba(0, 255, 255, 0.5));
-  }
-
   .project:hover::before {
     opacity: 1;
     transform: rotate(-45deg) translateY(100%);
@@ -44,10 +45,6 @@
 }
 
 /* Для клавиатурной навигации показываем тот же блик, что и при наведении */
-.project:focus-within {
-  filter: drop-shadow(0 0 1.25rem rgba(0, 255, 255, 0.5));
-}
-
 .project:focus-within::before {
   opacity: 1;
   transform: rotate(-45deg) translateY(100%);

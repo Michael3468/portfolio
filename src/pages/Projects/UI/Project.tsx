@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import type { CSSProperties } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { useDarkModeStore } from '@/store/darkModeStore';
@@ -58,15 +59,19 @@ export default function Project({ title, img, id, background, ariaHidden }: Proj
       className="project pulse-animation"
       aria-hidden={ariaHidden || undefined}
       style={
-        !img
+        (!img
           ? {
               display: 'flex',
               alignItems: 'center',
               boxShadow: `0 0 0.6875rem ${projectShadowColor}`,
+              // CSS-переменная с цветом рамки проекта: её используют hover/focus-анимации в Project.css
+              '--project-border-color': background,
             }
           : {
               boxShadow: `0 0 0.6875rem ${projectShadowColor}`,
-            }
+              // CSS-переменная с цветом рамки проекта: её используют hover/focus-анимации в Project.css
+              '--project-border-color': background,
+            }) as CSSProperties & Record<'--project-border-color', string>
       }
     >
       <NavLink
