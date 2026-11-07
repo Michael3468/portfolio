@@ -101,7 +101,7 @@ portfolio/
     │   │   └── model/
     │   │       ├── constants.ts       # позиции и прозрачность плиток
     │   │       ├── constants.test.ts
-    │   │       ├── lib.ts             # getParallaxOffset (в 3 раза медленнее курсора)
+    │   │       ├── lib.ts             # параллакс, снег и покачивание иконок
     │   │       └── lib.test.ts
     │   ├── Animations/
     │   │   ├── AnimationScale3d/
@@ -257,11 +257,14 @@ portfolio/
 
 `SkillBackground` — фиксированный декоративный слой под контентом. На нём разложены
 SVG-плитки всех навыков из `projects.json`: белые квадраты со скруглёнными углами,
-логотип внутри вырезан прозрачностью. Плитки неподвижны, пока пользователь не двигает
-мышью; движение курсора смещает весь слой в ту же сторону, но в 3 раза медленнее
-(`getParallaxOffset`, коэффициент `1 / 3`). На тач-экранах и при
-`prefers-reduced-motion: reduce` фон остаётся статичным. Слой имеет `pointer-events: none`
-и `aria-hidden`, поэтому не мешает кликам и скринридерам.
+логотип внутри вырезан прозрачностью. Иконки падают постоянно — даже когда пользователь
+двигает мышью, — покачиваясь на ±30 градусов; уйдя целиком за нижнюю границу, иконка
+возвращается сверху в новом месте по горизонтали (с запасом на поворот) и снова
+появляется из-за верхнего края.
+Движение мыши смещает весь слой только влево или вправо, без вертикального сдвига,
+и в 20 раз медленнее курсора (`getParallaxOffset`, коэффициент `1 / 20`). На тач-экранах
+и при `prefers-reduced-motion: reduce` анимация отключается. Слой имеет
+`pointer-events: none` и `aria-hidden`, поэтому не мешает кликам и скринридерам.
 
 ## Как перенесён проект (CRA → Vite)
 
@@ -320,9 +323,9 @@ SVG-плитки всех навыков из `projects.json`: белые ква
 `@testing-library/jest-dom/vitest` и мок `window.matchMedia`, необходимый для компонентов
 тёмной темы в jsdom.
 
-Все юнит-тесты проходят: **176 тестов в 44 файлах** (включая barrel-тесты, тесты типов
-и тесты seo-плагина). Покрытие по v8 на момент обновления README: **96.61%** statements /
-**94.79%** branches / **96.37%** functions / **97.3%** lines; актуальные цифры после
+Все юнит-тесты проходят: **184 теста в 44 файлах** (включая barrel-тесты, тесты типов
+и тесты seo-плагина). Покрытие по v8 на момент обновления README: **96.63%** statements /
+**94.25%** branches / **95.97%** functions / **97.44%** lines; актуальные цифры после
 каждого запуска печатает `npm run test:coverage`.
 
 | Модуль                                                                    | Файл теста                                                  |
@@ -336,7 +339,7 @@ SVG-плитки всех навыков из `projects.json`: белые ква
 | `Header`                                                                  | `src/components/Header/index.test.tsx`                      |
 | `ScrollToTop`                                                             | `src/components/ScrollToTop/index.test.tsx`                 |
 | `SkillBackground`                                                         | `src/components/SkillBackground/index.test.tsx`             |
-| `getParallaxOffset` / `clamp`                                             | `src/components/SkillBackground/model/lib.test.ts`          |
+| параллакс, снег и покачивание                                             | `src/components/SkillBackground/model/lib.test.ts`          |
 | константы `SkillBackground`                                               | `src/components/SkillBackground/model/constants.test.ts`    |
 | `ButtonIconWithLink`                                                      | `src/components/ButtonIconWithLink/index.test.tsx`          |
 | `AnimationScale3d`                                                        | `src/components/Animations/AnimationScale3d/index.test.tsx` |

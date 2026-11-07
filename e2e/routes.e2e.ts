@@ -20,7 +20,7 @@ test('home page renders with its own title', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Frontend' })).toBeVisible();
 });
 
-test('skill background follows the mouse three times slower', async ({ page }) => {
+test('skill background follows the mouse only horizontally and much slower', async ({ page }) => {
   await page.goto('/');
 
   const layer = page.locator('.skill-background__layer');
@@ -32,10 +32,28 @@ test('skill background follows the mouse three times slower', async ({ page }) =
   await page.mouse.move(300, 300);
   await page.mouse.move(600, 450, { steps: 10 });
 
-  // Курсор прошёл 300px по X и 150px по Y — слой должен пройти 100px и 50px.
+  // Курсор прошёл 300px по X — слой проходит 15px. Смещение по Y игнорируется.
   await expect
     .poll(() => layer.evaluate((element) => element.style.transform))
-    .toBe('translate3d(100px, 50px, 0px)');
+    .toBe('translate3d(15px, 0px, 0px)');
+});
+
+test('skill icons keep falling while the mouse moves', async ({ page }) => {
+  await page.goto('/');
+
+  const tile = page.locator('.skill-background__tile').first();
+  const getY = (element: Element) => new DOMMatrixReadOnly(getComputedStyle(element).transform).m42;
+
+  const startY = await tile.evaluate(getY);
+
+  await expect.poll(() => tile.evaluate(getY), { timeout: 3000 }).toBeGreaterThan(startY);
+
+  // Иконка продолжает падать, пока курсор двигается.
+  const beforeMoveY = await tile.evaluate(getY);
+  await page.mouse.move(300, 300);
+  await page.mouse.move(500, 350, { steps: 10 });
+
+  await expect.poll(() => tile.evaluate(getY), { timeout: 3000 }).toBeGreaterThan(beforeMoveY);
 });
 
 test('projects page lists projects and test tasks', async ({ page }) => {

@@ -7,22 +7,21 @@
   pointer-events: none;
 }
 
-/*
- * Слой больше окна, чтобы при смещении на 18% по краям не появлялось пустоты.
- * Плитки позиционируются в процентах от этого увеличенного слоя.
- */
+/* Слой двигается за мышью; иконки внутри падают независимо от него. */
 .skill-background__layer {
   position: absolute;
-  inset: -20%;
+  inset: 0;
   will-change: transform;
 }
 
 .skill-background__tile {
   position: absolute;
+  top: 0;
   width: var(--tile-size);
   height: var(--tile-size);
-  transform: translate(-50%, -50%) rotate(var(--tile-rotate));
+  transform-origin: center center;
   user-select: none;
+  will-change: transform;
 }
 
 /* На узких экранах уменьшаем плитки, чтобы фон не становился слишком плотным. */
@@ -35,7 +34,8 @@
 
 /* При отключённой анимации слой остаётся статичным. */
 @media (prefers-reduced-motion: reduce) {
-  .skill-background__layer {
+  .skill-background__layer,
+  .skill-background__tile {
     will-change: auto;
   }
 }
