@@ -121,4 +121,159 @@ describe('AnimationScale3d', () => {
     fireEvent.mouseOver(element);
     expect(mocks.start).toHaveBeenCalledTimes(2);
   });
+
+  /**
+   * Проверяет, что при монтировании без пропса playSignal анимация
+   * автоматически не запускается: работает только запуск по наведению.
+   */
+  it('does not start the animation on mount without playSignal', () => {
+    render(<AnimationScale3d>Hello</AnimationScale3d>);
+
+    expect(mocks.start).not.toHaveBeenCalled();
+  });
+
+  /**
+   * Проверяет, что нулевой сигнал playSignal (волна ещё не запускалась)
+   * не запускает анимацию при монтировании.
+   */
+  it('does not start the animation while playSignal is 0', () => {
+    render(
+      <AnimationScale3d playSignal={0} waveDelay={100}>
+        Hello
+      </AnimationScale3d>,
+    );
+
+    expect(mocks.start).not.toHaveBeenCalled();
+  });
+
+  /**
+   * Проверяет, что увеличение счётчика playSignal запускает анимацию волны
+   * с задержкой waveDelay, передаваемой в transition вызова controls.start.
+   *
+   * Регрессионный тест на баг единиц: transition у framer-motion задаёт
+   * delay в СЕКУНДАХ, а проп waveDelay приходит в миллисекундах, поэтому
+   * компонент обязан конвертировать его (120 мс → 0.12 c). Раньше delay
+   * передавался «как есть» (120), и в реальном браузере буква ждала
+   * анимацию 2 минуты — в волне двигались только буквы с нулевой
+   * задержкой, а навсегда «залипший» флаг isPlaying убивал hover.
+   */
+  it('starts the wave when playSignal increases, converting waveDelay ms to seconds', () => {
+    const { rerender } = render(
+      <AnimationScale3d playSignal={0} waveDelay={120}>
+        Hello
+      </AnimationScale3d>,
+    );
+    expect(mocks.start).not.toHaveBeenCalled();
+
+    rerender(
+      <AnimationScale3d playSignal={1} waveDelay={120}>
+        Hello
+      </AnimationScale3d>,
+    );
+
+    expect(mocks.start).toHaveBeenCalledTimes(1);
+    expect(mocks.start.mock.calls[0][0].transition.delay).toBeCloseTo(0.12);
+  });
+
+  /**
+   * Проверяет конвертацию единиц для большой задержки волны: хвост длинного
+   * заголовка («TEST TASKS», буква 420 мс) не должен превращаться в 420 секунд.
+   */
+  it('converts large waveDelay values to seconds', () => {
+    const { rerender } = render(
+      <AnimationScale3d playSignal={0} waveDelay={420}>
+        Hello
+      </AnimationScale3d>,
+    );
+
+    rerender(
+      <AnimationScale3d playSignal={1} waveDelay={420}>
+        Hello
+      </AnimationScale3d>,
+    );
+
+    expect(mocks.start).toHaveBeenCalledTimes(1);
+    expect(mocks.start.mock.calls[0][0].transition.delay).toBeCloseTo(0.42);
+  });
+
+  /**
+   * Проверяет, что без пропса waveDelay волна запускается без задержки
+   * (delay = 0 в transition).
+   */
+  it('starts the wave without delay when waveDelay is omitted', () => {
+    const { rerender } = render(<AnimationScale3d playSignal={0}>Hello</AnimationScale3d>);
+
+    rerender(<AnimationScale3d playSignal={1}>Hello</AnimationScale3d>);
+
+    expect(mocks.start).toHaveBeenCalledTimes(1);
+    expect(mocks.start.mock.calls[0][0].transition.delay).toBe(0);
+  });
+
+  /**
+   * Проверяет, что во время автозапуска волны флаг isPlaying активен:
+   * наведение не запускает анимацию повторно, а после onAnimationComplete
+   * наведение снова работает.
+   */
+  it('keeps the isPlaying guard after the wave start', () => {
+    const { rerender } = render(<AnimationScale3d playSignal={0}>Hello</AnimationScale3d>);
+
+    rerender(<AnimationScale3d playSignal={1}>Hello</AnimationScale3d>);
+    expect(mocks.start).toHaveBeenCalledTimes(1);
+
+    // Наведение во время «играющей» волны игнорируется
+    fireEvent.mouseOver(screen.getByText('Hello'));
+    expect(mocks.start).toHaveBeenCalledTimes(1);
+
+    // Завершение анимации сбрасывает флаг isPlaying
+    act(() => {
+      mocks.callbacks.onAnimationComplete?.();
+    });
+
+    fireEvent.mouseOver(screen.getByText('Hello'));
+    expect(mocks.start).toHaveBeenCalledTimes(2);
+  });
+
+  /**
+   * Регрессионный тест волны: ре-рендеры буквы при неизменном playSignal
+   * (например, переключение флага isPlaying по onAnimationComplete) не должны
+   * перезапускать отложенную анимацию — иначе буквы выбиваются из волны
+   * и в анимации участвуют не все символы заголовка.
+   */
+  it('does not restart the wave on rerenders with the same playSignal', () => {
+    const { rerender } = render(
+      <AnimationScale3d playSignal={0} waveDelay={120}>
+        Hello
+      </AnimationScale3d>,
+    );
+
+    rerender(
+      <AnimationScale3d playSignal={1} waveDelay={120}>
+        Hello
+      </AnimationScale3d>,
+    );
+    expect(mocks.start).toHaveBeenCalledTimes(1);
+
+    // Переключение флага isPlaying (isPlaying -> false) вызывает ре-рендер,
+    // который не должен перезапустить запланированную отложенную анимацию
+    act(() => {
+      mocks.callbacks.onAnimationComplete?.();
+    });
+    expect(mocks.start).toHaveBeenCalledTimes(1);
+
+    // Ре-рендер с тем же playSignal (даже с другой задержкой) — без перезапуска
+    rerender(
+      <AnimationScale3d playSignal={1} waveDelay={0}>
+        Hello
+      </AnimationScale3d>,
+    );
+    expect(mocks.start).toHaveBeenCalledTimes(1);
+
+    // Новый тик волны снова запускает анимацию ровно один раз
+    rerender(
+      <AnimationScale3d playSignal={2} waveDelay={0}>
+        Hello
+      </AnimationScale3d>,
+    );
+    expect(mocks.start).toHaveBeenCalledTimes(2);
+  });
 });

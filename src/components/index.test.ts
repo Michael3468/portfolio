@@ -12,6 +12,7 @@ describe('components index exports', () => {
     const mod = await import('./index');
 
     expect(mod).toBeDefined();
+    expect(mod.AnimatedTitle).toBeDefined();
     expect(mod.AnimationScale3d).toBeDefined();
     expect(mod.AnimationText).toBeDefined();
     expect(mod.ButtonIconWithLink).toBeDefined();

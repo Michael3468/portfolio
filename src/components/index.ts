@@ -1,3 +1,5 @@
+export { AnimatedTitle } from './Animations/AnimatedTitle';
+export type { AnimatedTitleProps } from './Animations/AnimatedTitle';
 export { default as AnimationScale3d } from './Animations/AnimationScale3d';
 export { default as AnimationText } from './Animations/AnimationText';
 export { default as ButtonIconWithLink } from './ButtonIconWithLink';

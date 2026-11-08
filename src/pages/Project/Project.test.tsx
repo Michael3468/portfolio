@@ -11,7 +11,7 @@ import ProjectPage from './Project';
  * поэтому компонент отслеживает загрузку через `new Image()`.
  */
 class FakeImage {
-  /** Все экземпляры, созданные в текущем тесте. */
+  /** Все экземпляры, созданные в текущем тесте (очищается в afterEach). */
   static readonly instances: FakeImage[] = [];
 
   /** Обработчик загрузки изображения. */
@@ -35,7 +35,7 @@ class FakeImage {
 describe('Project page', () => {
   afterEach(() => {
     vi.unstubAllGlobals();
-    FakeImage.instances = [];
+    FakeImage.instances.splice(0, FakeImage.instances.length);
     vi.restoreAllMocks();
   });
 

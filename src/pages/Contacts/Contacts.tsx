@@ -1,8 +1,9 @@
+import { AnimatedTitle } from '@/components/Animations/AnimatedTitle';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import { PAGES } from '@/shared/constants/seo';
 
 import { CONTACTS_LIST, CONTACTS_TITLE } from './model/constants';
-import { AnimatedTitle, ContactItem } from './UI';
+import { ContactItem } from './UI';
 
 /**
  * Страница «Контакты».

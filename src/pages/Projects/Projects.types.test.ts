@@ -12,7 +12,8 @@ import { ProjectsSection } from './Projects.types';
 describe('ProjectsSection type contract', () => {
   /**
    * Проверяет, что projectsList содержит ProjectItem с id и title.
-   * Реальная ProjectsSection создаётся в Projects.tsx через getLetters + projectsList.
+   * Реальная ProjectsSection создаётся в Projects.tsx из projectsList
+   * и testTasksList, а заголовок рендерит AnimatedTitle.
    */
   it('projectsList items have ProjectItem fields', () => {
     for (const item of projectsList) {
@@ -38,11 +39,11 @@ describe('ProjectsSection type contract', () => {
    */
   it('can construct a valid ProjectsSection', () => {
     const section: ProjectsSection = {
-      title: ['P', 'r', 'o', 'j', 'e', 'c', 't', 's'],
+      title: 'PROJECTS',
       projects: projectsList,
     };
 
-    expect(section.title).toHaveLength(8); // 'Projects' = 8 letters
+    expect(section.title).toBe('PROJECTS');
     expect(section.projects).toHaveLength(projectsList.length);
   });
 });

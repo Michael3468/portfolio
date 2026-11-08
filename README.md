@@ -57,7 +57,8 @@ portfolio/
 │   └── seo.test.ts              # тесты seo-плагина
 ├── playwright.config.ts         # Playwright: smoke-тесты против vite preview
 ├── e2e/
-│   └── routes.e2e.ts            # e2e: роутинг, 404, прямые заходы, сохранение темы
+│   ├── routes.e2e.ts            # e2e: роутинг, 404, прямые заходы, сохранение темы
+│   └── title-wave.e2e.ts        # e2e: авто-волна заголовков (getAnimations) + hover
 ├── scripts/
 │   └── optimize-images.sh       # конвертация исходных JPG → WebP (нужен ffmpeg с libwebp)
 ├── agents/
@@ -105,8 +106,21 @@ portfolio/
     │   │       └── lib.test.ts
     │   ├── Animations/
     │   │   ├── AnimationScale3d/
-    │   │   │   ├── index.tsx    # анимация «rubber band» букв
+    │   │   │   ├── index.tsx    # анимация «rubber band» букв (hover + автозапуск
+    │   │   │   │                # по playSignal с задержкой waveDelay)
     │   │   │   └── index.test.tsx
+    │   │   ├── AnimatedTitle/
+    │   │   │   ├── AnimatedTitle.tsx   # анимированный заголовок страницы (h1/h2)
+    │   │   │   │                       # с авто-волной «rubber band» каждые 10 секунд;
+    │   │   │   │                       # доступность: aria-label на заголовке,
+    │   │   │   │                       # буквы — декоративные (aria-hidden)
+    │   │   │   ├── AnimatedTitle.test.tsx
+    │   │   │   ├── index.ts            # barrel-реэкспорт AnimatedTitle
+    │   │   │   └── model/
+    │   │   │       ├── constants.ts       # TITLE_WAVE_INTERVAL_MS, TITLE_WAVE_STAGGER_MS
+    │   │   │       ├── constants.test.ts
+    │   │   │       ├── lib.ts             # getWaveDelay(index, count, direction)
+    │   │   │       └── lib.test.ts
     │   │   ├── AnimationText/
     │   │   │   ├── index.tsx    # анимация слов/букв
     │   │   │   └── index.test.tsx
@@ -158,7 +172,6 @@ portfolio/
     │   │   │   ├── constants.ts   # локальные константы (CONTACTS_LIST)
     │   │   │   └── constants.test.ts
     │   │   └── UI/
-    │   │       ├── AnimatedTitle.tsx  # анимированный заголовок
     │   │       ├── ContactItem.tsx    # элемент списка контактов
     │   │       └── index.ts
     │   ├── Project/
@@ -330,6 +343,35 @@ SVG-плитки всех навыков из `projects.json`: белые ква
 переключение кнопкой, сохранение в `localStorage`. По умолчанию включена тёмная тема,
 системная схема не учитывается.
 
+## Авто-волна заголовков
+
+Заголовки страниц «Contacts», «Projects» и «Test Tasks» рендерит общий компонент
+`AnimatedTitle` (`src/components/Animations/AnimatedTitle`): каждая буква — отдельный
+`AnimationScale3d` с эффектом «rubber band». Буквы декоративные (`aria-hidden`),
+а корректный accessible name заголовка задаётся через `aria-label={title}`
+(как в `OrbsTitle`) — иначе скринридер читает заголовок по одной букве.
+Помимо анимации по наведению мыши,
+каждые `TITLE_WAVE_INTERVAL_MS` (10 секунд) заголовок автоматически запускает
+«волну»: в волне участвует каждая буква заголовка (включая пробелы в многословных
+заголовках вроде «TEST TASKS»); нечётный тик — слева направо (от первой буквы к
+последней), чётный — справа налево (от последней к первой). Задержка каждой буквы
+считается чистой функцией `getWaveDelay` с шагом `TITLE_WAVE_STAGGER_MS` (60 мс).
+В `AnimationScale3d` волновой эффект реагирует строго на счётчик тиков `playSignal`:
+ровно один запуск на тик, ре-рендеры буквы (переключение флага `isPlaying`) не
+перезапускают запланированную отложенную анимацию. При `prefers-reduced-motion: reduce`
+автозапуск не включается, hover-поведение сохраняется.
+
+> **Важно про единицы:** `transition.delay`/`transition.duration` у framer-motion
+> задаются в **секундах**, а `waveDelay` приходит в миллисекундах — `AnimationScale3d`
+> конвертирует их делением на 1000. Ранее delay передавался в мс «как есть»: буква
+> с задержкой 60 мс получала анимацию с задержкой 60 секунд — в волне визуально
+> двигались только буквы с нулевой задержкой (первая на нечётном тике, последняя на
+> чётном), а навсегда «залипший» флаг `isPlaying` (его сбрасывает `onAnimationComplete`,
+> который для отложенной на минуты анимации не срабатывает) полностью отключал hover.
+> Реальное поведение анимации в браузере (WAAPI `getAnimations()` каждой буквы,
+> направление волны и работоспособность hover после волн) проверяют e2e-тесты
+> `e2e/title-wave.e2e.ts`.
+
 ## Тесты
 
 Юнит-тесты запускаются через Vitest (`environment: jsdom`, `setupFiles: ./src/setupTests.ts`,
@@ -337,54 +379,56 @@ SVG-плитки всех навыков из `projects.json`: белые ква
 `@testing-library/jest-dom/vitest` и мок `window.matchMedia`, необходимый для компонентов
 тёмной темы в jsdom.
 
-Все юнит-тесты проходят: **192 теста в 44 файлах** (включая barrel-тесты, тесты типов
+Все юнит-тесты проходят: **210 тестов в 46 файлах** (включая barrel-тесты, тесты типов
 и тесты seo-плагина). Покрытие по v8 на момент обновления README: **96.63%** statements /
 **94.25%** branches / **95.97%** functions / **97.44%** lines; актуальные цифры после
 каждого запуска печатает `npm run test:coverage`.
 
-| Модуль                                                                    | Файл теста                                                  |
-| ------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| `App` (маршрутизация, ленивые загрузчики)                                 | `src/App.test.tsx`                                          |
-| баррель компонентов                                                       | `src/components/index.test.ts`                              |
-| баррель `Navbar`                                                          | `src/components/Navbar/index.test.ts`                       |
-| `Navbar`                                                                  | `src/components/Navbar/Navbar.test.tsx`                     |
-| `ButtonToggleDarkMode`                                                    | `src/components/Navbar/UI/ButtonToggleDarkMode.test.tsx`    |
-| `Footer`                                                                  | `src/components/Footer/index.test.tsx`                      |
-| `Header`                                                                  | `src/components/Header/index.test.tsx`                      |
-| `ScrollToTop`                                                             | `src/components/ScrollToTop/index.test.tsx`                 |
-| `SkillBackground`                                                         | `src/components/SkillBackground/index.test.tsx`             |
-| параллакс, снег и покачивание                                             | `src/components/SkillBackground/model/lib.test.ts`          |
-| константы `SkillBackground`                                               | `src/components/SkillBackground/model/constants.test.ts`    |
-| `ButtonIconWithLink`                                                      | `src/components/ButtonIconWithLink/index.test.tsx`          |
-| `AnimationScale3d`                                                        | `src/components/Animations/AnimationScale3d/index.test.tsx` |
-| `AnimationText` (варианты `words` / `letters`)                            | `src/components/Animations/AnimationText/index.test.tsx`    |
-| `Home`                                                                    | `src/pages/Home.test.tsx`                                   |
-| баррель страницы `Contacts`                                               | `src/pages/Contacts/index.test.ts`                          |
-| типы `ContactItem` / `ContactLink`                                        | `src/pages/Contacts/Contacts.types.test.ts`                 |
-| `Contacts`                                                                | `src/pages/Contacts/Contacts.test.tsx`                      |
-| `AnimatedTitle` (`Contacts`)                                              | `src/pages/Contacts/UI/AnimatedTitle.test.tsx`              |
-| `ContactItem` (`Contacts`)                                                | `src/pages/Contacts/UI/ContactItem.test.tsx`                |
-| константы `Contacts`                                                      | `src/pages/Contacts/model/constants.test.ts`                |
-| баррель страницы `Projects`                                               | `src/pages/Projects/index.test.ts`                          |
-| тип `ProjectsSection`                                                     | `src/pages/Projects/Projects.types.test.ts`                 |
-| `Projects`                                                                | `src/pages/Projects/Projects.test.tsx`                      |
-| `Project` (карточка)                                                      | `src/pages/Projects/UI/Project.test.tsx`                    |
-| `DEFAULT_SHADOW_COLOR` / `INNER_SHADOW_COLOR_DARK`                        | `src/pages/Projects/UI/model/constants.test.ts`             |
-| баррель страницы `Project`                                                | `src/pages/Project/index.test.ts`                           |
-| `Project` (страница)                                                      | `src/pages/Project/Project.test.tsx`                        |
-| `findProjectById` / `getParallaxTransform`                                | `src/pages/Project/model/lib.test.ts`                       |
-| `BUTTON_GRADIENT` / `MOUSE_PARALLAX_SHIFT_PX`                             | `src/pages/Project/model/constants.test.ts`                 |
-| `NotFound` (404)                                                          | `src/pages/NotFound/NotFound.test.tsx`                      |
-| `useDocumentMeta` / `upsertMeta`                                          | `src/hooks/useDocumentMeta.test.ts`                         |
-| `darkModeStore` (zustand-стор, catch-ветки)                               | `src/store/darkModeStore.test.ts`                           |
-| `projects` / `projectsList` / `testTasksList` / `resolveImage`            | `src/shared/constants/projects.test.ts`                     |
-| баррель констант                                                          | `src/shared/constants/index.test.ts`                        |
-| seo-константы (`SITE_URL`, `PAGES`, …)                                    | `src/shared/constants/seo.test.ts`                          |
-| баррель утилит                                                            | `src/shared/lib/index.test.ts`                              |
-| `getLetters` / `replaceSpaceWithNbsp`                                     | `src/shared/lib/text.test.ts`                               |
-| баррель типов                                                             | `src/shared/types/index.test.ts`                            |
-| типы `DarkMode` / `ProjectSection` / `ProjectItem`                        | `src/shared/types/types.test.ts`                            |
-| seo-плагин (`renderHead`, `renderRobots`, `renderSitemap`, `closeBundle`) | `vite-plugins/seo.test.ts`                                  |
+| Модуль                                                                    | Файл теста                                                        |
+| ------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `App` (маршрутизация, ленивые загрузчики)                                 | `src/App.test.tsx`                                                |
+| баррель компонентов                                                       | `src/components/index.test.ts`                                    |
+| баррель `Navbar`                                                          | `src/components/Navbar/index.test.ts`                             |
+| `Navbar`                                                                  | `src/components/Navbar/Navbar.test.tsx`                           |
+| `ButtonToggleDarkMode`                                                    | `src/components/Navbar/UI/ButtonToggleDarkMode.test.tsx`          |
+| `Footer`                                                                  | `src/components/Footer/index.test.tsx`                            |
+| `Header`                                                                  | `src/components/Header/index.test.tsx`                            |
+| `ScrollToTop`                                                             | `src/components/ScrollToTop/index.test.tsx`                       |
+| `SkillBackground`                                                         | `src/components/SkillBackground/index.test.tsx`                   |
+| параллакс, снег и покачивание                                             | `src/components/SkillBackground/model/lib.test.ts`                |
+| константы `SkillBackground`                                               | `src/components/SkillBackground/model/constants.test.ts`          |
+| `ButtonIconWithLink`                                                      | `src/components/ButtonIconWithLink/index.test.tsx`                |
+| `AnimationScale3d`                                                        | `src/components/Animations/AnimationScale3d/index.test.tsx`       |
+| `AnimationText` (варианты `words` / `letters`)                            | `src/components/Animations/AnimationText/index.test.tsx`          |
+| `Home`                                                                    | `src/pages/Home.test.tsx`                                         |
+| баррель страницы `Contacts`                                               | `src/pages/Contacts/index.test.ts`                                |
+| типы `ContactItem` / `ContactLink`                                        | `src/pages/Contacts/Contacts.types.test.ts`                       |
+| `Contacts`                                                                | `src/pages/Contacts/Contacts.test.tsx`                            |
+| `AnimatedTitle` (заголовки Contacts, Projects, Test Tasks)                | `src/components/Animations/AnimatedTitle/AnimatedTitle.test.tsx`  |
+| `getWaveDelay` (волна заголовков)                                         | `src/components/Animations/AnimatedTitle/model/lib.test.ts`       |
+| `TITLE_WAVE_INTERVAL_MS` / `TITLE_WAVE_STAGGER_MS`                        | `src/components/Animations/AnimatedTitle/model/constants.test.ts` |
+| `ContactItem` (`Contacts`)                                                | `src/pages/Contacts/UI/ContactItem.test.tsx`                      |
+| константы `Contacts`                                                      | `src/pages/Contacts/model/constants.test.ts`                      |
+| баррель страницы `Projects`                                               | `src/pages/Projects/index.test.ts`                                |
+| тип `ProjectsSection`                                                     | `src/pages/Projects/Projects.types.test.ts`                       |
+| `Projects`                                                                | `src/pages/Projects/Projects.test.tsx`                            |
+| `Project` (карточка)                                                      | `src/pages/Projects/UI/Project.test.tsx`                          |
+| `DEFAULT_SHADOW_COLOR` / `INNER_SHADOW_COLOR_DARK`                        | `src/pages/Projects/UI/model/constants.test.ts`                   |
+| баррель страницы `Project`                                                | `src/pages/Project/index.test.ts`                                 |
+| `Project` (страница)                                                      | `src/pages/Project/Project.test.tsx`                              |
+| `findProjectById` / `getParallaxTransform`                                | `src/pages/Project/model/lib.test.ts`                             |
+| `BUTTON_GRADIENT` / `MOUSE_PARALLAX_SHIFT_PX`                             | `src/pages/Project/model/constants.test.ts`                       |
+| `NotFound` (404)                                                          | `src/pages/NotFound/NotFound.test.tsx`                            |
+| `useDocumentMeta` / `upsertMeta`                                          | `src/hooks/useDocumentMeta.test.ts`                               |
+| `darkModeStore` (zustand-стор, catch-ветки)                               | `src/store/darkModeStore.test.ts`                                 |
+| `projects` / `projectsList` / `testTasksList` / `resolveImage`            | `src/shared/constants/projects.test.ts`                           |
+| баррель констант                                                          | `src/shared/constants/index.test.ts`                              |
+| seo-константы (`SITE_URL`, `PAGES`, …)                                    | `src/shared/constants/seo.test.ts`                                |
+| баррель утилит                                                            | `src/shared/lib/index.test.ts`                                    |
+| `getLetters` / `replaceSpaceWithNbsp`                                     | `src/shared/lib/text.test.ts`                                     |
+| баррель типов                                                             | `src/shared/types/index.test.ts`                                  |
+| типы `DarkMode` / `ProjectSection` / `ProjectItem`                        | `src/shared/types/types.test.ts`                                  |
+| seo-плагин (`renderHead`, `renderRobots`, `renderSitemap`, `closeBundle`) | `vite-plugins/seo.test.ts`                                        |
 
 Команда запуска (однократно):
 
@@ -400,6 +444,14 @@ npm run test:run
 deep link открывается без SPA-навигации, неизвестные маршруты и id проекта дают 404,
 тёмная тема применяется при загрузке и сохраняется после перезагрузки. Uncaught
 ошибки в консоли браузера считаются падением теста.
+
+`e2e/title-wave.e2e.ts` — реальное поведение авто-волны заголовка «Contacts» в браузере
+(юнит-тесты framer-motion замоканы и анимацию не исполняют): через `getAnimations()` каждой
+буквы проверяется, что на первом тике волны все 8 букв получают rubber-band WAAPI-анимацию
+со задержками 0, 60, …, 420 мс (слева направо), на втором тике — зеркально (справа налево),
+а после завершения волн hover по букве по-прежнему запускает анимацию (регрессия «залипшего»
+флага `isPlaying`). Отдельный тест проверяет, что при `prefers-reduced-motion: reduce`
+авто-волна не запускается.
 
 ```
 npm run test:e2e   # сначала производит сборку, затем playwright test
