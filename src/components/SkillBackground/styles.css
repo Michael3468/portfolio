@@ -24,6 +24,11 @@
   will-change: transform;
 }
 
+/* В светлой теме плитки темнее, чтобы не сливаться со светлым фоном страницы. */
+:root:not(.dark) .skill-background__tile {
+  filter: brightness(0.01);
+}
+
 /* На узких экранах уменьшаем плитки, чтобы фон не становился слишком плотным. */
 @media (max-width: 40rem) {
   .skill-background__tile {

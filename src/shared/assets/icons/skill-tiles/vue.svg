@@ -5,5 +5,5 @@
       <g transform="translate(18 18) scale(1.1666667)" fill="#000000"><path d="M24,1.61H14.06L12,5.16,9.94,1.61H0L12,22.39ZM12,14.08,5.16,2.23H9.59L12,6.41l2.41-4.18h4.43Z"/></g>
     </mask>
   </defs>
-  <rect width="64" height="64" rx="15" fill="#ffffff" mask="url(#cutout)"/>
+  <rect width="64" height="64" rx="15" fill="#8c8c8c" mask="url(#cutout)"/>
 </svg>
