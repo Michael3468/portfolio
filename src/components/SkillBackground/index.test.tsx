@@ -134,6 +134,28 @@ describe('SkillBackground', () => {
     expect(frames.request).not.toHaveBeenCalled();
   });
 
+  it('skips tiles that are missing from the DOM', () => {
+    const frames = createFrameController();
+    const originalQuerySelectorAll = Element.prototype.querySelectorAll;
+
+    // Слой нашёлся, но плиток в нём нет: защитная проверка `!tile` должна
+    // пропустить обновление, а анимация — продолжиться без ошибок.
+    vi.spyOn(Element.prototype, 'querySelectorAll').mockImplementation(function (
+      this: Element,
+      selectors: string,
+    ) {
+      if (selectors === '.skill-background__tile') {
+        return [] as unknown as NodeListOf<Element>;
+      }
+      return originalQuerySelectorAll.call(this, selectors);
+    });
+
+    render(<SkillBackground />);
+
+    expect(() => frames.step(1000)).not.toThrow();
+    expect(frames.request).toHaveBeenCalled();
+  });
+
   it('does not jump when the pointer returns after leaving the window', () => {
     const frames = createFrameController();
 
