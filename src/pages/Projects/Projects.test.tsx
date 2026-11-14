@@ -2,7 +2,9 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 
-import Projects from './Projects';
+import { projectsList } from '@/shared/constants';
+
+import Projects, { ProjectsSectionBlock } from './Projects';
 
 /**
  * Тесты страницы «Проекты».
@@ -46,6 +48,30 @@ describe('Projects page', () => {
     );
     expect(reactLandingLinks.some((link) => link.getAttribute('href') === '/project/29')).toBe(
       true,
+    );
+  });
+
+  /**
+   * Проверяет, что секция без флага isSlider рендерит проекты обычной сеткой,
+   * а не слайдером.
+   */
+  it('renders a non-slider section as a plain grid', () => {
+    const project = projectsList[0];
+    const { container } = render(
+      <MemoryRouter>
+        <ProjectsSectionBlock section={{ title: 'GRID', projects: [project], isSlider: false }} />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole('heading', { level: 2, name: 'GRID' })).toBeInTheDocument();
+    expect(container.querySelector('.projects-slider')).not.toBeInTheDocument();
+
+    const list = container.querySelector('.projects-list__block-items');
+    expect(list).toBeInTheDocument();
+    expect(list?.querySelectorAll('.project')).toHaveLength(1);
+    expect(screen.getByRole('link', { name: new RegExp(project.title) })).toHaveAttribute(
+      'href',
+      `/project/${project.id}`,
     );
   });
 });

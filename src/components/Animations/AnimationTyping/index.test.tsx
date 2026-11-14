@@ -128,4 +128,26 @@ describe('AnimationTyping', () => {
     rerender(<AnimationTyping text="new text" />);
     expect(container.firstElementChild?.textContent).toBe('');
   });
+
+  /**
+   * Проверяет, что запоздавший таймер после размонтирования не обновляет
+   * состояние: цикл видит флаг cancelled и завершается без ошибок.
+   */
+  it('does not update state when a timer fires after unmount', () => {
+    // Не даём очистке эффекта отменить таймер, чтобы callback всё же выполнился.
+    const clearTimeoutSpy = vi.spyOn(globalThis, 'clearTimeout').mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const { unmount } = render(<AnimationTyping text="abc" typingSpeed={80} />);
+    unmount();
+
+    act(() => {
+      vi.advanceTimersByTime(80);
+    });
+
+    expect(errorSpy).not.toHaveBeenCalled();
+
+    clearTimeoutSpy.mockRestore();
+    errorSpy.mockRestore();
+  });
 });

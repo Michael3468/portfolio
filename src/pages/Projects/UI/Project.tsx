@@ -58,6 +58,10 @@ export default function Project({ title, img, id, background, ariaHidden }: Proj
     <li
       className="project pulse-animation"
       aria-hidden={ariaHidden || undefined}
+      // Крайние копии ленты скрыты от скринридеров, но aria-hidden не убирает
+      // их ссылки из tab-порядка. inert запрещает фокус, клики и выделение,
+      // поэтому скрытые копии не мешают клавиатурной навигации.
+      inert={ariaHidden ? true : undefined}
       style={
         (!img
           ? {
@@ -76,6 +80,9 @@ export default function Project({ title, img, id, background, ariaHidden }: Proj
     >
       <NavLink
         to={`/project/${id}`}
+        // Запасной вариант для браузеров без поддержки inert:
+        // скрытая копия не должна попадать в tab-порядок.
+        tabIndex={ariaHidden ? -1 : undefined}
         style={{
           width: 'inherit',
           maxWidth: 'inherit',

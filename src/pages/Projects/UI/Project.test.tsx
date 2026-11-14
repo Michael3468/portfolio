@@ -42,6 +42,45 @@ describe('Project card', () => {
   });
 
   /**
+   * Проверяет, что скрытая копия карточки в слайдере получает `inert`
+   * и её ссылка исключается из tab-порядка: `aria-hidden` сам по себе
+   * не мешает фокусу на дочерних элементах.
+   */
+  it('makes hidden copies inert and removes their links from the tab order', () => {
+    const { container } = render(
+      <MemoryRouter>
+        <Project {...projectProps} ariaHidden />
+      </MemoryRouter>,
+    );
+
+    const item = container.querySelector('.project');
+    expect(item).toHaveAttribute('aria-hidden', 'true');
+    expect(item).toHaveAttribute('inert');
+
+    // getByRole не находит ссылку: она намеренно скрыта от дерева доступности.
+    const link = container.querySelector('a');
+    expect(link).toHaveAttribute('tabindex', '-1');
+  });
+
+  /**
+   * Проверяет, что обычная (видимая) карточка не становится inert
+   * и остаётся доступной с клавиатуры.
+   */
+  it('does not make a visible card inert', () => {
+    const { container } = render(
+      <MemoryRouter>
+        <Project {...projectProps} />
+      </MemoryRouter>,
+    );
+
+    const item = container.querySelector('.project');
+    expect(item).not.toHaveAttribute('inert');
+
+    const link = screen.getByRole('link', { name: /React Landing/ });
+    expect(link).not.toHaveAttribute('tabindex');
+  });
+
+  /**
    * Проверяет, что карточка рендерит изображение
    * с атрибутом alt и корректным значением src.
    */

@@ -23,6 +23,40 @@ const PROJECTS_SECTIONS: readonly ProjectsSection[] = [
   },
 ];
 
+interface ProjectsSectionBlockProps {
+  readonly section: ProjectsSection;
+}
+
+/**
+ * Блок одной секции: анимированный заголовок и проекты слайдером или сеткой.
+ *
+ * @param props.section - Заголовок и список проектов секции.
+ * @returns Секция страницы проектов.
+ */
+export function ProjectsSectionBlock({ section }: ProjectsSectionBlockProps) {
+  return (
+    <div className="projects-list__block">
+      <AnimatedTitle as="h2" title={section.title} />
+
+      {section.isSlider ? (
+        <ProjectsSlider projects={section.projects} />
+      ) : (
+        <ul className="projects-list__block-items">
+          {section.projects.map((project) => (
+            <Project
+              key={project.id}
+              title={project.title}
+              img={project.img}
+              id={project.id}
+              background={project.background}
+            />
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 export default function Projects() {
   useDocumentMeta(PAGES.projects);
 
@@ -32,25 +66,7 @@ export default function Projects() {
           (определён в src/assets/styles/main.css) */}
       <div className="projects-list container">
         {PROJECTS_SECTIONS.map((item) => (
-          <div className="projects-list__block" key={item.title}>
-            <AnimatedTitle as="h2" title={item.title} />
-
-            {item.isSlider ? (
-              <ProjectsSlider projects={item.projects} />
-            ) : (
-              <ul className="projects-list__block-items">
-                {item.projects.map((project) => (
-                  <Project
-                    key={project.id}
-                    title={project.title}
-                    img={project.img}
-                    id={project.id}
-                    background={project.background}
-                  />
-                ))}
-              </ul>
-            )}
-          </div>
+          <ProjectsSectionBlock key={item.title} section={item} />
         ))}
       </div>
     </main>

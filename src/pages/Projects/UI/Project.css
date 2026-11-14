@@ -50,6 +50,27 @@
   transform: rotate(-45deg) translateY(100%);
 }
 
+/*
+ * Видимая рамка клавиатурного фокуса.
+ *
+ * Ссылка занимает всю карточку, но у `.project` стоит `overflow: hidden`,
+ * поэтому её собственный outline обрезается по краям. Рисуем рамку
+ * псевдоэлементом внутри карточки: так она гарантированно видна поверх
+ * изображения и заголовка и не обрезается.
+ *
+ * `:has(a:focus-visible)` показывает рамку только при клавиатурной навигации,
+ * а не после клика мышью.
+ */
+.project:has(a:focus-visible)::after {
+  content: '';
+  position: absolute;
+  inset: 0.25rem;
+  z-index: 3;
+  border: 0.125rem solid var(--project-card-text);
+  border-radius: calc(0.625rem - 0.25rem);
+  pointer-events: none;
+}
+
 .project__container {
   padding: 0.9375rem;
   border-radius: 0.625rem;

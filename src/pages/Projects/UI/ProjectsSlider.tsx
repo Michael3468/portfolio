@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type FocusEvent } from 'react';
 
 import { ProjectItem } from '@/shared/types';
 
@@ -50,6 +50,9 @@ export default function ProjectsSlider({ projects }: ProjectsSliderProps) {
   const [position, setPosition] = useState(count);
   const [animate, setAnimate] = useState(true);
   const [isMoving, setIsMoving] = useState(false);
+  // Автопрокрутка остановлена, пока клавиатурный фокус находится на карточке:
+  // иначе карточка уедет из-под пользователя прямо во время чтения.
+  const [isCardFocused, setIsCardFocused] = useState(false);
 
   const activeIndex = normalizePosition(position, count) - count;
 
@@ -95,10 +98,11 @@ export default function ProjectsSlider({ projects }: ProjectsSliderProps) {
     return () => clearTimeout(timerId);
   }, [isMoving, position, count]);
 
-  // Автопрокрутка: таймер взводится, когда слайдер неподвижен, и перезапускается
-  // после каждого перехода (в том числе ручного), поэтому не сбивает пользователя
+  // Автопрокрутка: таймер взводится, когда слайдер неподвижен и фокус не на карточке.
+  // После ухода фокуса с карточек на стрелку (или за пределы слайдера) отсчёт
+  // начинается заново с полного интервала.
   useEffect(() => {
-    if (isMoving) {
+    if (isMoving || isCardFocused) {
       return;
     }
     const timerId = setTimeout(() => {
@@ -107,7 +111,26 @@ export default function ProjectsSlider({ projects }: ProjectsSliderProps) {
       setIsMoving(true);
     }, AUTOPLAY_INTERVAL);
     return () => clearTimeout(timerId);
-  }, [isMoving, position]);
+  }, [isMoving, position, isCardFocused]);
+
+  /**
+   * Обновляет признак «фокус на карточке» при переходе фокуса внутри слайдера.
+   * События focus/blur всплывают, поэтому обработчики висят на контейнере.
+   */
+  const handleFocus = (event: FocusEvent<HTMLDivElement>) => {
+    setIsCardFocused(Boolean((event.target as HTMLElement).closest('.project')));
+  };
+
+  /**
+   * Сбрасывает признак, когда фокус уходит за пределы слайдера.
+   * При переходе между элементами внутри контейнера состояние не трогаем:
+   * его обновит следующий handleFocus.
+   */
+  const handleBlur = (event: FocusEvent<HTMLDivElement>) => {
+    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+      setIsCardFocused(false);
+    }
+  };
 
   if (count === 0) {
     return null;
@@ -123,7 +146,7 @@ export default function ProjectsSlider({ projects }: ProjectsSliderProps) {
   };
 
   return (
-    <div className="projects-slider">
+    <div className="projects-slider" onFocus={handleFocus} onBlur={handleBlur}>
       <div className="projects-slider__stage">
         <button
           type="button"
@@ -136,16 +159,23 @@ export default function ProjectsSlider({ projects }: ProjectsSliderProps) {
 
         <div className="projects-slider__viewport">
           <ul className="projects-slider__track" style={trackStyle}>
-            {slides.map(({ copy, project }) => (
-              <Project
-                key={`${copy}-${project.id}`}
-                title={project.title}
-                img={project.img}
-                id={project.id}
-                background={project.background}
-                ariaHidden={copy !== 1}
-              />
-            ))}
+            {slides.map(({ copy, project }, index) => {
+              // В tab-порядке и дереве доступности оставляем только карточки,
+              // которые сейчас видны: центральную и двух соседних. Остальные
+              // получают inert в компоненте Project и пропускаются Tab'ом.
+              const isVisible = Math.abs(index - position) <= 1;
+
+              return (
+                <Project
+                  key={`${copy}-${project.id}`}
+                  title={project.title}
+                  img={project.img}
+                  id={project.id}
+                  background={project.background}
+                  ariaHidden={!isVisible}
+                />
+              );
+            })}
           </ul>
         </div>
 

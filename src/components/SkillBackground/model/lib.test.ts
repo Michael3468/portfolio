@@ -93,4 +93,12 @@ describe('SkillBackground lib', () => {
     // 60 + 45 = 105 > 95, поэтому позиция переносится на 15.
     expect(getRespawnLeft(60, samePlace)).toBe(15);
   });
+
+  it('shifts the icon within the range when the fallback fits', () => {
+    const range = SNOW_LEFT_MAX - SNOW_LEFT_MIN;
+    const samePlace = () => (20 - SNOW_LEFT_MIN) / range;
+
+    // 20 + 45 = 65 <= 95, поэтому позиция остаётся внутри диапазона.
+    expect(getRespawnLeft(20, samePlace)).toBe(65);
+  });
 });
