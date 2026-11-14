@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it } from 'vitest';
 
@@ -31,14 +32,14 @@ describe('Navbar', () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByRole('link', { name: 'Portfolio' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Portfolio' })).toHaveAttribute('href', '/');
     expect(screen.getByRole('link', { name: 'Link to GitHub' })).toHaveAttribute(
       'href',
       'https://github.com/Michael3468',
     );
-    expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Projects' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Contacts' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/');
+    expect(screen.getByRole('link', { name: 'Projects' })).toHaveAttribute('href', '/projects');
+    expect(screen.getByRole('link', { name: 'Contacts' })).toHaveAttribute('href', '/contacts');
   });
 
   /**
@@ -55,6 +56,82 @@ describe('Navbar', () => {
     const toggle = screen.getByRole('button', { name: 'Переключить тему' });
     expect(toggle).toBeInTheDocument();
     expect(toggle).toHaveAttribute('type', 'button');
+  });
+
+  /**
+   * Проверяет, что порядок Tab совпадает с визуальным: после ссылки Portfolio
+   * идут пункты меню, а кнопка темы стоит последней справа.
+   */
+  it('keeps the theme toggle after the navigation links in the tab order', () => {
+    const { container } = render(
+      <MemoryRouter>
+        <Navbar />
+      </MemoryRouter>,
+    );
+
+    const focusables = Array.from(container.querySelectorAll('a[href], button')).map(
+      (element) => element.getAttribute('aria-label') ?? element.textContent?.trim(),
+    );
+
+    expect(focusables).toEqual([
+      'Link to GitHub',
+      'Portfolio',
+      'Home',
+      'Projects',
+      'Contacts',
+      'Переключить тему',
+    ]);
+  });
+
+  /**
+   * Проверяет фактическую клавиатурную навигацию: Tab последовательно
+   * проходит ссылки хедера и только затем попадает на кнопку темы.
+   */
+  it('tabs through the header links before the theme toggle', async () => {
+    const user = userEvent.setup();
+    render(
+      <MemoryRouter>
+        <Navbar />
+      </MemoryRouter>,
+    );
+
+    const sequence = [
+      screen.getByRole('link', { name: 'Link to GitHub' }),
+      screen.getByRole('link', { name: 'Portfolio' }),
+      screen.getByRole('link', { name: 'Home' }),
+      screen.getByRole('link', { name: 'Projects' }),
+      screen.getByRole('link', { name: 'Contacts' }),
+      screen.getByRole('button', { name: 'Переключить тему' }),
+    ];
+
+    for (const element of sequence) {
+      await user.tab();
+      expect(element).toHaveFocus();
+    }
+  });
+
+  /**
+   * Проверяет, что на корневом маршруте активен только пункт «Home»:
+   * он получает aria-current="page" и класс активной ссылки,
+   * а остальные пункты остаются в обычном состоянии.
+   */
+  it('marks only the Home link as active on the root route', () => {
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <Navbar />
+      </MemoryRouter>,
+    );
+
+    const homeLink = screen.getByRole('link', { name: 'Home' });
+    expect(homeLink).toHaveAttribute('aria-current', 'page');
+    expect(homeLink).toHaveClass('nav-list__link--active');
+
+    ['Projects', 'Contacts'].forEach((name) => {
+      const link = screen.getByRole('link', { name });
+      expect(link).not.toHaveAttribute('aria-current');
+      expect(link).not.toHaveClass('nav-list__link--active');
+      expect(link).toHaveClass('nav-list__link', 'main-text-shadow');
+    });
   });
 
   /**

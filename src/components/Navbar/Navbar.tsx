@@ -29,8 +29,6 @@ export default function Navbar() {
             </NavLink>
           </div>
 
-          <ButtonToggleDarkMode />
-
           <ul className="nav-list">
             <li className="nav-list__item">
               <NavLink to="/" className={({ isActive }) => (isActive ? activeLink : normalLink)}>
@@ -54,6 +52,9 @@ export default function Navbar() {
               </NavLink>
             </li>
           </ul>
+
+          {/* Кнопка идёт после ссылок и в DOM, и визуально, чтобы Tab шёл слева направо */}
+          <ButtonToggleDarkMode />
         </div>
       </div>
     </nav>

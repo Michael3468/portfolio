@@ -261,3 +261,33 @@ test('theme toggle switches to light and persists the choice', async ({ page }) 
   await page.reload();
   await expect(page.locator('html')).not.toHaveClass(/dark/);
 });
+
+test('theme toggle is reachable by Tab and shows a focus ring', async ({ page }) => {
+  await page.goto('/');
+
+  const nav = page.getByRole('navigation');
+  const toggle = page.getByRole('button', { name: 'Переключить тему' });
+
+  // Tab идёт слева направо: после Portfolio — ссылки меню, затем кнопка темы.
+  await page.locator('.logo__link').focus();
+  await page.keyboard.press('Tab');
+  await expect(nav.getByRole('link', { name: 'Home' })).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(nav.getByRole('link', { name: 'Projects' })).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(nav.getByRole('link', { name: 'Contacts' })).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(toggle).toBeFocused();
+
+  const ring = await toggle.evaluate((element) => {
+    const styles = getComputedStyle(element);
+    return { style: styles.outlineStyle, width: parseFloat(styles.outlineWidth) };
+  });
+  expect(ring.style).not.toBe('none');
+  expect(ring.width).toBeGreaterThan(0);
+
+  // Enter на кнопке переключает тему так же, как клик мышью.
+  await page.keyboard.press('Enter');
+  await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('html')).not.toHaveClass(/dark/);
+});

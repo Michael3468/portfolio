@@ -3,7 +3,6 @@
 .dark-mode-btn {
   box-sizing: border-box;
   cursor: pointer;
-  order: 9;
 
   position: relative;
   display: flex;
@@ -39,6 +38,13 @@
 
 .dark-mode-btn--active::before {
   left: 25px;
+}
+
+/* Кольцо фокуса видно только при клавиатурной навигации по Tab:
+   при клике мышью кнопка не получает :focus-visible. */
+.dark-mode-btn:focus-visible {
+  outline: 0.125rem solid var(--nav-text);
+  outline-offset: 0.1875rem;
 }
 
 .dark-mode-btn__icon {

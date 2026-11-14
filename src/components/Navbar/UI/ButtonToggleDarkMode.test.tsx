@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { useDarkModeStore } from '@/store/darkModeStore';
@@ -68,5 +69,26 @@ describe('ButtonToggleDarkMode', () => {
     expect(toggle).toHaveAttribute('aria-pressed', 'false');
     expect(document.documentElement.classList.contains('dark')).toBe(false);
     expect(localStorage.getItem('darkMode')).toBe('light');
+  });
+
+  /**
+   * Проверяет, что кнопка входит в tab-порядок как обычный <button>
+   * и переключает тему с клавиатуры по Enter и пробелу.
+   */
+  it('is reachable by Tab and toggles the theme from the keyboard', async () => {
+    const user = userEvent.setup();
+    render(<ButtonToggleDarkMode />);
+
+    const toggle = screen.getByRole('button', { name: 'Переключить тему' });
+    expect(toggle).not.toHaveAttribute('tabindex');
+
+    await user.tab();
+    expect(toggle).toHaveFocus();
+
+    await user.keyboard('{Enter}');
+    expect(toggle).toHaveAttribute('aria-pressed', 'true');
+
+    await user.keyboard(' ');
+    expect(toggle).toHaveAttribute('aria-pressed', 'false');
   });
 });
