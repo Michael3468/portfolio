@@ -116,7 +116,7 @@ export default function Project() {
   );
 
   if (!project) {
-    return <NotFound message="Проект не найден" />;
+    return <NotFound message="Project not found" />;
   }
 
   return (

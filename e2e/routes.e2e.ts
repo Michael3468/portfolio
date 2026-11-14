@@ -83,7 +83,7 @@ test('keyboard focus on a slider card shows a visible focus ring', async ({ page
   await page.goto('/projects');
 
   const slider = page.locator('.projects-slider').first();
-  const prevArrow = slider.getByRole('button', { name: 'Предыдущий проект' });
+  const prevArrow = slider.getByRole('button', { name: 'Previous project' });
   const focusedCard = page.locator('.project:has(a:focus-visible)');
 
   // Ставим фокус на левую стрелку и переходим Tab'ом на первую видимую карточку.
@@ -112,8 +112,8 @@ test('tab walks only through visible slider cards, in visual order', async ({ pa
   await page.goto('/projects');
 
   const slider = page.locator('.projects-slider').first();
-  const prevArrow = slider.getByRole('button', { name: 'Предыдущий проект' });
-  const nextArrow = slider.getByRole('button', { name: 'Следующий проект' });
+  const prevArrow = slider.getByRole('button', { name: 'Previous project' });
+  const nextArrow = slider.getByRole('button', { name: 'Next project' });
 
   await prevArrow.focus();
 
@@ -164,9 +164,9 @@ test('autoplay pauses while a visible card is focused and resumes on an arrow', 
 
   const slider = page.locator('.projects-slider').first();
   const activeDot = slider.locator('.projects-slider__dot[aria-current="true"]');
-  const nextArrow = slider.getByRole('button', { name: 'Следующий проект' });
+  const nextArrow = slider.getByRole('button', { name: 'Next project' });
 
-  await slider.getByRole('button', { name: 'Предыдущий проект' }).focus();
+  await slider.getByRole('button', { name: 'Previous project' }).focus();
   await page.keyboard.press('Tab');
 
   const activeBefore = await activeDot.getAttribute('aria-label');
@@ -216,14 +216,14 @@ test('unknown project id shows the not-found message', async ({ page }) => {
   await page.goto('/project/999');
 
   await expect(page.getByRole('heading', { level: 1, name: '404' })).toBeVisible();
-  await expect(page.getByText('Проект не найден')).toBeVisible();
+  await expect(page.getByText('Project not found')).toBeVisible();
 });
 
 test('unknown route shows the 404 page', async ({ page }) => {
   await page.goto('/this-page-does-not-exist');
 
   await expect(page.getByRole('heading', { level: 1, name: '404' })).toBeVisible();
-  await page.getByRole('link', { name: 'На главную' }).click();
+  await page.getByRole('link', { name: 'Back to home' }).click();
   await expect(page).toHaveURL('/');
 });
 
@@ -253,7 +253,7 @@ test('theme toggle switches to light and persists the choice', async ({ page }) 
   });
   await page.goto('/');
 
-  await page.getByRole('button', { name: 'Переключить тему' }).click();
+  await page.getByRole('button', { name: 'Toggle theme' }).click();
 
   await expect(page.locator('html')).not.toHaveClass(/dark/);
   await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#c1c1c1');
@@ -266,7 +266,7 @@ test('theme toggle is reachable by Tab and shows a focus ring', async ({ page })
   await page.goto('/');
 
   const nav = page.getByRole('navigation');
-  const toggle = page.getByRole('button', { name: 'Переключить тему' });
+  const toggle = page.getByRole('button', { name: 'Toggle theme' });
 
   // Tab идёт слева направо: после Portfolio — ссылки меню, затем кнопка темы.
   await page.locator('.logo__link').focus();

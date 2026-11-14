@@ -23,7 +23,7 @@ describe('App', () => {
     render(<App />);
 
     expect(await screen.findByRole('heading', { level: 1, name: '404' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'На главную' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Back to home' })).toBeInTheDocument();
   });
 
   /**

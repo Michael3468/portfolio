@@ -23,8 +23,8 @@ describe('NotFound page', () => {
     );
 
     expect(screen.getByRole('heading', { level: 1, name: '404' })).toBeInTheDocument();
-    expect(screen.getByText('Страница не найдена')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'На главную' })).toHaveAttribute('href', '/');
+    expect(screen.getByText('Page not found')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Back to home' })).toHaveAttribute('href', '/');
   });
 
   /**
@@ -33,11 +33,11 @@ describe('NotFound page', () => {
   it('renders a custom message when provided', () => {
     render(
       <MemoryRouter>
-        <NotFound message="Проект не найден" />
+        <NotFound message="Project not found" />
       </MemoryRouter>,
     );
 
-    expect(screen.getByText('Проект не найден')).toBeInTheDocument();
-    expect(screen.queryByText('Страница не найдена')).not.toBeInTheDocument();
+    expect(screen.getByText('Project not found')).toBeInTheDocument();
+    expect(screen.queryByText('Page not found')).not.toBeInTheDocument();
   });
 });

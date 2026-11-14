@@ -5,7 +5,7 @@ import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import './styles.css';
 
 type NotFoundProps = {
-  /** Текст под заголовком. По умолчанию — «Страница не найдена». */
+  /** Текст под заголовком. По умолчанию — «Page not found». */
   readonly message?: string;
 };
 
@@ -18,7 +18,7 @@ type NotFoundProps = {
  * @param props.message - Текст под заголовком.
  * @returns {JSX.Element} Разметка страницы 404.
  */
-export default function NotFound({ message = 'Страница не найдена' }: NotFoundProps) {
+export default function NotFound({ message = 'Page not found' }: NotFoundProps) {
   useDocumentMeta({
     title: '404 — Portfolio',
     description: 'The page you are looking for does not exist.',
@@ -34,7 +34,7 @@ export default function NotFound({ message = 'Страница не найден
         <p className="not-found__message text-shadow">{message}</p>
 
         <Link to="/" className="not-found__link">
-          На главную
+          Back to home
         </Link>
       </div>
     </main>

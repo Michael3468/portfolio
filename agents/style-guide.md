@@ -113,7 +113,7 @@ import ButtonToggleDarkMode from './UI/ButtonToggleDarkMode'; // ✅ прямо�
   иконками без видимого текста):
 
   ```tsx
-  <button type="button" aria-label="Переключить тему" aria-pressed={isDark}>
+  <button type="button" aria-label="Toggle theme" aria-pressed={isDark}>
     ...
   </button>
   ```

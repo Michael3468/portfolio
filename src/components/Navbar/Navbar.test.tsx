@@ -53,7 +53,7 @@ describe('Navbar', () => {
       </MemoryRouter>,
     );
 
-    const toggle = screen.getByRole('button', { name: 'Переключить тему' });
+    const toggle = screen.getByRole('button', { name: 'Toggle theme' });
     expect(toggle).toBeInTheDocument();
     expect(toggle).toHaveAttribute('type', 'button');
   });
@@ -79,7 +79,7 @@ describe('Navbar', () => {
       'Home',
       'Projects',
       'Contacts',
-      'Переключить тему',
+      'Toggle theme',
     ]);
   });
 
@@ -101,7 +101,7 @@ describe('Navbar', () => {
       screen.getByRole('link', { name: 'Home' }),
       screen.getByRole('link', { name: 'Projects' }),
       screen.getByRole('link', { name: 'Contacts' }),
-      screen.getByRole('button', { name: 'Переключить тему' }),
+      screen.getByRole('button', { name: 'Toggle theme' }),
     ];
 
     for (const element of sequence) {

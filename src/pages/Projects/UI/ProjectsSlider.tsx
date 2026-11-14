@@ -151,7 +151,7 @@ export default function ProjectsSlider({ projects }: ProjectsSliderProps) {
         <button
           type="button"
           className="projects-slider__arrow projects-slider__arrow_prev"
-          aria-label="Предыдущий проект"
+          aria-label="Previous project"
           onClick={() => move(-1)}
         >
           ‹
@@ -182,7 +182,7 @@ export default function ProjectsSlider({ projects }: ProjectsSliderProps) {
         <button
           type="button"
           className="projects-slider__arrow projects-slider__arrow_next"
-          aria-label="Следующий проект"
+          aria-label="Next project"
           onClick={() => move(1)}
         >
           ›
@@ -202,7 +202,7 @@ export default function ProjectsSlider({ projects }: ProjectsSliderProps) {
             key={project.id}
             type="button"
             className={`projects-slider__dot ${index === activeIndex ? 'projects-slider__dot_active' : ''}`}
-            aria-label={`Проект ${index + 1}: ${project.title}`}
+            aria-label={`Project ${index + 1}: ${project.title}`}
             aria-current={index === activeIndex || undefined}
             onClick={() => goTo(index)}
           />

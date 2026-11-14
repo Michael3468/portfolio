@@ -188,7 +188,7 @@ describe('Project page', () => {
 
   /**
    * Проверяет, что для несуществующего id страница показывает
-   * сообщение «Проект не найден» и ссылку на главную, а не пустой экран.
+   * сообщение «Project not found» и ссылку на главную, а не пустой экран.
    */
   it('renders the not-found message when the project does not exist', () => {
     render(
@@ -200,7 +200,7 @@ describe('Project page', () => {
     );
 
     expect(screen.getByRole('heading', { level: 1, name: '404' })).toBeInTheDocument();
-    expect(screen.getByText('Проект не найден')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'На главную' })).toHaveAttribute('href', '/');
+    expect(screen.getByText('Project not found')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Back to home' })).toHaveAttribute('href', '/');
   });
 });

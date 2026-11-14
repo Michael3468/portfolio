@@ -28,7 +28,7 @@ export default function ButtonToggleDarkMode() {
       type="button"
       className={darkMode === 'dark' ? btnActive : btnNormal}
       onClick={toggleDarkMode}
-      aria-label="Переключить тему"
+      aria-label="Toggle theme"
       aria-pressed={darkMode === 'dark'}
     >
       <img src={sun} alt="" aria-hidden="true" className="dark-mode-btn__icon" />

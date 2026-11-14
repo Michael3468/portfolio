@@ -54,7 +54,7 @@ describe('ProjectsSlider', () => {
   it('renders a dot per project with the first one active', () => {
     renderSlider();
 
-    const dots = screen.getAllByRole('button', { name: /^Проект \d/ });
+    const dots = screen.getAllByRole('button', { name: /^Project \d/ });
     expect(dots).toHaveLength(projects.length);
     expect(dots[0]).toHaveAttribute('aria-current', 'true');
     expect(dots[1]).not.toHaveAttribute('aria-current');
@@ -99,7 +99,7 @@ describe('ProjectsSlider', () => {
     // В начале в центре Alpha, слева Gamma (последняя карточка в ленте), справа Beta.
     expect(visibleHrefs()).toEqual(['/project/3', '/project/1', '/project/2']);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Следующий проект' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Next project' }));
     act(() => {
       vi.advanceTimersByTime(SLIDE_DURATION);
     });
@@ -113,7 +113,7 @@ describe('ProjectsSlider', () => {
    */
   it('pauses autoplay while a project card is focused and resumes on an arrow', () => {
     renderSlider();
-    const dots = () => screen.getAllByRole('button', { name: /^Проект \d/ });
+    const dots = () => screen.getAllByRole('button', { name: /^Project \d/ });
 
     fireEvent.focusIn(screen.getByRole('link', { name: /Alpha/ }));
 
@@ -122,7 +122,7 @@ describe('ProjectsSlider', () => {
     });
     expect(dots()[0]).toHaveAttribute('aria-current', 'true');
 
-    fireEvent.focusIn(screen.getByRole('button', { name: 'Следующий проект' }));
+    fireEvent.focusIn(screen.getByRole('button', { name: 'Next project' }));
 
     act(() => {
       vi.advanceTimersByTime(5000);
@@ -131,17 +131,17 @@ describe('ProjectsSlider', () => {
   });
 
   /**
-   * Проверяет, что кнопка «Следующий проект» переводит активную точку вперёд.
+   * Проверяет, что кнопка «Next project» переводит активную точку вперёд.
    */
   it('moves to the next project on the next button click', () => {
     renderSlider();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Следующий проект' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Next project' }));
     act(() => {
       vi.advanceTimersByTime(SLIDE_DURATION);
     });
 
-    const dots = screen.getAllByRole('button', { name: /^Проект \d/ });
+    const dots = screen.getAllByRole('button', { name: /^Project \d/ });
     expect(dots[1]).toHaveAttribute('aria-current', 'true');
   });
 
@@ -151,9 +151,9 @@ describe('ProjectsSlider', () => {
    */
   it('wraps around from the first to the last and from the last to the first project', () => {
     renderSlider();
-    const dots = () => screen.getAllByRole('button', { name: /^Проект \d/ });
-    const prev = screen.getByRole('button', { name: 'Предыдущий проект' });
-    const next = screen.getByRole('button', { name: 'Следующий проект' });
+    const dots = () => screen.getAllByRole('button', { name: /^Project \d/ });
+    const prev = screen.getByRole('button', { name: 'Previous project' });
+    const next = screen.getByRole('button', { name: 'Next project' });
 
     fireEvent.click(prev);
     act(() => {
@@ -178,7 +178,7 @@ describe('ProjectsSlider', () => {
     expect(screen.getByText('Project: Alpha')).toBeInTheDocument();
     expect(screen.getByText('Skills: React, Vite')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Проект 2: Beta' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Project 2: Beta' }));
     act(() => {
       vi.advanceTimersByTime(SLIDE_DURATION);
     });
@@ -193,7 +193,7 @@ describe('ProjectsSlider', () => {
    */
   it('auto-advances to the next project every 5 seconds', () => {
     renderSlider();
-    const dots = () => screen.getAllByRole('button', { name: /^Проект \d/ });
+    const dots = () => screen.getAllByRole('button', { name: /^Project \d/ });
 
     act(() => {
       vi.advanceTimersByTime(4900);
@@ -221,12 +221,12 @@ describe('ProjectsSlider', () => {
   it('switches to the project chosen by a dot', () => {
     renderSlider();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Проект 3: Gamma' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Project 3: Gamma' }));
     act(() => {
       vi.advanceTimersByTime(SLIDE_DURATION);
     });
 
-    const dots = screen.getAllByRole('button', { name: /^Проект \d/ });
+    const dots = screen.getAllByRole('button', { name: /^Project \d/ });
     expect(dots[2]).toHaveAttribute('aria-current', 'true');
   });
 
@@ -236,8 +236,8 @@ describe('ProjectsSlider', () => {
    */
   it('ignores a new move while the previous slide transition is running', () => {
     renderSlider();
-    const next = screen.getByRole('button', { name: 'Следующий проект' });
-    const dots = () => screen.getAllByRole('button', { name: /^Проект \d/ });
+    const next = screen.getByRole('button', { name: 'Next project' });
+    const dots = () => screen.getAllByRole('button', { name: /^Project \d/ });
 
     fireEvent.click(next);
     fireEvent.click(next);
@@ -256,7 +256,7 @@ describe('ProjectsSlider', () => {
    */
   it('keeps the current project when its active dot is clicked', () => {
     renderSlider();
-    const dots = () => screen.getAllByRole('button', { name: /^Проект \d/ });
+    const dots = () => screen.getAllByRole('button', { name: /^Project \d/ });
 
     fireEvent.click(dots()[0]);
 
@@ -274,7 +274,7 @@ describe('ProjectsSlider', () => {
    */
   it('takes the shortest path between dots across the boundary', () => {
     renderSlider();
-    const dots = () => screen.getAllByRole('button', { name: /^Проект \d/ });
+    const dots = () => screen.getAllByRole('button', { name: /^Project \d/ });
 
     fireEvent.click(dots()[2]);
     act(() => {
@@ -296,7 +296,7 @@ describe('ProjectsSlider', () => {
   it('resumes autoplay when focus leaves the slider', () => {
     renderSlider();
     const card = screen.getByRole('link', { name: /Alpha/ });
-    const dots = () => screen.getAllByRole('button', { name: /^Проект \d/ });
+    const dots = () => screen.getAllByRole('button', { name: /^Project \d/ });
 
     fireEvent.focusIn(card);
     act(() => {
@@ -318,8 +318,8 @@ describe('ProjectsSlider', () => {
   it('keeps focus tracking when focus moves inside the slider', () => {
     renderSlider();
     const card = screen.getByRole('link', { name: /Alpha/ });
-    const next = screen.getByRole('button', { name: 'Следующий проект' });
-    const dots = () => screen.getAllByRole('button', { name: /^Проект \d/ });
+    const next = screen.getByRole('button', { name: 'Next project' });
+    const dots = () => screen.getAllByRole('button', { name: /^Project \d/ });
 
     fireEvent.focusIn(card);
     fireEvent.focusOut(card, { relatedTarget: next });

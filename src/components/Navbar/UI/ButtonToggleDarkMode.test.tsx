@@ -31,7 +31,7 @@ describe('ButtonToggleDarkMode', () => {
   it('renders a toggle button with aria attributes', () => {
     render(<ButtonToggleDarkMode />);
 
-    const toggle = screen.getByRole('button', { name: 'Переключить тему' });
+    const toggle = screen.getByRole('button', { name: 'Toggle theme' });
     expect(toggle).toHaveAttribute('type', 'button');
     expect(toggle).toHaveAttribute('aria-pressed', 'false');
   });
@@ -44,7 +44,7 @@ describe('ButtonToggleDarkMode', () => {
   it('switches to dark theme on click and updates aria-pressed', () => {
     render(<ButtonToggleDarkMode />);
 
-    const toggle = screen.getByRole('button', { name: 'Переключить тему' });
+    const toggle = screen.getByRole('button', { name: 'Toggle theme' });
     expect(toggle).toHaveAttribute('aria-pressed', 'false');
 
     fireEvent.click(toggle);
@@ -62,7 +62,7 @@ describe('ButtonToggleDarkMode', () => {
   it('switches back to light theme on the second click', () => {
     render(<ButtonToggleDarkMode />);
 
-    const toggle = screen.getByRole('button', { name: 'Переключить тему' });
+    const toggle = screen.getByRole('button', { name: 'Toggle theme' });
     fireEvent.click(toggle);
     fireEvent.click(toggle);
 
@@ -79,7 +79,7 @@ describe('ButtonToggleDarkMode', () => {
     const user = userEvent.setup();
     render(<ButtonToggleDarkMode />);
 
-    const toggle = screen.getByRole('button', { name: 'Переключить тему' });
+    const toggle = screen.getByRole('button', { name: 'Toggle theme' });
     expect(toggle).not.toHaveAttribute('tabindex');
 
     await user.tab();
