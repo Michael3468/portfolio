@@ -98,6 +98,7 @@ portfolio/
     │   ├── SkillBackground/
     │   │   ├── index.tsx        # фон с SVG-иконками навыков, параллакс за мышью
     │   │   ├── index.test.tsx
+    │   │   ├── index.nullRef.test.tsx  # защитная ветка без привязанного ref
     │   │   ├── styles.css
     │   │   └── model/
     │   │       ├── constants.ts       # позиции и прозрачность плиток
@@ -116,6 +117,7 @@ portfolio/
     │   │   │   │                       # буквы — декоративные (aria-hidden)
     │   │   │   ├── AnimatedTitle.test.tsx
     │   │   │   ├── index.ts            # barrel-реэкспорт AnimatedTitle
+    │   │   │   ├── index.test.ts       # barrel-тест реэкспорта
     │   │   │   └── model/
     │   │   │       ├── constants.ts       # TITLE_WAVE_INTERVAL_MS, TITLE_WAVE_STAGGER_MS
     │   │   │       ├── constants.test.ts
@@ -142,6 +144,7 @@ portfolio/
     │   │   ├── OrbsTitle.tsx    # заголовок с анимацией падения букв (Web Animations API)
     │   │   ├── OrbsTitle.css
     │   │   ├── OrbsTitle.test.tsx
+    │   │   ├── OrbsTitle.nullRef.test.tsx  # защитная ветка без привязанного ref
     │   │   ├── styles.css
     │   │   └── header-bg.png
     │   └── Navbar/
@@ -173,7 +176,9 @@ portfolio/
     │   │   │   └── constants.test.ts
     │   │   └── UI/
     │   │       ├── ContactItem.tsx    # элемент списка контактов
-    │   │       └── index.ts
+    │   │       ├── ContactItem.test.tsx
+    │   │       ├── index.ts
+    │   │       └── index.test.ts      # barrel-тест реэкспорта
     │   ├── Project/
     │   │   ├── index.ts         # реэкспорт страницы
     │   │   ├── index.test.ts    # barrel-тест реэкспорта
@@ -202,6 +207,7 @@ portfolio/
     │   │           └── constants.test.ts
     │   └── NotFound/
     │       ├── index.ts         # реэкспорт страницы
+    │       ├── index.test.ts    # barrel-тест реэкспорта
     │       ├── NotFound.tsx     # страница 404
     │       ├── NotFound.test.tsx
     │       └── styles.css
@@ -379,9 +385,9 @@ SVG-плитки всех навыков из `projects.json`: серые ква
 `@testing-library/jest-dom/vitest` и мок `window.matchMedia`, необходимый для компонентов
 тёмной темы в jsdom.
 
-Все юнит-тесты проходят: **210 тестов в 46 файлах** (включая barrel-тесты, тесты типов
-и тесты seo-плагина). Покрытие по v8 на момент обновления README: **96.63%** statements /
-**94.25%** branches / **95.97%** functions / **97.44%** lines; актуальные цифры после
+Все юнит-тесты проходят: **240 тестов в 51 файле** (включая barrel-тесты, тесты типов
+и тесты seo-плагина). Покрытие по v8 на момент обновления README: **100%** statements /
+**100%** branches / **100%** functions / **100%** lines; актуальные цифры после
 каждого запуска печатает `npm run test:coverage`.
 
 | Модуль                                                                    | Файл теста                                                        |
@@ -405,9 +411,11 @@ SVG-плитки всех навыков из `projects.json`: серые ква
 | типы `ContactItem` / `ContactLink`                                        | `src/pages/Contacts/Contacts.types.test.ts`                       |
 | `Contacts`                                                                | `src/pages/Contacts/Contacts.test.tsx`                            |
 | `AnimatedTitle` (заголовки Contacts, Projects, Test Tasks)                | `src/components/Animations/AnimatedTitle/AnimatedTitle.test.tsx`  |
+| баррель `AnimatedTitle`                                                   | `src/components/Animations/AnimatedTitle/index.test.ts`           |
 | `getWaveDelay` (волна заголовков)                                         | `src/components/Animations/AnimatedTitle/model/lib.test.ts`       |
 | `TITLE_WAVE_INTERVAL_MS` / `TITLE_WAVE_STAGGER_MS`                        | `src/components/Animations/AnimatedTitle/model/constants.test.ts` |
 | `ContactItem` (`Contacts`)                                                | `src/pages/Contacts/UI/ContactItem.test.tsx`                      |
+| баррель `Contacts/UI`                                                     | `src/pages/Contacts/UI/index.test.ts`                             |
 | константы `Contacts`                                                      | `src/pages/Contacts/model/constants.test.ts`                      |
 | баррель страницы `Projects`                                               | `src/pages/Projects/index.test.ts`                                |
 | тип `ProjectsSection`                                                     | `src/pages/Projects/Projects.types.test.ts`                       |
@@ -419,6 +427,7 @@ SVG-плитки всех навыков из `projects.json`: серые ква
 | `findProjectById` / `getParallaxTransform`                                | `src/pages/Project/model/lib.test.ts`                             |
 | `BUTTON_GRADIENT` / `MOUSE_PARALLAX_SHIFT_PX`                             | `src/pages/Project/model/constants.test.ts`                       |
 | `NotFound` (404)                                                          | `src/pages/NotFound/NotFound.test.tsx`                            |
+| баррель страницы `NotFound`                                               | `src/pages/NotFound/index.test.ts`                                |
 | `useDocumentMeta` / `upsertMeta`                                          | `src/hooks/useDocumentMeta.test.ts`                               |
 | `darkModeStore` (zustand-стор, catch-ветки)                               | `src/store/darkModeStore.test.ts`                                 |
 | `projects` / `projectsList` / `testTasksList` / `resolveImage`            | `src/shared/constants/projects.test.ts`                           |
