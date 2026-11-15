@@ -45,11 +45,28 @@
   transform: rotateY(0deg);
   transition: transform 0.5s cubic-bezier(0.45, 0, 0.55, 1);
   will-change: transform;
+
+  /* Один оборот против часовой стрелки вокруг вертикальной оси каждые 5 секунд:
+     сам оборот занимает 1 секунду (20% цикла), затем иконка отдыхает 4 секунды. */
+  animation: logo-icon-spin 5s infinite;
 }
 
-/* Три оборота влево при наведении и три обратно при уходе курсора. */
+@keyframes logo-icon-spin {
+  0% {
+    transform: rotateY(0deg);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+
+  20%,
+  100% {
+    transform: rotateY(-360deg);
+  }
+}
+
+/* Оборот влево при наведении и возврат при уходе курсора. */
 .logo__github:hover .logo__icon,
 .logo__github:focus-visible .logo__icon {
+  animation: none;
   transform: rotateY(-360deg);
 }
 
@@ -163,6 +180,7 @@
 
   .logo__icon {
     transition: none;
+    animation: none;
   }
 
   .logo__github:hover .logo__icon,
